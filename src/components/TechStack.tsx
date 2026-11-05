@@ -13,6 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { skillPillars, techMarquee } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function TechStack() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -65,11 +66,12 @@ export default function TechStack() {
 
       <div className="section-heading-row reveal">
         <div>
-          <h2 className="font-unbounded">
-            Structured for scale.
-            <br />
-            <span className="text-muted">Proven in production.</span>
-          </h2>
+          <FlyingHeading
+            line1="Structured for scale."
+            line2="Proven in production."
+            line2ClassName="text-muted"
+            className="font-unbounded"
+          />
         </div>
         <p>
           I select tools based on domain requirements, low-latency performance, and

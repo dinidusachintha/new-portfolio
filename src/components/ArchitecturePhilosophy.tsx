@@ -1,5 +1,6 @@
 import { Cpu, GitBranch, Layers, ShieldCheck } from "lucide-react";
 import { principles } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function ArchitecturePhilosophy() {
   return (
@@ -13,11 +14,11 @@ export default function ArchitecturePhilosophy() {
       </div>
 
       <div className="section-heading-row reveal">
-        <h2>
-          Architectural rigor.
-          <br />
-          <span className="text-muted">From RFC to production cluster.</span>
-        </h2>
+        <FlyingHeading
+          line1="Architectural rigor."
+          line2="From RFC to production cluster."
+          line2ClassName="text-muted"
+        />
         <p>
           Great software isn't improvised. It is designed with clear constraints,
           proven data models, and automated guardrails.

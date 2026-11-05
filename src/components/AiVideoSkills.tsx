@@ -11,6 +11,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { aiVideoSkills } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function AiVideoSkills() {
   const [activePillarIdx, setActivePillarIdx] = useState(0);
@@ -51,11 +52,11 @@ export default function AiVideoSkills() {
       </div>
 
       <div className="section-heading-row reveal">
-        <h2>
-          Neural cinematography.
-          <br />
-          <span className="text-muted">Generative video engineering.</span>
-        </h2>
+        <FlyingHeading
+          line1="Neural cinematography."
+          line2="Generative video engineering."
+          line2ClassName="text-muted"
+        />
         <p>{aiVideoSkills.subtitle}</p>
       </div>
 

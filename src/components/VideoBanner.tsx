@@ -10,6 +10,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function VideoBanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -123,11 +124,12 @@ export default function VideoBanner() {
             <span>06 / SOFTWARE ARCHITECTURE IN ACTION</span>
           </div>
 
-          <h2 className="video-title font-unbounded">
-            BUILDING SYSTEMS.
-            <br />
-            <span className="video-title-gradient font-unbounded">CRAFTING WHAT MATTERS.</span>
-          </h2>
+          <FlyingHeading
+            line1="BUILDING SYSTEMS."
+            line2="CRAFTING WHAT MATTERS."
+            line2ClassName="video-title-gradient font-unbounded block"
+            className="video-title font-unbounded"
+          />
 
           <p className="video-lead">
             High-throughput event pipelines, resilient relational models, and responsive web platforms engineered to endure real-world production load.
