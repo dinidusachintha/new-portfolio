@@ -193,18 +193,34 @@ export default function ProjectCard({
                 <span>Architecture & Specs</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => onSelect?.(project, "demo")}
-                className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
-                aria-label={`Visit live site for ${project.title}`}
-              >
-                <span>Visit live site</span>
-                <ArrowUpRight
-                  size={15}
-                  className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
-                />
-              </button>
+              {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
+                  aria-label={`Visit live site for ${project.title}`}
+                >
+                  <span>Visit live site</span>
+                  <ArrowUpRight
+                    size={15}
+                    className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                  />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onSelect?.(project, "demo")}
+                  className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
+                  aria-label={`Visit live site for ${project.title}`}
+                >
+                  <span>Visit live site</span>
+                  <ArrowUpRight
+                    size={15}
+                    className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                  />
+                </button>
+              )}
             </div>
           </div>
 

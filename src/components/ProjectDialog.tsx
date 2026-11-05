@@ -146,6 +146,8 @@ export default function ProjectDialog({
   const detailedItem = project
     ? projectsData.find((d) => d.id === project.id)
     : undefined;
+  const liveUrl = project?.liveUrl || detailedItem?.liveUrl;
+  const sourceUrl = project?.sourceUrl || detailedItem?.sourceUrl;
 
   const navigateSibling = (direction: -1 | 1) => {
     if (!onSelectProject || currentProjectIndex === -1) return;
@@ -285,7 +287,7 @@ export default function ProjectDialog({
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
                   </div>
                   <span className="px-3 py-1 rounded-md bg-black/60 border border-white/10 text-emerald-400 font-semibold truncate">
-                    https://{project.id}.dinidu.dev
+                    {liveUrl || `https://${project.id}.dinidu.dev`}
                   </span>
                   <span className="hidden md:inline-flex items-center gap-1 text-[11px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -1174,23 +1176,23 @@ export default function ProjectDialog({
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
                 <div className="flex flex-wrap items-center gap-3">
-                  {project.liveUrl && (
+                  {liveUrl && (
                     <a
-                      href={project.liveUrl}
+                      href={liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all shadow-lg"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all shadow-lg cursor-pointer"
                     >
                       <span>Open External Live Deployment</span>
                       <ExternalLink size={14} />
                     </a>
                   )}
-                  {project.sourceUrl && (
+                  {sourceUrl && (
                     <a
-                      href={project.sourceUrl}
+                      href={sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/[0.04] border border-white/20 text-white font-mono text-xs hover:bg-white/[0.08] transition-all"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/[0.04] border border-white/20 text-white font-mono text-xs hover:bg-white/[0.08] transition-all cursor-pointer"
                     >
                       <Github size={14} />
                       <span>View GitHub Repository</span>
@@ -1382,21 +1384,21 @@ export default function ProjectDialog({
                       <Play size={14} className="fill-current" />
                       <span>Launch Interactive Simulator</span>
                     </button>
-                    {project.liveUrl && (
+                    {liveUrl && (
                       <a
-                        className="button button-outline text-xs py-2.5 px-5"
-                        href={project.liveUrl}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all shadow-lg cursor-pointer"
+                        href={liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <span>External Deployment</span>
+                        <span>Open External Live Deployment</span>
                         <ExternalLink size={14} />
                       </a>
                     )}
-                    {project.sourceUrl && (
+                    {sourceUrl && (
                       <a
-                        className="button button-outline text-xs py-2.5 px-5"
-                        href={project.sourceUrl}
+                        className="button button-outline text-xs py-2.5 px-5 cursor-pointer"
+                        href={sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

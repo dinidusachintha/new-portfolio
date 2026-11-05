@@ -705,17 +705,30 @@ function GlassCardItem({
       {/* 4. TWO PILL ACTION BUTTONS IN MATCHING VIOLET/OBSIDIAN THEME */}
       <div className="relative z-10 space-y-2">
         {/* Top Button: Electric Violet / Indigo Gradient Filled Pill */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenDemo();
-          }}
-          className="glass-pill-violet w-full py-2.5 sm:py-3 px-4 sm:px-5 rounded-full text-white font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
-        >
-          <ExternalLink size={13} className="shrink-0" />
-          <span>EXPLORE LIVE SYSTEM</span>
-        </button>
+        {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="glass-pill-violet w-full py-2.5 sm:py-3 px-4 sm:px-5 rounded-full text-white font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
+          >
+            <ExternalLink size={13} className="shrink-0" />
+            <span>EXPLORE LIVE SYSTEM</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenDemo();
+            }}
+            className="glass-pill-violet w-full py-2.5 sm:py-3 px-4 sm:px-5 rounded-full text-white font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
+          >
+            <ExternalLink size={13} className="shrink-0" />
+            <span>EXPLORE LIVE SYSTEM</span>
+          </button>
+        )}
 
         {/* Bottom Button: Frosted Glass Outline Pill */}
         <button
