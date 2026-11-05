@@ -1,0 +1,3 @@
+Put your PDF CV in this folder, for example dinidu-cv.pdf.
+Then set profile.cv to 'assets/documents/dinidu-cv.pdf' in src/data/portfolio.ts.
+The Download CV link will appear automatically.

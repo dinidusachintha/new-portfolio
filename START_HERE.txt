@@ -1,0 +1,29 @@
+DINIDU SACHINTHA — CREATIVE PORTFOLIO
+
+1. Extract this ZIP.
+2. Open the dinidu-portfolio folder in VS Code.
+3. Open a terminal in that folder.
+4. Run:
+
+   npm install
+   npm run dev
+
+5. Open the localhost URL printed by Vite (usually http://localhost:5173).
+
+Requires Node.js 22.12 or later (Node.js 24 LTS also works).
+
+On Windows, if PowerShell blocks npm.ps1, use these instead:
+   npm.cmd install
+   npm.cmd run dev
+
+PERSONALIZE
+   src/data/portfolio.ts        Name, biography, contact info, project content
+   public/assets/images/       Replace the sample project images
+   public/assets/music/        Replace ambient-loop.mp3 with your own audio
+   public/assets/documents/    Put your CV here, then set profile.cv
+
+Click Sound off to start the background music.
+
+Read README.md for customization, contact behavior, and hosting instructions.
+The dist folder contains a checked production build. Serve it through a web
+server or upload its contents to a static host; do not double-click index.html.
