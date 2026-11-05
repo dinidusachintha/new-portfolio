@@ -4301,8 +4301,10 @@ main {
   margin-bottom: 16px;
 }
 
-.video-title-gradient {
+.video-title-gradient,
+.video-title-gradient .flying-char-letter {
   background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 50%, #f472b6 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -7116,7 +7118,8 @@ body {
   color: #ffffff;
 }
 
-.have-a-system-outline {
+.have-a-system-outline,
+.have-a-system-outline .flying-char-letter {
   display: block;
   font-family: "Manrope Variable", Arial, sans-serif;
   font-size: clamp(38px, 6.2vw, 82px);
@@ -7125,6 +7128,11 @@ body {
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.95);
   text-transform: uppercase;
+}
+
+.have-a-system-outline .flying-char-letter {
+  display: inline-block;
+  font-size: inherit;
 }
 
 .footer-simple {

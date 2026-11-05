@@ -9,6 +9,7 @@ import {
   Zap,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function AboutSection() {
   return (
@@ -27,11 +28,12 @@ export default function AboutSection() {
           </div>
 
           <div className="section-heading-row mt-4 mb-8 relative z-10">
-            <h2 className="font-unbounded text-2xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-white tracking-tight leading-tight">
-              Developer’s mind.
-              <br />
-              <span className="text-slate-400 font-normal">Architect’s vision.</span>
-            </h2>
+            <FlyingHeading
+              line1="Developer’s mind."
+              line2="Architect’s vision."
+              line2ClassName="text-slate-400 font-normal"
+              className="font-unbounded text-2xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-white tracking-tight leading-tight"
+            />
             <p className="text-slate-300 text-sm sm:text-base max-w-xl">
               Software engineering undergraduate at SLIIT, full stack engineer, and distributed systems enthusiast based in Sri Lanka.
             </p>

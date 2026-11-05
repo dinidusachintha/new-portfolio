@@ -9,6 +9,7 @@ import {
   Terminal as TerminalIcon,
 } from "lucide-react";
 import { profile, projects, stats } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 type HistoryItem = {
   command: string;
@@ -253,11 +254,12 @@ export default function InteractiveTerminal() {
       </div>
 
       <div className="section-heading-row reveal">
-        <h2 className="font-unbounded">
-          Inside the engine.
-          <br />
-          <span className="text-muted">Live interactive environment.</span>
-        </h2>
+        <FlyingHeading
+          line1="Inside the engine."
+          line2="Live interactive environment."
+          line2ClassName="text-muted"
+          className="font-unbounded"
+        />
         <p>
           Explore system architecture, inspect technical proficiencies, or query
           benchmarks directly from the command line.

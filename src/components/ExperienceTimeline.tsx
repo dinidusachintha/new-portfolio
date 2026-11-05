@@ -8,6 +8,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { asset, experience, profile } from "../data/portfolio";
+import FlyingHeading from "./FlyingHeading";
 
 export default function ExperienceTimeline() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
@@ -27,11 +28,12 @@ export default function ExperienceTimeline() {
       </div>
 
       <div className="section-heading-row reveal">
-        <h2 className="font-unbounded">
-          Building credibility.
-          <br />
-          <span className="text-muted">Engineering in the real world.</span>
-        </h2>
+        <FlyingHeading
+          line1="Building credibility."
+          line2="Engineering in the real world."
+          line2ClassName="text-muted"
+          className="font-unbounded"
+        />
         <p>
           A combination of formal software engineering at SLIIT and continuous
           production delivery for clients and startups.

@@ -18,6 +18,7 @@ import AboutSection from "./components/AboutSection";
 import ExperienceTimeline from "./components/ExperienceTimeline";
 import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
+import FlyingHeading from "./components/FlyingHeading";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -291,13 +292,12 @@ function HaveASystemSection() {
         <span>07 // INITIATE COLLABORATION</span>
       </span>
 
-      <h2 className="have-a-system-title font-unbounded font-black text-white tracking-tight leading-[1.02] mb-6">
-        HAVE A SYSTEM TO BUILD OR ARCHITECT?
-        <br />
-        <span className="have-a-system-outline font-unbounded block mt-2">
-          LET&apos;S BUILD IT.
-        </span>
-      </h2>
+      <FlyingHeading
+        line1="HAVE A SYSTEM TO BUILD OR ARCHITECT?"
+        line2="LET'S BUILD IT."
+        line2ClassName="have-a-system-outline font-unbounded block mt-2"
+        className="have-a-system-title font-unbounded font-black text-white tracking-tight leading-[1.02] mb-6"
+      />
 
       <p className="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed mb-6 sm:mb-7">
         I am currently open for new projects. You bring the idea, and I will handle the code, the architecture, and all the fine details to make sure it runs flawlessly.
@@ -851,11 +851,12 @@ export default function App() {
                   <span className="small-index">END-TO-END ARCHITECTURAL WORK</span>
                 </div>
                 <div className="section-heading-row reveal">
-                  <h2 className="font-unbounded">
-                    Engineered systems.
-                    <br />
-                    <span className="text-muted">Measurable production impact.</span>
-                  </h2>
+                  <FlyingHeading
+                    line1="Engineered systems."
+                    line2="Measurable production impact."
+                    line2ClassName="text-muted"
+                    className="font-unbounded"
+                  />
                   <p>
                     A selection of full stack platforms, distributed backend services, and
                     responsive applications built for performance.

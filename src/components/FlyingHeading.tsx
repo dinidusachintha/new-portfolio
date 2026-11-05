@@ -67,7 +67,7 @@ export function FlyingLetters({
                   key={`c-${wIdx}-${cIdx}`}
                   custom={currentIdx}
                   variants={letterFlyVariants}
-                  className={`inline-block will-change-transform ${letterClassName}`}
+                  className={`inline-block will-change-transform flying-char-letter ${letterClassName}`.trim()}
                 >
                   {char}
                 </motion.span>
@@ -99,7 +99,7 @@ export default function FlyingHeading({
         variants={headingContainerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, amount: 0.15 }}
       >
         <span className="block" aria-hidden="true">
           <FlyingLetters text={line1} startIdx={0} />
