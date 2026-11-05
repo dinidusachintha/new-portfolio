@@ -60,6 +60,13 @@ const navLinks = [
   { name: "Contact", id: "contact" },
 ];
 
+const techTickerSequence = [
+  { text: "TYPE SAFETY", symbol: "✿", type: "flower" },
+  { text: "ZERO DOWNTIME DEPLOYS", symbol: "✦", type: "star" },
+  { text: "DISTRIBUTED SYSTEMS", symbol: "✿", type: "flower" },
+  { text: "AI VIDEO PIPELINES", symbol: "✦", type: "star" },
+];
+
 function LogoSharpFilter() {
   return (
     <svg className="sr-only" aria-hidden="true" width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }}>
@@ -810,24 +817,18 @@ export default function App() {
             {/* Continuous Tech Ticker with Subtle Floral Accents */}
             <div className="marquee-section" aria-hidden="true">
               <div className="marquee-track">
-                {[0, 1].map((copyIndex) => (
-                  <div key={copyIndex} className="marquee-group">
-                    <span className="marquee-item">
-                      <span className="marquee-text">DISTRIBUTED SYSTEMS</span>
-                      <span className="marquee-symbol symbol-flower">✿</span>
-                    </span>
-                    <span className="marquee-item">
-                      <span className="marquee-text">AI VIDEO PIPELINES</span>
-                      <span className="marquee-symbol symbol-star">✦</span>
-                    </span>
-                    <span className="marquee-item">
-                      <span className="marquee-text">TYPE SAFETY</span>
-                      <span className="marquee-symbol symbol-flower">✿</span>
-                    </span>
-                    <span className="marquee-item">
-                      <span className="marquee-text">ZERO DOWNTIME DEPLOYS</span>
-                      <span className="marquee-symbol symbol-star">✦</span>
-                    </span>
+                {[0, 1].map((groupIdx) => (
+                  <div key={groupIdx} className="marquee-group">
+                    {[0, 1, 2, 3].map((repIdx) =>
+                      techTickerSequence.map((item, itemIdx) => (
+                        <span key={`${groupIdx}-${repIdx}-${itemIdx}`} className="marquee-item">
+                          <span className="marquee-text">{item.text}</span>
+                          <span className={`marquee-symbol ${item.type === "flower" ? "symbol-flower" : "symbol-star"}`}>
+                            {item.symbol}
+                          </span>
+                        </span>
+                      ))
+                    )}
                   </div>
                 ))}
               </div>
