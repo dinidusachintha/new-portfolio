@@ -5993,22 +5993,21 @@ main {
 .hero-dymas-big-name {
   position: absolute;
   top: 11%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   display: inline-flex;
   flex-wrap: nowrap;
   white-space: nowrap;
   align-items: baseline;
-  justify-content: center;
   gap: clamp(14px, 1.8vw, 24px);
-  max-width: 100%;
+  max-width: none;
   width: max-content;
   z-index: 15 !important;
-  /* Centered on one single line in front of the video */
+  /* Placed on one single line in front of the video */
   pointer-events: none;
   user-select: none;
   line-height: 0.95;
-  text-align: center;
+  animation: smoothNameFloatWave 7.5s ease-in-out infinite;
+  will-change: transform;
 }
 
 .hero-char-letter {
@@ -6457,11 +6456,6 @@ main {
 
   .hero-dymas-big-name {
     top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 100%;
-    justify-content: center;
   }
 }
 
