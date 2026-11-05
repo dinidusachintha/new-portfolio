@@ -809,11 +809,26 @@ export default function App() {
 
             {/* Continuous Tech Ticker with Subtle Floral Accents */}
             <div className="marquee-section" aria-hidden="true">
-              <div className="marquee-track font-mono text-xs">
-                {[0, 1, 2, 3].map((i) => (
-                  <span key={i}>
-                    DISTRIBUTED SYSTEMS <b>✿</b> AI VIDEO PIPELINES <b>✦</b> TYPE SAFETY <b>✿</b> ZERO DOWNTIME DEPLOYS <b>✦</b>{" "}
-                  </span>
+              <div className="marquee-track">
+                {[0, 1].map((copyIndex) => (
+                  <div key={copyIndex} className="marquee-group">
+                    <span className="marquee-item">
+                      <span className="marquee-text">DISTRIBUTED SYSTEMS</span>
+                      <span className="marquee-symbol symbol-flower">✿</span>
+                    </span>
+                    <span className="marquee-item">
+                      <span className="marquee-text">AI VIDEO PIPELINES</span>
+                      <span className="marquee-symbol symbol-star">✦</span>
+                    </span>
+                    <span className="marquee-item">
+                      <span className="marquee-text">TYPE SAFETY</span>
+                      <span className="marquee-symbol symbol-flower">✿</span>
+                    </span>
+                    <span className="marquee-item">
+                      <span className="marquee-text">ZERO DOWNTIME DEPLOYS</span>
+                      <span className="marquee-symbol symbol-star">✦</span>
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>

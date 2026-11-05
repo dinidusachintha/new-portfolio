@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import {
   ArrowUpRight,
   Code2,
@@ -10,6 +10,42 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
+
+// Stagger container for the whole name
+const nameContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.04,
+      delayChildren: 0.22,
+    },
+  },
+};
+
+// Flying effect for each individual letter
+const letterVariants: Variants = {
+  hidden: (i: number) => ({
+    opacity: 0,
+    y: i % 2 === 0 ? -55 : 55,
+    x: (i - 7) * 7,
+    scale: 0.5,
+    rotateZ: i % 2 === 0 ? -14 : 14,
+    filter: "blur(12px)",
+  }),
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+    scale: 1,
+    rotateZ: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.85,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+};
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -75,16 +111,44 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Giant Merged Headline Typography with Smooth Floating Waving Animation */}
+            {/* Giant Merged Headline Typography with Letter-by-Letter Flying Animation */}
             <motion.div
               className="hero-dymas-big-name"
               aria-label="Dinidu Sachintha"
-              initial={{ opacity: 0, scale: 0.95, y: 25 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.1, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              variants={nameContainerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <span className="hero-name-outlined">DINIDU</span>
-              <span className="hero-name-solid">SACHINTHA</span>
+              <span className="hero-name-outlined" aria-hidden="true">
+                {"DINIDU".split("").map((char, i) => (
+                  <motion.span
+                    key={`d-${i}`}
+                    custom={i}
+                    variants={letterVariants}
+                    className="hero-char-letter"
+                    style={{
+                      animationDelay: `${i * 0.14}s`,
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
+              <span className="hero-name-solid" aria-hidden="true">
+                {"SACHINTHA".split("").map((char, i) => (
+                  <motion.span
+                    key={`s-${i}`}
+                    custom={i + 6}
+                    variants={letterVariants}
+                    className="hero-char-letter"
+                    style={{
+                      animationDelay: `${(i + 6) * 0.14}s`,
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
             </motion.div>
 
             {/* Bottom Left: Role Title, Tech Pill, and Action Button */}
