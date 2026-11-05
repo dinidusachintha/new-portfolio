@@ -332,6 +332,42 @@ export const projects: Project[] = [
     liveUrl: "https://github.com/dinidu",
     sourceUrl: "https://github.com/dinidu",
   },
+  {
+    id: "spicy-selling-site",
+    index: "09",
+    title: "Spicy Selling Site",
+    kind: "03 · E-Commerce · Modern Spice Shopping Experience",
+    category: "Full Stack",
+    year: "2026",
+    summary:
+      "A modern, responsive e-commerce website designed to showcase and sell premium spices through an engaging digital shopping experience. Focused on intuitive navigation, attractive product presentation, smooth interactions, and mobile-friendly design.",
+    image: "assets/images/spicy-selling-site.jpg",
+    mockupImage: "assets/images/spicy-selling-site.jpg",
+    accent: "#f97316",
+    stack: ["REACT", "JAVASCRIPT", "TAILWIND CSS", "HTML5", "CSS3"],
+    metrics: [
+      { value: "100%", label: "Ceylon Quality" },
+      { value: "<0.1s", label: "Cart Update Latency" },
+      { value: "Mobile", label: "First Responsive UI" },
+    ],
+    problem:
+      "Traditional specialty spice stores struggle with outdated online storefronts that fail to convey rich product freshness, provide clear culinary pairing guides, or deliver smooth mobile cart checkouts.",
+    solution:
+      "Engineered a sleek, responsive e-commerce web platform with categorized spice showcases, detailed product pricing and heat levels, dynamic cart state management, and an engaging Ceylon Reds brand identity.",
+    architecture:
+      "Modular React component hierarchy utilizing Tailwind CSS for utility-driven responsive design, structured client-side product catalogues, dynamic shopping cart drawer state, and fluid UI micro-interactions.",
+    highlights: [
+      "Interactive spice product catalogue showcasing Ceylon Reds premium seasonings",
+      "Detailed product cards with pricing, heat indicators, and single-click cart addition",
+      "Organized category browsing for chili blends, whole spices, and gourmet sauces",
+      "Reactive shopping cart state management with real-time badge updates and item counts",
+      "Responsive mobile-first storefront optimized for fast browsing across all screen sizes",
+      "Smooth animations, newsletter subscription modal, and warm chili-orange aesthetic",
+    ],
+    role: "Web Developer · E-Commerce",
+    liveUrl: "https://github.com/dinidusachintha/spicy-selling-site",
+    sourceUrl: "https://github.com/dinidusachintha/spicy-selling-site",
+  },
 ];
 
 export const skillPillars = [

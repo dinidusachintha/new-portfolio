@@ -6,6 +6,7 @@ import sentinelImg from "../assets/projects/sentinel.jpg";
 import omnistreamImg from "../assets/projects/omnistream.jpg";
 import pulseImg from "../assets/projects/pulse.jpg";
 import eWeddingRsvpImg from "../assets/projects/e-wedding-rsvp.jpg";
+import spicySellingSiteImg from "../assets/projects/spicy-selling-site.jpg";
 
 export type ProjectDomain = "Full Stack" | "Cloud & Backend" | "AI & Media";
 
@@ -430,6 +431,56 @@ export const projectsData: ProjectItem[] = [
       { value: "100%", label: "Mobile Responsive" },
       { value: "Live", label: "Interactive RSVP" },
       { value: "60 FPS", label: "Cinematic Animations" },
+    ],
+  },
+  {
+    id: "spicy-selling-site",
+    number: "09",
+    category: "03 · E-Commerce",
+    domain: "Full Stack",
+    year: "2026",
+    role: "Web Developer · E-Commerce",
+    status: "E-COMMERCE STORE",
+    title: "Spicy Selling Site",
+    shortDescription:
+      "A modern, responsive e-commerce website designed to showcase and sell premium spices through an engaging digital shopping experience. Focused on intuitive navigation, attractive product presentation, smooth interactions, and mobile-friendly design.",
+    description:
+      "A modern, responsive e-commerce website designed to showcase and sell premium Ceylon spices through an engaging digital shopping experience. Focused on intuitive navigation, attractive product presentation, smooth interactions, and mobile-friendly design.",
+    problem:
+      "Traditional specialty spice stores struggle with outdated online storefronts that fail to convey rich product freshness, provide clear culinary pairing guides, or deliver smooth mobile cart checkouts.",
+    solution:
+      "Engineered a sleek, responsive e-commerce web platform with categorized spice showcases, detailed product pricing and heat levels, dynamic cart state management, and an engaging Ceylon Reds brand identity.",
+    architecture:
+      "Modular React component hierarchy utilizing Tailwind CSS for utility-driven responsive design, structured client-side product catalogues, dynamic shopping cart drawer state, and fluid UI micro-interactions.",
+    highlights: [
+      "Interactive spice product catalogue showcasing Ceylon Reds premium seasonings",
+      "Detailed product cards with pricing, heat indicators, and single-click cart addition",
+      "Organized category browsing for chili blends, whole spices, and gourmet sauces",
+      "Reactive shopping cart state management with real-time badge updates and item counts",
+      "Responsive mobile-first storefront optimized for fast browsing across all screen sizes",
+      "Smooth animations, newsletter subscription modal, and warm chili-orange aesthetic",
+    ],
+    architectureNodes: [
+      { layer: "Storefront UI", tech: "React + Tailwind CSS", detail: "Responsive layout with Ceylon Reds fiery aesthetic" },
+      { layer: "Catalog Core", tech: "JavaScript + Product State", detail: "Structured spice catalog with categorized browsing" },
+      { layer: "Cart Management", tech: "React State & Context", detail: "Real-time item count, price calculation & cart drawer" },
+      { layer: "Engage & Capture", tech: "Interactive Modals", detail: "Subscription newsletter modal & promotional banners" },
+    ],
+    technologies: ["React", "JavaScript", "Tailwind CSS", "HTML5", "CSS3"],
+    liveUrl: "https://github.com/dinidusachintha/spicy-selling-site",
+    sourceUrl: "https://github.com/dinidusachintha/spicy-selling-site",
+    screenshot: spicySellingSiteImg,
+    demoUrl: "https://spicy-selling-site.vercel.app",
+    accentColor: "#f97316",
+    cardBg: "linear-gradient(145deg, #180e0a 0%, #0c0705 100%)",
+    borderColor: "rgba(249, 115, 22, 0.38)",
+    glowColor: "rgba(249, 115, 22, 0.28)",
+    tagBg: "rgba(249, 115, 22, 0.16)",
+    tagColor: "#fdba74",
+    metrics: [
+      { value: "100%", label: "Ceylon Quality" },
+      { value: "<0.1s", label: "Cart Update Latency" },
+      { value: "Mobile", label: "First Responsive UI" },
     ],
   },
 ];

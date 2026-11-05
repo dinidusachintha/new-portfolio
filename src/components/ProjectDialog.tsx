@@ -1096,6 +1096,79 @@ export default function ProjectDialog({
                     </div>
                   </div>
                 )}
+
+                {/* 9. SPICY SELLING SITE INTERACTIVE SIMULATOR */}
+                {project.id === "spicy-selling-site" && (
+                  <div className="p-6 sm:p-8 space-y-6 font-sans">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                      <div>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-orange-400 font-bold">
+                          CEYLON REDS · SPICE E-COMMERCE STOREFRONT
+                        </span>
+                        <h4 className="text-xl font-bold text-white">
+                          Modern Spice Shopping Experience &amp; Cart Engine
+                        </h4>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-300 border border-orange-500/30 text-xs font-mono font-semibold">
+                        Chili-Red &amp; Amber Fire Theme
+                      </span>
+                    </div>
+
+                    {/* Storefront Hero Screenshot Display */}
+                    <div className="rounded-xl overflow-hidden border border-white/15 bg-black/60 aspect-[16/9] relative group">
+                      <img
+                        src={asset(project.mockupImage || project.image)}
+                        alt="Ceylon Reds Spicy Store"
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
+                      <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-mono text-white z-10">
+                        <span className="px-2.5 py-1 rounded bg-black/70 border border-white/20 text-[#fdba74]">
+                          Ceylon Reds · Premium Handcrafted Spice Blends
+                        </span>
+                        <span className="px-2.5 py-1 rounded bg-orange-600/80 text-white font-bold">
+                          Cart Ready
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Interactive Store Simulator Widget */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
+                        <span className="text-xs font-mono text-gray-400 block">
+                          1. FEATURED SPICE PRODUCT
+                        </span>
+                        <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/10">
+                          <div>
+                            <div className="text-sm font-bold text-white">Ceylon Fire Hot Blend</div>
+                            <div className="text-[10px] font-mono text-orange-400 font-semibold">
+                              Heat: Extra Hot · Small Batch
+                            </div>
+                          </div>
+                          <div className="text-sm font-mono font-bold text-emerald-400">$12.99</div>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
+                        <span className="text-xs font-mono text-gray-400 block">
+                          2. SHOPPING CART ENGINE
+                        </span>
+                        <div className="flex items-center gap-2 pt-1">
+                          <span className="px-3 py-1.5 rounded-lg bg-orange-500/20 text-orange-300 border border-orange-500/40 text-xs font-mono font-semibold flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+                            Cart: 1 Item ($12.99)
+                          </span>
+                          <span className="text-xs font-mono text-gray-400">
+                            Free Shipping Ready
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-400 pt-1">
+                          ✓ Reactive Cart State · Fast Product Search &amp; Filtering
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
