@@ -5,6 +5,7 @@ import ceylonTrailsImg from "../assets/projects/ceylon-trails.jpg";
 import sentinelImg from "../assets/projects/sentinel.jpg";
 import omnistreamImg from "../assets/projects/omnistream.jpg";
 import pulseImg from "../assets/projects/pulse.jpg";
+import eWeddingRsvpImg from "../assets/projects/e-wedding-rsvp.jpg";
 
 export type ProjectDomain = "Full Stack" | "Cloud & Backend" | "AI & Media";
 
@@ -379,6 +380,56 @@ export const projectsData: ProjectItem[] = [
       { value: "0.00ms", label: "Double-Spend Variance" },
       { value: "120k", label: "Transactions / Sec" },
       { value: "100%", label: "Cryptographic Audit" },
+    ],
+  },
+  {
+    id: "e-wedding-rsvp",
+    number: "08",
+    category: "Client Project · Web Development",
+    domain: "Full Stack",
+    year: "2026",
+    role: "Lead Frontend & Creative Engineer",
+    status: "CLIENT PRODUCTION",
+    title: "E-Wedding RSVP Invitation",
+    shortDescription:
+      "A premium digital wedding invitation website designed for Gimasha & Chathura, delivering an elegant, interactive wedding experience with cinematic visuals, romantic animations, and seamless guest interaction.",
+    description:
+      "A premium digital wedding invitation website designed for Gimasha & Chathura, delivering an elegant, interactive wedding experience with cinematic visuals, romantic animations, and seamless guest interaction.",
+    problem:
+      "Traditional paper wedding invitations are static, lack real-time RSVP tracking, cannot provide dynamic countdowns or interactive venue maps, and are easily lost or misplaced by wedding guests.",
+    solution:
+      "Engineered a luxury digital wedding invitation platform featuring an interactive online RSVP system, live countdown timer, cinematic cover screen, animated flower petals, and Google Maps venue integration.",
+    architecture:
+      "Modern React & TypeScript architecture styled with Tailwind CSS, utilizing Framer Motion for cinematic physics-based animations, fluid scroll-driven transitions, and real-time guest RSVP state handling.",
+    highlights: [
+      "Interactive online RSVP with instant guest attendance confirmation and response tracking",
+      "Live wedding countdown timer synchronizing event milestones in real time",
+      "Cinematic wedding cover screen with romantic ambient visuals and audio controls",
+      "Animated flower petals with fluid physics and smooth scroll navigation",
+      "Wedding story and ceremony details with Google Maps location integration",
+      "Fully responsive mobile and desktop experience with premium olive-green and gold theme",
+    ],
+    architectureNodes: [
+      { layer: "Presentation UI", tech: "React + Tailwind CSS", detail: "Luxury olive-green & champagne-gold aesthetic" },
+      { layer: "Motion Engine", tech: "Framer Motion", detail: "Animated falling flower petals & cinematic transitions" },
+      { layer: "Guest Utilities", tech: "Interactive RSVP & Maps", detail: "Online RSVP confirmation & Google Maps routing" },
+      { layer: "Event Core", tech: "Live Countdown & Audio", detail: "Real-time wedding day synchronizer & ambient audio controller" },
+    ],
+    technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    liveUrl: "https://github.com/dinidu",
+    sourceUrl: "https://github.com/dinidu",
+    screenshot: eWeddingRsvpImg,
+    demoUrl: "https://ewedding-rsvp.vercel.app",
+    accentColor: "#849b5c",
+    cardBg: "linear-gradient(145deg, #0f1611 0%, #080d09 100%)",
+    borderColor: "rgba(132, 155, 92, 0.38)",
+    glowColor: "rgba(132, 155, 92, 0.28)",
+    tagBg: "rgba(132, 155, 92, 0.16)",
+    tagColor: "#c5d8a4",
+    metrics: [
+      { value: "100%", label: "Mobile Responsive" },
+      { value: "Live", label: "Interactive RSVP" },
+      { value: "60 FPS", label: "Cinematic Animations" },
     ],
   },
 ];

@@ -296,6 +296,42 @@ export const projects: Project[] = [
     liveUrl: "https://github.com",
     sourceUrl: "https://github.com",
   },
+  {
+    id: "e-wedding-rsvp",
+    index: "08",
+    title: "E-Wedding RSVP Invitation",
+    kind: "Client Project · Digital Wedding Experience",
+    category: "Full Stack",
+    year: "2026",
+    summary:
+      "A premium digital wedding invitation website designed for Gimasha & Chathura, delivering an elegant, interactive wedding experience with cinematic visuals, romantic animations, and seamless guest interaction.",
+    image: "assets/images/e-wedding-rsvp.jpg",
+    mockupImage: "assets/images/e-wedding-rsvp.jpg",
+    accent: "#849b5c",
+    stack: ["REACT", "TYPESCRIPT", "TAILWIND CSS", "FRAMER MOTION"],
+    metrics: [
+      { value: "100%", label: "Mobile Responsive" },
+      { value: "Live", label: "Interactive RSVP" },
+      { value: "60 FPS", label: "Cinematic Animations" },
+    ],
+    problem:
+      "Traditional paper wedding invitations are static, lack real-time RSVP tracking, cannot provide dynamic countdowns or interactive venue maps, and are easily lost or misplaced by wedding guests.",
+    solution:
+      "Engineered a luxury digital wedding invitation platform featuring an interactive online RSVP system, live countdown timer, cinematic cover screen, animated flower petals, and Google Maps venue integration.",
+    architecture:
+      "Modern React & TypeScript architecture styled with Tailwind CSS, utilizing Framer Motion for cinematic physics-based animations, fluid scroll-driven transitions, and real-time guest RSVP state handling.",
+    highlights: [
+      "Interactive online RSVP with instant guest attendance confirmation & response tracking",
+      "Live wedding countdown timer synchronizing event milestones in real time",
+      "Cinematic wedding cover screen with romantic ambient visuals and audio controls",
+      "Animated flower petals with fluid physics and silky smooth scroll navigation",
+      "Wedding story and ceremony details with Google Maps location integration",
+      "Fully responsive mobile and desktop experience with premium olive-green and gold theme",
+    ],
+    role: "Lead Frontend & Creative Engineer",
+    liveUrl: "https://github.com/dinidu",
+    sourceUrl: "https://github.com/dinidu",
+  },
 ];
 
 export const skillPillars = [
