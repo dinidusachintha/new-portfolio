@@ -365,7 +365,7 @@ export const projects: Project[] = [
       "Smooth animations, newsletter subscription modal, and warm chili-orange aesthetic",
     ],
     role: "Web Developer · E-Commerce",
-    liveUrl: "https://github.com/dinidusachintha/spicy-selling-site",
+    liveUrl: "https://ceylonredspice.netlify.app/",
     sourceUrl: "https://github.com/dinidusachintha/spicy-selling-site",
   },
 ];
