@@ -11,7 +11,7 @@ import { asset, experience, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
 
 export default function ExperienceTimeline() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);

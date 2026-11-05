@@ -390,7 +390,18 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("");
   const [workReady, setWorkReady] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+
+  // Check if returning visitor who previously visited the site
+  const [isReturningVisitor] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("portfolio_has_visited") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const [loaded, setLoaded] = useState(() => isReturningVisitor);
   const [scrollPercent, setScrollPercent] = useState(0);
 
   const handleOpenProject = (proj: Project, tab: "demo" | "arch" = "demo") => {
@@ -445,10 +456,51 @@ export default function App() {
     }
   };
 
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [siteReady, setSiteReady] = useState(false);
+  // Direct show hero section: lock scroll to top on visit/revisit and prevent browser auto-scroll restoration
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    // Direct show hero section at the top
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+    // Clear section anchor hashes on entry/revisit so browser never scrolls down away from hero section
+    if (window.location.hash && !window.location.hash.startsWith("#/blog")) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+
+    const handleBeforeUnload = () => {
+      // Reset scroll position on leave so reopening direct shows hero section
+      window.scrollTo(0, 0);
+    };
+
+    const handlePageShow = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      lenis.current?.scrollTo(0, { immediate: true });
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, []);
+
+  const [loadingProgress, setLoadingProgress] = useState(() => (isReturningVisitor ? 100 : 0));
+  const [siteReady, setSiteReady] = useState(() => isReturningVisitor);
 
   useEffect(() => {
+    // If user already visited before, skip the preloader directly to show hero section immediately
+    if (isReturningVisitor) {
+      setLoadingProgress(100);
+      setSiteReady(true);
+      setLoaded(true);
+      return;
+    }
+
     let current = 0;
     const interval = setInterval(() => {
       current += Math.floor(Math.random() * 24) + 22;
@@ -459,6 +511,11 @@ export default function App() {
         setTimeout(() => {
           setSiteReady(true);
           setLoaded(true);
+          try {
+            localStorage.setItem("portfolio_has_visited", "true");
+          } catch {
+            // Storage access fallback
+          }
         }, 140);
       } else {
         setLoadingProgress(current);
@@ -466,7 +523,7 @@ export default function App() {
     }, 45);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isReturningVisitor]);
 
   useEffect(() => {
     let frame = 0;
@@ -628,43 +685,45 @@ export default function App() {
 
   return (
     <div className={`site-shell ${loaded ? "is-loaded" : ""}`}>
-      {/* Luxury Cinematic Site Preloader with Subtle Floral Emblem */}
-      <div
-        className={`site-preloader ${siteReady ? "is-complete" : ""}`}
-        aria-hidden={siteReady}
-      >
-        <div className="preloader-content text-center">
-          <div className="preloader-floral-halo mb-4 flex items-center justify-center relative" aria-hidden="true">
-            <div className="p-3 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.7)]">
-              <img
-                src={asset("assets/images/ds-logo.png")}
-                alt="DS Emblem"
-                className="w-14 h-14 object-contain animate-pulse"
-                style={{
-                  filter: "url(#ds-logo-sharp) contrast(1.25) brightness(1.06) drop-shadow(0 4px 10px rgba(0,0,0,0.5))",
-                  imageRendering: "-webkit-optimize-contrast",
-                }}
+      {/* Luxury Cinematic Site Preloader with Subtle Floral Emblem - only displayed on 1st visit */}
+      {!isReturningVisitor && (
+        <div
+          className={`site-preloader ${siteReady ? "is-complete" : ""}`}
+          aria-hidden={siteReady}
+        >
+          <div className="preloader-content text-center">
+            <div className="preloader-floral-halo mb-4 flex items-center justify-center relative" aria-hidden="true">
+              <div className="p-3 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.7)]">
+                <img
+                  src={asset("assets/images/ds-logo.png")}
+                  alt="DS Emblem"
+                  className="w-14 h-14 object-contain animate-pulse"
+                  style={{
+                    filter: "url(#ds-logo-sharp) contrast(1.25) brightness(1.06) drop-shadow(0 4px 10px rgba(0,0,0,0.5))",
+                    imageRendering: "-webkit-optimize-contrast",
+                  }}
+                />
+              </div>
+            </div>
+            <div className="preloader-brand flex items-center justify-center gap-2 mb-4">
+              <span className="brand-dot-pulse" />
+              <span className="font-unbounded font-extrabold text-2xl sm:text-3xl tracking-tight text-white">
+                Dinidu<span className="text-violet-400">.</span>
+              </span>
+            </div>
+            <div className="preloader-bar-wrap mx-auto">
+              <div
+                className="preloader-bar-fill"
+                style={{ width: `${loadingProgress}%` }}
               />
             </div>
-          </div>
-          <div className="preloader-brand flex items-center justify-center gap-2 mb-4">
-            <span className="brand-dot-pulse" />
-            <span className="font-unbounded font-extrabold text-2xl sm:text-3xl tracking-tight text-white">
-              Dinidu<span className="text-violet-400">.</span>
-            </span>
-          </div>
-          <div className="preloader-bar-wrap mx-auto">
-            <div
-              className="preloader-bar-fill"
-              style={{ width: `${loadingProgress}%` }}
-            />
-          </div>
-          <div className="preloader-meta font-mono text-[10.5px] text-gray-400 flex items-center justify-between w-full max-w-[260px] mx-auto mt-3">
-            <span>INITIALIZING ARCHITECTURE</span>
-            <span className="text-violet-400 font-bold">{loadingProgress}%</span>
+            <div className="preloader-meta font-mono text-[10.5px] text-gray-400 flex items-center justify-between w-full max-w-[260px] mx-auto mt-3">
+              <span>INITIALIZING ARCHITECTURE</span>
+              <span className="text-violet-400 font-bold">{loadingProgress}%</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="ambient-spotlight" aria-hidden="true" />
       <a className="skip-link" href="#main">
