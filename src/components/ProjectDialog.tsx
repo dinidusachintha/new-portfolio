@@ -83,6 +83,12 @@ export default function ProjectDialog({
     { id: "#89419", txCount: 1940, hash: "0x72dc...f901", verified: true, time: "4s ago" },
   ]);
 
+  // 8. Waterboard Inventory Management
+  const [selectedInventoryItem, setSelectedInventoryItem] = useState("PVC Pressure Pipe 50mm");
+  const [selectedSection, setSelectedSection] = useState("Operations & Maintenance Depot");
+  const [inventoryDispatched, setInventoryDispatched] = useState(false);
+  const [inventoryDispatching, setInventoryDispatching] = useState(false);
+
   // Keep Nexus price ticking for realism
   useEffect(() => {
     if (!project || project.id !== "nexus" || activeTab !== "demo") return;
@@ -108,6 +114,8 @@ export default function ProjectDialog({
       setSentinelRecovered(false);
       setOmniProcessing(false);
       setOmniProgress(100);
+      setInventoryDispatched(false);
+      setInventoryDispatching(false);
       if (!dialog.open) {
         try {
           dialog.showModal();
@@ -137,6 +145,14 @@ export default function ProjectDialog({
   const handleQuizAnswer = (idx: number) => {
     setQuizSelected(idx);
     setQuizPassed(idx === 1);
+  };
+
+  const handleDispatchInventory = () => {
+    setInventoryDispatching(true);
+    setTimeout(() => {
+      setInventoryDispatching(false);
+      setInventoryDispatched(true);
+    }, 500);
   };
 
   // Find current project index and architecture nodes for navigation & diagram
@@ -1015,6 +1031,131 @@ export default function ProjectDialog({
                           </div>
                         ))}
                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. WATERBOARD INVENTORY MANAGEMENT INTERACTIVE SIMULATOR */}
+                {project.id === "waterboard-inventory" && (
+                  <div className="p-6 sm:p-8 space-y-6 font-sans">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                      <div>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
+                          NWSDB WATER UTILITY · INVENTORY &amp; STOCK CONTROL
+                        </span>
+                        <h4 className="text-xl font-bold text-white">
+                          Material Rebalance, Stock Allocation &amp; PDF Audit
+                        </h4>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-semibold flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                        MongoDB &amp; jsPDF Engine Active
+                      </span>
+                    </div>
+
+                    {/* Step 1: Material Item Choice */}
+                    <div>
+                      <label className="text-xs font-mono text-gray-400 block mb-2">
+                        1. SELECT WATERWORKS MATERIAL ITEM
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {[
+                          { name: "PVC Pressure Pipe 50mm", code: "WBD-PIP-050", stock: "420 Units", status: "In Stock" },
+                          { name: "Brass Water Meter 15mm", code: "WBD-MTR-015", stock: "35 Units", status: "Low Stock Alert" },
+                          { name: "Sluice Gate Valve 100mm", code: "WBD-VLV-100", stock: "18 Units", status: "In Stock" },
+                        ].map((item) => (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onClick={() => {
+                              setSelectedInventoryItem(item.name);
+                              setInventoryDispatched(false);
+                            }}
+                            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                              selectedInventoryItem === item.name
+                                ? "bg-cyan-950/40 border-cyan-500 text-white"
+                                : "bg-white/[0.02] border-white/10 text-gray-300 hover:border-white/30"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs truncate">{item.name}</span>
+                              <span
+                                className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                                  item.status.includes("Low")
+                                    ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                                    : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                }`}
+                              >
+                                {item.stock}
+                              </span>
+                            </div>
+                            <span className="text-[11px] text-gray-400 block mt-1 font-mono">{item.code}</span>
+                            <span className="text-[10px] text-cyan-300 font-mono block mt-0.5">{item.status}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Step 2: Utility Section Assignment */}
+                    <div>
+                      <label className="text-xs font-mono text-gray-400 block mb-2">
+                        2. ASSIGN TO WATER SUPPLY SECTION / DEPOT
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        {[
+                          "Operations & Maintenance Depot",
+                          "Distribution Network Unit",
+                          "Water Quality & Treatment Section",
+                        ].map((sec) => (
+                          <button
+                            key={sec}
+                            type="button"
+                            onClick={() => {
+                              setSelectedSection(sec);
+                              setInventoryDispatched(false);
+                            }}
+                            className={`py-2 px-3 rounded-lg text-xs font-mono text-center border transition-all cursor-pointer truncate ${
+                              selectedSection === sec
+                                ? "bg-white text-black font-bold border-white"
+                                : "bg-black/40 border-white/10 text-gray-300 hover:border-white/30"
+                            }`}
+                          >
+                            {sec}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Dispatch & Report Action */}
+                    <div className="pt-2">
+                      {!inventoryDispatched ? (
+                        <button
+                          type="button"
+                          onClick={handleDispatchInventory}
+                          disabled={inventoryDispatching}
+                          className="w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-sm font-mono flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                        >
+                          {inventoryDispatching ? (
+                            <span>Generating jsPDF Stock Manifest &amp; Updating MongoDB...</span>
+                          ) : (
+                            <>
+                              <Zap size={16} />
+                              <span>Record Stock Movement &amp; Generate PDF Audit</span>
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-300 text-xs font-mono space-y-1">
+                          <div className="flex items-center gap-2 font-bold text-sm text-white">
+                            <Check size={16} className="text-cyan-400" />
+                            <span>Stock Movement Recorded &amp; Audit PDF Exported!</span>
+                          </div>
+                          <div>Section: {selectedSection} · Material: {selectedInventoryItem}</div>
+                          <div className="text-[11px] text-gray-400">
+                            Status: MongoDB Synced (14ms) · PDF Manifest Built via jsPDF-AutoTable · Low Stock Alert: Monitored
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
