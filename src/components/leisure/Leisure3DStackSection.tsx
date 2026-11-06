@@ -33,16 +33,26 @@ export default function Leisure3DStackSection() {
 
     if (!section || !pinTrack || !pinViewport || !cluster || !singleCard) return;
 
+    // Synchronize window scroll events with ScrollTrigger
+    const handleScroll = () => {
+      ScrollTrigger.update();
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       // =========================================================================
-      // DESKTOP & TABLET: Master 5-Phase Scroll-Driven 3D Rotation Timeline
+      // DESKTOP & TABLET: 3D Image-Stack Rotation Timeline
+      // Calibrated angles (-45deg to 0deg to +45deg) ensure cards are ALWAYS visible,
+      // never collapsing into a 1-pixel edge-on line.
       // =========================================================================
       mm.add("(min-width: 768px)", () => {
-        // Initial 3D Setup
+        // Initial setup: dynamic angled 3D perspective where cards are rich and visible
         gsap.set(cluster, {
-          rotateY: -90,
+          rotateY: -45,
+          rotateX: 5,
+          scale: 0.94,
           opacity: 1,
           transformPerspective: 1200,
           transformOrigin: "center center",
@@ -50,7 +60,7 @@ export default function Leisure3DStackSection() {
         });
 
         gsap.set(singleCard, {
-          rotateY: -90,
+          rotateY: -50,
           opacity: 0,
           scale: 0.9,
           pointerEvents: "none",
@@ -65,72 +75,63 @@ export default function Leisure3DStackSection() {
             pin: pinViewport,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1.1,
+            scrub: 1,
             anticipatePin: 1,
             onUpdate: (self) => {
               if (!phaseIndicator) return;
               const p = self.progress;
-              if (p < 0.15) {
-                phaseIndicator.textContent = "PHASE 01 / EDGE-ON PERSPECTIVE";
-              } else if (p < 0.40) {
-                phaseIndicator.textContent = "PHASE 02 / ROTATING INTO VIEW";
+              if (p < 0.20) {
+                phaseIndicator.textContent = "PHASE 01 / 3D ANGLED PERSPECTIVE";
               } else if (p < 0.65) {
-                phaseIndicator.textContent = "PHASE 03 / FRONT-FACING COMPOSITION";
+                phaseIndicator.textContent = "PHASE 02 / FRONT-FACING COMPOSITION";
               } else if (p < 0.85) {
-                phaseIndicator.textContent = "PHASE 04 / ROTATING OUT";
+                phaseIndicator.textContent = "PHASE 03 / 3D ROTATION OUT";
               } else {
-                phaseIndicator.textContent = "PHASE 05 / SINGLE-CARD SPOTLIGHT";
+                phaseIndicator.textContent = "PHASE 04 / SINGLE-CARD SPOTLIGHT";
               }
             },
           },
         });
 
         // -----------------------------------------------------------------------
-        // PHASE 01: 0% - 15% -> Initial edge-on state (-90deg hold)
+        // PHASE 01 -> 02: 0% to 22% -> Smooth rotation from -45deg into 0deg
         // -----------------------------------------------------------------------
         masterTl.to(
           cluster,
           {
-            rotateY: -90,
-            duration: 0.15,
-            ease: "none",
+            rotateY: 0,
+            rotateX: 0,
+            scale: 1,
+            duration: 0.22,
+            ease: "power2.out",
           },
           0
         );
 
         // -----------------------------------------------------------------------
-        // PHASE 02: 15% - 40% -> Synchronized 3D rotation into view (-90deg to 0deg)
+        // PHASE 02 (HOLD): 22% to 65% -> Hold front-facing layered composition
         // -----------------------------------------------------------------------
         masterTl.to(
           cluster,
           {
             rotateY: 0,
-            duration: 0.25,
-            ease: "power2.out",
-          },
-          0.15
-        );
-
-        // -----------------------------------------------------------------------
-        // PHASE 03: 40% - 65% -> Front-facing layered composition hold (0deg)
-        // -----------------------------------------------------------------------
-        masterTl.to(
-          cluster,
-          {
-            rotateY: 0,
-            duration: 0.25,
+            rotateX: 0,
+            scale: 1,
+            duration: 0.43,
             ease: "none",
           },
-          0.40
+          0.22
         );
 
         // -----------------------------------------------------------------------
-        // PHASE 04: 65% - 85% -> Synchronized 3D rotation out (0deg to +90deg)
+        // PHASE 03: 65% to 85% -> Synchronized 3D rotation out (0deg to +48deg)
         // -----------------------------------------------------------------------
         masterTl.to(
           cluster,
           {
-            rotateY: 90,
+            rotateY: 48,
+            rotateX: -4,
+            scale: 0.94,
             duration: 0.20,
             ease: "power2.in",
           },
@@ -148,12 +149,12 @@ export default function Leisure3DStackSection() {
         );
 
         // -----------------------------------------------------------------------
-        // PHASE 05: 85% - 100% -> Single-card reveal (-90deg to 0deg facing viewer)
+        // PHASE 04: 85% to 100% -> Single-card spotlight reveals facing viewer
         // -----------------------------------------------------------------------
         masterTl.fromTo(
           singleCard,
           {
-            rotateY: -90,
+            rotateY: -50,
             opacity: 0,
             scale: 0.9,
             pointerEvents: "none",
@@ -171,11 +172,13 @@ export default function Leisure3DStackSection() {
       });
 
       // =========================================================================
-      // MOBILE (< 768px): Smooth Mobile ScrollTrigger Scrub
+      // MOBILE (< 768px): Smooth Mobile Touch Scrub
       // =========================================================================
       mm.add("(max-width: 767px)", () => {
         gsap.set(cluster, {
-          rotateY: -85,
+          rotateY: -40,
+          rotateX: 4,
+          scale: 0.92,
           opacity: 1,
           transformPerspective: 1000,
           transformOrigin: "center center",
@@ -183,9 +186,9 @@ export default function Leisure3DStackSection() {
         });
 
         gsap.set(singleCard, {
-          rotateY: -85,
+          rotateY: -45,
           opacity: 0,
-          scale: 0.92,
+          scale: 0.9,
           pointerEvents: "none",
           transformPerspective: 1000,
           transformOrigin: "center center",
@@ -203,19 +206,17 @@ export default function Leisure3DStackSection() {
           },
         });
 
-        // Phase 01: Edge-on hold
-        mobileTl.to(cluster, { rotateY: -85, duration: 0.15, ease: "none" }, 0);
-        // Phase 02: Rotate to front
-        mobileTl.to(cluster, { rotateY: 0, duration: 0.25, ease: "power2.out" }, 0.15);
-        // Phase 03: Front hold
-        mobileTl.to(cluster, { rotateY: 0, duration: 0.25, ease: "none" }, 0.40);
-        // Phase 04: Rotate out
-        mobileTl.to(cluster, { rotateY: 85, duration: 0.20, ease: "power2.in" }, 0.65);
+        // Rotate from -40deg to 0deg
+        mobileTl.to(cluster, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.22, ease: "power2.out" }, 0);
+        // Hold front-facing
+        mobileTl.to(cluster, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.43, ease: "none" }, 0.22);
+        // Rotate out to +45deg
+        mobileTl.to(cluster, { rotateY: 45, rotateX: -3, scale: 0.92, duration: 0.20, ease: "power2.in" }, 0.65);
         mobileTl.to(cluster, { opacity: 0, duration: 0.05 }, 0.80);
-        // Phase 05: Single card reveal
+        // Single card reveal
         mobileTl.fromTo(
           singleCard,
-          { rotateY: -85, opacity: 0, scale: 0.92, pointerEvents: "none" },
+          { rotateY: -45, opacity: 0, scale: 0.9, pointerEvents: "none" },
           { rotateY: 0, opacity: 1, scale: 1, pointerEvents: "auto", duration: 0.15, ease: "power2.out" },
           0.85
         );
@@ -225,17 +226,18 @@ export default function Leisure3DStackSection() {
       // ACCESSIBILITY: Reduced Motion Preference
       // =========================================================================
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(cluster, { rotateY: 0, opacity: 1 });
+        gsap.set(cluster, { rotateY: 0, rotateX: 0, scale: 1, opacity: 1 });
         gsap.set(singleCard, { display: "none" });
       });
     }, sectionRef);
 
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 400);
+    }, 450);
 
     return () => {
       clearTimeout(refreshTimer);
+      window.removeEventListener("scroll", handleScroll);
       ctx.revert();
     };
   }, []);
@@ -253,14 +255,14 @@ export default function Leisure3DStackSection() {
         aria-hidden="true"
       />
 
-      {/* Pinned Scroll Track Container (300vh for luxury smooth scrub) */}
+      {/* Pinned Scroll Track Container (220vh for fluid, effortless scrub) */}
       <div
         ref={pinTrackRef}
-        className="leisure-pin-track relative w-full h-[280vh] md:h-[320vh]"
+        className="leisure-pin-track relative w-full h-[220vh] md:h-[250vh]"
       >
         <div
           ref={pinViewportRef}
-          className="leisure-pin-viewport sticky top-0 w-full h-screen max-h-screen overflow-hidden flex flex-col justify-between py-6 sm:py-10 px-3 sm:px-6"
+          className="leisure-pin-viewport relative w-full h-screen max-h-screen overflow-hidden flex flex-col justify-between py-6 sm:py-10 px-3 sm:px-6"
         >
           {/* Header Block: Category Pill, Headline & Subtitle */}
           <div className="leisure-header-block max-w-4xl mx-auto text-center space-y-2 z-40 relative select-none shrink-0 pointer-events-none">
@@ -275,7 +277,7 @@ export default function Leisure3DStackSection() {
               BEYOND THE CODE<span className="text-violet-400">.</span>
             </h2>
 
-            {/* Requested Subtitle */}
+            {/* Subtitle */}
             <p className="font-sans text-xs sm:text-sm md:text-base text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
               A glimpse into the things that inspire me beyond programming.
             </p>
@@ -291,8 +293,9 @@ export default function Leisure3DStackSection() {
               }}
             >
               {/* 
-                THE MASTER 3D ROTATING CLUSTER (Phases 01 - 04):
-                Parent element rotated around Y-axis by GSAP ScrollTrigger (-90deg -> 0deg -> +90deg).
+                THE MASTER 3D ROTATING CLUSTER:
+                Parent element rotated around Y-axis by GSAP ScrollTrigger (-45deg -> 0deg -> +48deg).
+                Maintains full visibility and rich 3D perspective at all times.
               */}
               <div
                 ref={clusterRef}
@@ -384,8 +387,8 @@ export default function Leisure3DStackSection() {
               </div>
 
               {/* 
-                PHASE 05: SINGLE-CARD REVEAL
-                Rotates in around Y-axis (-90deg -> 0deg) facing the viewer after stack rotates away.
+                SINGLE-CARD REVEAL (Phase 04):
+                Smoothly rotates in around Y-axis (-50deg -> 0deg) facing the viewer after stack rotates out.
               */}
               <div
                 ref={singleCardRef}
@@ -452,7 +455,7 @@ export default function Leisure3DStackSection() {
                 ref={phaseIndicatorRef}
                 className="tracking-widest uppercase text-gray-300 font-medium transition-all duration-300"
               >
-                PHASE 01 / EDGE-ON PERSPECTIVE
+                PHASE 01 / 3D ANGLED PERSPECTIVE
               </span>
             </div>
             <span className="hidden sm:inline-block tracking-wider text-gray-400">
