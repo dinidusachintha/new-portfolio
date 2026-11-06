@@ -1,285 +1,465 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import LeisureIntro from "./LeisureIntro";
-import LeisureActivityPanel from "./LeisureActivityPanel";
-import LeisureProgressIndicator from "./LeisureProgressIndicator";
-import { leisureActivities } from "./leisureData";
+import { Compass, Sparkles } from "lucide-react";
+import LeisureImageStack from "./LeisureImageStack";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function LeisureSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const scrollTrackRef = useRef<HTMLDivElement>(null);
-  const stagePinRef = useRef<HTMLDivElement>(null);
-  const frameCardRef = useRef<HTMLDivElement>(null);
-  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pinTrackRef = useRef<HTMLDivElement>(null);
+  const pinViewportRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const headingTextRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  // Card element refs
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const carGamingRef = useRef<HTMLDivElement>(null);
+  const netflixRef = useRef<HTMLDivElement>(null);
+  const spotifyRef = useRef<HTMLDivElement>(null);
+  const travelRef = useRef<HTMLDivElement>(null);
+  const codingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const track = scrollTrackRef.current;
-    const stage = stagePinRef.current;
-    const frame = frameCardRef.current;
+    const pinTrack = pinTrackRef.current;
+    const pinViewport = pinViewportRef.current;
+    const heading = headingTextRef.current;
+    const desc = descRef.current;
 
-    if (!section || !track || !stage || !frame) return;
+    const portrait = portraitRef.current;
+    const carGaming = carGamingRef.current;
+    const netflix = netflixRef.current;
+    const spotify = spotifyRef.current;
+    const travel = travelRef.current;
+    const coding = codingRef.current;
 
-    // Use GSAP Context for 100% clean React 18/19 lifecycle cleanup
+    if (!section || !pinTrack || !pinViewport) return;
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       // =========================================================================
-      // DESKTOP & TABLET: Pinned Cinematic Campione-Style Scroll Experience
+      // DESKTOP & TABLET (min-width: 768px): Pinned Cinematic Staged Animation
       // =========================================================================
       mm.add("(min-width: 768px)", () => {
-        // Initial States for Panels
-        // Panel 0 starts inside framed card
-        gsap.set(frame, {
-          clipPath: "inset(8% 8% 8% 8% round 32px)",
-          scale: 0.9,
-          transformOrigin: "center center",
-        });
+        // STAGE 01: Entrance text initial state
+        if (heading) {
+          gsap.set(heading, { yPercent: 100, opacity: 0 });
+        }
+        if (desc) {
+          gsap.set(desc, { y: 20, opacity: 0 });
+        }
 
-        // Panels 1 through 4 start clipped from bottom
-        panelRefs.current.forEach((panel, idx) => {
-          if (!panel) return;
-          if (idx === 0) {
-            gsap.set(panel, { clipPath: "none", zIndex: 1 });
-            const title = panel.querySelector(".leisure-panel-title");
-            const desc = panel.querySelector(".leisure-panel-desc");
-            const pill = panel.querySelector(".leisure-panel-category-pill");
-            if (title) gsap.set(title, { yPercent: 40, opacity: 0.6 });
-            if (desc) gsap.set(desc, { opacity: 0.6, y: 15 });
-            if (pill) gsap.set(pill, { y: 15, opacity: 0.7 });
-          } else {
-            gsap.set(panel, {
-              clipPath: "inset(100% 0% 0% 0%)",
-              zIndex: idx + 2,
+        // STAGE 02: Initial offscreen/dispersed positions for image cards
+        if (carGaming) {
+          gsap.set(carGaming, {
+            xPercent: -140,
+            yPercent: -20,
+            rotate: -14,
+            scale: 0.82,
+            opacity: 0,
+          });
+        }
+        if (netflix) {
+          gsap.set(netflix, {
+            xPercent: 140,
+            yPercent: -20,
+            rotate: 14,
+            scale: 0.82,
+            opacity: 0,
+          });
+        }
+        if (spotify) {
+          gsap.set(spotify, {
+            yPercent: -150,
+            scale: 0.85,
+            opacity: 0,
+          });
+        }
+        if (travel) {
+          gsap.set(travel, {
+            xPercent: -120,
+            yPercent: 130,
+            rotate: -10,
+            scale: 0.82,
+            opacity: 0,
+          });
+        }
+        if (coding) {
+          gsap.set(coding, {
+            xPercent: 120,
+            yPercent: 130,
+            rotate: 10,
+            scale: 0.82,
+            opacity: 0,
+          });
+        }
+        if (portrait) {
+          gsap.set(portrait, {
+            scale: 0.72,
+            opacity: 0,
+            clipPath: "inset(16% 16% 16% 16% round 32px)",
+          });
+        }
+
+        // Section Heading Scroll Reveal Trigger
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top 80%",
+          onEnter: () => {
+            gsap.to(heading, {
+              yPercent: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power3.out",
             });
-            const img = panel.querySelector(".leisure-panel-img");
-            const title = panel.querySelector(".leisure-panel-title");
-            const desc = panel.querySelector(".leisure-panel-desc");
-            const pill = panel.querySelector(".leisure-panel-category-pill");
-            const watermark = panel.querySelector(".leisure-watermark-number");
-
-            if (img) gsap.set(img, { scale: 1.18, yPercent: -8 });
-            if (title) gsap.set(title, { yPercent: 100, opacity: 0 });
-            if (desc) gsap.set(desc, { y: 25, opacity: 0 });
-            if (pill) gsap.set(pill, { y: 15, opacity: 0 });
-            if (watermark) gsap.set(watermark, { yPercent: 30, opacity: 0 });
-          }
+            gsap.to(desc, {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              delay: 0.2,
+              ease: "power3.out",
+            });
+          },
         });
 
         // Main Pinned Scrub Timeline
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: track,
-            pin: stage,
+            trigger: pinTrack,
+            pin: pinViewport,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1.1,
+            scrub: 1.2,
             anticipatePin: 1,
-            onUpdate: (self) => {
-              const p = self.progress;
-              setScrollProgress(p);
-
-              // Update active index based on scrub position across 5 panels
-              if (p < 0.22) {
-                setCurrentIndex(0);
-              } else if (p < 0.42) {
-                setCurrentIndex(1);
-              } else if (p < 0.62) {
-                setCurrentIndex(2);
-              } else if (p < 0.82) {
-                setCurrentIndex(3);
-              } else {
-                setCurrentIndex(4);
-              }
-            },
           },
         });
 
         // -----------------------------------------------------------------------
-        // PHASE B: Expansion of First Card (Car Gaming) to Full Viewport
+        // STAGE 02: Staggered Fly-In into Overlapping Composition
         // -----------------------------------------------------------------------
-        const panel0 = panelRefs.current[0];
-        const panel0Img = panel0?.querySelector(".leisure-panel-img");
-        const panel0Title = panel0?.querySelector(".leisure-panel-title");
-        const panel0Desc = panel0?.querySelector(".leisure-panel-desc");
-        const panel0Pill = panel0?.querySelector(".leisure-panel-category-pill");
-
-        tl.to(
-          frame,
-          {
-            clipPath: "inset(0% 0% 0% 0% round 0px)",
-            scale: 1,
-            duration: 1.2,
-            ease: "power2.inOut",
-          },
-          0
-        );
-
-        if (panel0Img) {
-          tl.to(panel0Img, { scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 0);
-        }
-        if (panel0Title) {
-          tl.to(panel0Title, { yPercent: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, 0.2);
-        }
-        if (panel0Desc) {
-          tl.to(panel0Desc, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.3);
-        }
-        if (panel0Pill) {
-          tl.to(panel0Pill, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.15);
-        }
-
-        // Brief hold on Panel 0
-        tl.to({}, { duration: 0.4 });
-
-        // -----------------------------------------------------------------------
-        // PHASE C: Sequential Cinematic Clip-Path Transitions (01 -> 05)
-        // -----------------------------------------------------------------------
-        for (let i = 1; i < leisureActivities.length; i++) {
-          const prevPanel = panelRefs.current[i - 1];
-          const currPanel = panelRefs.current[i];
-          if (!currPanel) continue;
-
-          const prevImg = prevPanel?.querySelector(".leisure-panel-img");
-          const prevTitle = prevPanel?.querySelector(".leisure-panel-title");
-          const prevDesc = prevPanel?.querySelector(".leisure-panel-desc");
-          const prevPill = prevPanel?.querySelector(".leisure-panel-category-pill");
-
-          const currImg = currPanel.querySelector(".leisure-panel-img");
-          const currTitle = currPanel.querySelector(".leisure-panel-title");
-          const currDesc = currPanel.querySelector(".leisure-panel-desc");
-          const currPill = currPanel.querySelector(".leisure-panel-category-pill");
-          const currWatermark = currPanel.querySelector(".leisure-watermark-number");
-
-          const stepStartTime = tl.duration();
-
-          // Animate outgoing panel text & image scale
-          if (prevImg) {
-            tl.to(prevImg, { scale: 1.14, duration: 1.2, ease: "power2.inOut" }, stepStartTime);
-          }
-          if (prevTitle) {
-            tl.to(prevTitle, { yPercent: -50, opacity: 0, duration: 0.6, ease: "power2.in" }, stepStartTime);
-          }
-          if (prevDesc) {
-            tl.to(prevDesc, { y: -20, opacity: 0, duration: 0.5, ease: "power2.in" }, stepStartTime);
-          }
-          if (prevPill) {
-            tl.to(prevPill, { opacity: 0, duration: 0.4 }, stepStartTime);
-          }
-
-          // Incoming Panel reveals via full-screen clip-path curtain wipe
+        // 1. Car Gaming flies in from upper left
+        if (carGaming) {
           tl.to(
-            currPanel,
+            carGaming,
             {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.2,
-              ease: "power3.inOut",
+              xPercent: 0,
+              yPercent: 0,
+              rotate: -4,
+              scale: 1,
+              opacity: 1,
+              duration: 1.4,
+              ease: "power3.out",
             },
-            stepStartTime
+            0
           );
-
-          // Parallax settling of incoming image
-          if (currImg) {
-            tl.to(
-              currImg,
-              {
-                scale: 1.05,
-                yPercent: 0,
-                duration: 1.2,
-                ease: "power2.out",
-              },
-              stepStartTime
-            );
-          }
-
-          // Masked Typography reveals for incoming panel
-          if (currTitle) {
-            tl.to(
-              currTitle,
-              {
-                yPercent: 0,
-                opacity: 1,
-                duration: 0.85,
-                ease: "power3.out",
-              },
-              stepStartTime + 0.35
-            );
-          }
-          if (currDesc) {
-            tl.to(
-              currDesc,
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.75,
-                ease: "power3.out",
-              },
-              stepStartTime + 0.45
-            );
-          }
-          if (currPill) {
-            tl.to(
-              currPill,
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out",
-              },
-              stepStartTime + 0.25
-            );
-          }
-          if (currWatermark) {
-            tl.to(
-              currWatermark,
-              {
-                yPercent: 0,
-                opacity: 1,
-                duration: 0.9,
-                ease: "power2.out",
-              },
-              stepStartTime + 0.3
-            );
-          }
-
-          // Hold period on this panel before transitioning to next
-          tl.to({}, { duration: 0.5 });
         }
 
-        // Final hold on Panel 05 (Coding) before unpinning smoothly
-        tl.to({}, { duration: 0.4 });
+        // 2. Netflix flies in from upper right (slight stagger)
+        if (netflix) {
+          tl.to(
+            netflix,
+            {
+              xPercent: 0,
+              yPercent: 0,
+              rotate: 3.5,
+              scale: 1,
+              opacity: 1,
+              duration: 1.4,
+              ease: "power3.out",
+            },
+            0.15
+          );
+        }
+
+        // 3. Spotify drops down from top center
+        if (spotify) {
+          tl.to(
+            spotify,
+            {
+              yPercent: 0,
+              rotate: -1.5,
+              scale: 1,
+              opacity: 1,
+              duration: 1.3,
+              ease: "power3.out",
+            },
+            0.25
+          );
+        }
+
+        // 4. Travel sweeps in from bottom left
+        if (travel) {
+          tl.to(
+            travel,
+            {
+              xPercent: 0,
+              yPercent: 0,
+              rotate: 2.5,
+              scale: 1,
+              opacity: 1,
+              duration: 1.4,
+              ease: "power3.out",
+            },
+            0.35
+          );
+        }
+
+        // 5. Coding sweeps in from bottom right
+        if (coding) {
+          tl.to(
+            coding,
+            {
+              xPercent: 0,
+              yPercent: 0,
+              rotate: -3,
+              scale: 1,
+              opacity: 1,
+              duration: 1.4,
+              ease: "power3.out",
+            },
+            0.45
+          );
+        }
+
+        // 6. Central Portrait arrives last and expands prominently above all
+        if (portrait) {
+          tl.to(
+            portrait,
+            {
+              scale: 1,
+              opacity: 1,
+              clipPath: "inset(0% 0% 0% 0% round 24px)",
+              duration: 1.6,
+              ease: "power3.out",
+            },
+            0.7
+          );
+        }
+
+        // -----------------------------------------------------------------------
+        // STAGE 03: Pinned Composition Layered Parallax Hold
+        // -----------------------------------------------------------------------
+        // Multi-layered depth parallax while user scrubs through the settled composition
+        if (carGaming) {
+          tl.to(
+            carGaming,
+            {
+              y: -30,
+              x: -12,
+              rotate: -5,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+        if (netflix) {
+          tl.to(
+            netflix,
+            {
+              y: -24,
+              x: 12,
+              rotate: 4.5,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+        if (spotify) {
+          tl.to(
+            spotify,
+            {
+              y: -36,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+        if (travel) {
+          tl.to(
+            travel,
+            {
+              y: 22,
+              x: -10,
+              rotate: 3.5,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+        if (coding) {
+          tl.to(
+            coding,
+            {
+              y: 26,
+              x: 10,
+              rotate: -4,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+        if (portrait) {
+          tl.to(
+            portrait,
+            {
+              y: -14,
+              scale: 1.02,
+              duration: 1.6,
+              ease: "none",
+            },
+            2.3
+          );
+        }
+
+        // -----------------------------------------------------------------------
+        // STAGE 05: Cinematic Exit Animation (Outward Dispersion & Pin Release)
+        // -----------------------------------------------------------------------
+        if (carGaming) {
+          tl.to(
+            carGaming,
+            {
+              xPercent: -70,
+              yPercent: -40,
+              opacity: 0.15,
+              scale: 0.9,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (netflix) {
+          tl.to(
+            netflix,
+            {
+              xPercent: 70,
+              yPercent: -40,
+              opacity: 0.15,
+              scale: 0.9,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (spotify) {
+          tl.to(
+            spotify,
+            {
+              yPercent: -60,
+              opacity: 0.15,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (travel) {
+          tl.to(
+            travel,
+            {
+              xPercent: -60,
+              yPercent: 60,
+              opacity: 0.15,
+              scale: 0.9,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (coding) {
+          tl.to(
+            coding,
+            {
+              xPercent: 60,
+              yPercent: 60,
+              opacity: 0.15,
+              scale: 0.9,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (portrait) {
+          tl.to(
+            portrait,
+            {
+              scale: 1.06,
+              opacity: 0.35,
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
+        if (headerRef.current) {
+          tl.to(
+            headerRef.current,
+            {
+              opacity: 0.2,
+              y: -25,
+              duration: 0.8,
+              ease: "power2.inOut",
+            },
+            3.9
+          );
+        }
       });
 
       // =========================================================================
-      // MOBILE: Fluid Touch-Optimized Scroll with ScrollTrigger Panels
+      // MOBILE (< 768px): Fluid Responsive Layout without Sticky Traps
       // =========================================================================
       mm.add("(max-width: 767px)", () => {
-        panelRefs.current.forEach((panel) => {
-          if (!panel) return;
-          gsap.set(panel, { clipPath: "none" });
+        // Reset transform positions so cards render cleanly in fluid mobile viewport
+        const elements = [portrait, carGaming, netflix, spotify, travel, coding];
+        elements.forEach((el) => {
+          if (el) {
+            gsap.set(el, {
+              clearProps: "all",
+            });
+          }
+        });
+
+        // Smooth staggered reveal on scroll into view
+        gsap.from(elements.filter(Boolean), {
+          scrollTrigger: {
+            trigger: pinTrack,
+            start: "top 75%",
+          },
+          y: 40,
+          opacity: 0,
+          scale: 0.92,
+          stagger: 0.12,
+          duration: 0.8,
+          ease: "power3.out",
         });
       });
 
       // =========================================================================
-      // REDUCED MOTION ACCESSIBILITY
+      // ACCESSIBILITY: Reduced Motion
       // =========================================================================
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        panelRefs.current.forEach((panel) => {
-          if (!panel) return;
-          gsap.set(panel, { clipPath: "none", opacity: 1 });
+        const elements = [portrait, carGaming, netflix, spotify, travel, coding];
+        elements.forEach((el) => {
+          if (el) gsap.set(el, { clearProps: "all", opacity: 1 });
         });
       });
     }, sectionRef);
 
-    // Refresh ScrollTrigger after assets settle
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 400);
+    }, 450);
 
     return () => {
       clearTimeout(refreshTimer);
@@ -287,95 +467,83 @@ export default function LeisureSection() {
     };
   }, []);
 
-  // Jump to specific activity chapter on indicator click
-  const handleSelectChapter = (targetIndex: number) => {
-    const track = scrollTrackRef.current;
-    if (!track) return;
-
-    const st = ScrollTrigger.getById("leisure-pin-st") || ScrollTrigger.getAll().find((s) => s.trigger === track);
-    if (st) {
-      const stepFraction = targetIndex / (leisureActivities.length - 1);
-      const targetScroll = st.start + (st.end - st.start) * stepFraction;
-      window.scrollTo({ top: targetScroll, behavior: "smooth" });
-    }
-  };
-
   return (
     <section
       ref={sectionRef}
       id="beyond-the-code"
-      className="leisure-section relative bg-[#06070a] text-white overflow-hidden border-t border-white/10"
-      aria-label="Beyond the Code — Leisure & Lifestyle Archive"
+      className="leisure-floating-section relative bg-[#080808] text-white overflow-hidden border-t border-white/10"
+      aria-label="Beyond the Code — Floating Image Composition"
     >
-      {/* Background Atmosphere Spotlight */}
+      {/* Subtle Ambient Radial Lighting */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl h-96 bg-violet-600/10 rounded-full blur-[120px] pointer-events-none"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-5xl h-[500px] bg-violet-600/[0.08] rounded-full blur-[140px] pointer-events-none"
         aria-hidden="true"
       />
 
-      {/* 1. SECTION INTRO (Editorial Heading & Deck) */}
-      <LeisureIntro />
-
-      {/* 2. DESKTOP / TABLET: Pinned Campione Viewport Stage */}
+      {/* Pinned Scroll Track Container */}
       <div
-        ref={scrollTrackRef}
-        className="leisure-scroll-track relative hidden md:block w-full h-[520vh]"
+        ref={pinTrackRef}
+        className="leisure-pin-track relative w-full md:h-[380vh]"
       >
         <div
-          ref={stagePinRef}
-          className="leisure-stage-pin sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-black"
+          ref={pinViewportRef}
+          className="leisure-pin-viewport md:sticky md:top-0 w-full md:h-screen md:max-h-screen overflow-hidden flex flex-col justify-between py-12 md:py-16 px-4 sm:px-8"
         >
-          {/* Framed Card Container that expands on scroll */}
+          {/* Header Block: Main Heading & Deck */}
           <div
-            ref={frameCardRef}
-            className="leisure-frame-card relative w-full h-full overflow-hidden shadow-2xl"
+            ref={headerRef}
+            className="leisure-header-block max-w-4xl mx-auto text-center space-y-3 z-40 relative select-none pointer-events-none mb-6"
           >
-            {leisureActivities.map((activity, idx) => (
-              <LeisureActivityPanel
-                key={activity.id}
-                ref={(el) => {
-                  panelRefs.current[idx] = el;
-                }}
-                activity={activity}
-                index={idx}
-                isActive={currentIndex === idx}
-              />
-            ))}
+            {/* Editorial Category Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/25 text-violet-300 font-mono text-[11px] sm:text-xs font-semibold tracking-widest uppercase">
+              <Compass size={13} className="text-violet-400" />
+              <span>LIFE OUTSIDE WORK / 001</span>
+            </div>
+
+            {/* Masked Upward Reveal Heading */}
+            <div className="overflow-hidden py-1">
+              <h2
+                ref={headingTextRef}
+                className="font-unbounded font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-white uppercase leading-[1.02]"
+              >
+                BEYOND THE CODE<span className="text-violet-400">.</span>
+              </h2>
+            </div>
+
+            {/* Supporting Description */}
+            <p
+              ref={descRef}
+              className="font-sans text-sm sm:text-base md:text-lg text-gray-300 font-light max-w-2xl mx-auto leading-relaxed"
+            >
+              When I&apos;m not building digital experiences, I&apos;m exploring the things that inspire me.
+            </p>
           </div>
 
-          {/* Floating Minimal Progress Indicator (Campione Style) */}
-          <div className="absolute top-6 sm:top-8 right-6 sm:right-10 z-30 pointer-events-none">
-            <LeisureProgressIndicator
-              currentIndex={currentIndex}
-              progress={scrollProgress}
-              total={leisureActivities.length}
-              activities={leisureActivities}
-              onSelectIndex={handleSelectChapter}
+          {/* Central Layered Floating Image Composition */}
+          <div className="flex-1 flex items-center justify-center relative w-full">
+            <LeisureImageStack
+              portraitRef={portraitRef}
+              carGamingRef={carGamingRef}
+              netflixRef={netflixRef}
+              spotifyRef={spotifyRef}
+              travelRef={travelRef}
+              codingRef={codingRef}
             />
           </div>
 
-          {/* Subtle Corner Ambient Label */}
-          <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-10 z-30 pointer-events-none flex items-center gap-2 font-mono text-[11px] text-white/40 uppercase tracking-widest">
-            <span className="w-2 h-2 rounded-full bg-violet-400/80 animate-ping" />
-            <span>CAMPIONE CINEMATIC EXPERIENCE</span>
+          {/* Minimalist Bottom Subtle Legend */}
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between text-xs font-mono text-gray-500 z-30 pointer-events-none pt-4">
+            <div className="flex items-center gap-2">
+              <Sparkles size={12} className="text-violet-400" />
+              <span className="tracking-widest uppercase text-gray-400">
+                SCROLL-DRIVEN COMPOSITION
+              </span>
+            </div>
+            <span className="hidden sm:inline-block tracking-wider text-gray-500">
+              HOVER TO INSPECT ARTIFACTS
+            </span>
           </div>
         </div>
-      </div>
-
-      {/* 3. MOBILE ADAPTIVE VIEW (Fluid Stacked Full-Height Viewports) */}
-      <div className="leisure-mobile-track md:hidden px-4 pb-20 space-y-8">
-        {leisureActivities.map((activity, idx) => (
-          <div
-            key={`mobile-${activity.id}`}
-            className="leisure-mobile-card relative h-[80vh] min-h-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
-          >
-            <LeisureActivityPanel
-              activity={activity}
-              index={idx}
-              isActive={true}
-            />
-          </div>
-        ))}
       </div>
     </section>
   );

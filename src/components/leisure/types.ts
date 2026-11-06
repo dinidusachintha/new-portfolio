@@ -1,12 +1,11 @@
-export interface LeisureActivity {
+export interface LeisureCardData {
   id: string;
-  number: string; // "01" | "02" | "03" | "04" | "05"
-  category: string; // "CAR GAMING" | "NETFLIX" | "SPOTIFY" | "TRAVEL" | "CODING"
+  label: string; // e.g. "01 / CAR GAMING"
+  category: string;
   title: string;
-  description: string;
   image: string;
   alt: string;
   accentColor: string;
-  badge: string;
-  meta: string;
+  defaultRotate?: number;
+  isPortrait?: boolean;
 }

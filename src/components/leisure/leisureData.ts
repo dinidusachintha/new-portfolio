@@ -1,69 +1,72 @@
+import portraitImg from "../../assets/leisure/portrait.jpg";
 import carGamingImg from "../../assets/leisure/car-gaming.jpg";
 import netflixImg from "../../assets/leisure/netflix.jpg";
 import spotifyImg from "../../assets/leisure/spotify.jpg";
 import travelImg from "../../assets/leisure/travel.jpg";
 import codingImg from "../../assets/leisure/coding.jpg";
-import type { LeisureActivity } from "./types";
+import type { LeisureCardData } from "./types";
 
-export const leisureActivities: LeisureActivity[] = [
+export const portraitCard: LeisureCardData = {
+  id: "portrait",
+  label: "PORTRAIT / DINIDU",
+  category: "LIFE & ETHOS",
+  title: "DINIDU SACHINTHA",
+  image: portraitImg,
+  alt: "Dinidu Sachintha portrait in white t-shirt against dark background",
+  accentColor: "#9867ff",
+  defaultRotate: 0,
+  isPortrait: true,
+};
+
+export const floatingLeisureCards: LeisureCardData[] = [
+  {
+    id: "spotify",
+    label: "03 / SPOTIFY",
+    category: "SPOTIFY",
+    title: "LOST IN THE RHYTHM",
+    image: spotifyImg,
+    alt: "Studio headphones and dedicated audio player setup",
+    accentColor: "#10b981",
+    defaultRotate: -1.5,
+  },
   {
     id: "car-gaming",
-    number: "01",
+    label: "01 / CAR GAMING",
     category: "CAR GAMING",
     title: "CHASE THE ADRENALINE",
-    description: "Virtual roads, real excitement.",
     image: carGamingImg,
-    alt: "Premium racing simulator setup with triple monitors, force feedback wheel, and cockpit lighting",
+    alt: "Triple-monitor racing simulator with steering wheel and red cockpit lighting",
     accentColor: "#ef4444",
-    badge: "SIM RACING & PRECISION",
-    meta: "FORCE FEEDBACK · APEX APPRECIATION",
+    defaultRotate: -4,
   },
   {
     id: "netflix",
-    number: "02",
+    label: "02 / NETFLIX",
     category: "NETFLIX",
     title: "STORIES THAT STAY",
-    description: "Getting lost in great films and unforgettable stories.",
     image: netflixImg,
-    alt: "Cinematic home cinema space with warm ambient lighting and movie curation",
+    alt: "Cinematic home theater screen with ambient evening lighting",
     accentColor: "#f59e0b",
-    badge: "CINEMATIC STORYTELLING",
-    meta: "4K CINEMATOGRAPHY · TIMELESS NARRATIVES",
-  },
-  {
-    id: "spotify",
-    number: "03",
-    category: "SPOTIFY",
-    title: "LOST IN THE RHYTHM",
-    description: "Good music, better moods.",
-    image: spotifyImg,
-    alt: "Audiophile studio headphones with high-res music player and synthesizer deck",
-    accentColor: "#10b981",
-    badge: "SONIC IMMERSION",
-    meta: "ACOUSTIC DEPTH · DEEP FLOW STATE",
+    defaultRotate: 3.5,
   },
   {
     id: "travel",
-    number: "04",
+    label: "04 / TRAVEL",
     category: "TRAVEL",
     title: "EXPLORE BEYOND",
-    description: "New places, fresh perspectives, endless memories.",
     image: travelImg,
-    alt: "Cinematic winding open road carving through glacial valleys and mountain landscapes",
+    alt: "Cinematic mountain highway road leading to misty glacier landscape",
     accentColor: "#38bdf8",
-    badge: "DISCOVERY & LANDSCAPES",
-    meta: "ENDLESS HORIZONS · RAW PERSPECTIVE",
+    defaultRotate: 2.5,
   },
   {
     id: "coding",
-    number: "05",
+    label: "05 / CODING",
     category: "CODING",
     title: "ALWAYS CREATING",
-    description: "Sometimes the best ideas happen after hours.",
     image: codingImg,
-    alt: "Moody developer workstation at night with glowing code editor and warm desk lamp",
+    alt: "Developer workstation at night with glowing code editor on wide monitor",
     accentColor: "#a855f7",
-    badge: "CREATIVE ENGINEERING",
-    meta: "AFTER-HOURS EXPERIMENTS · ARCHITECTURAL PLAY",
+    defaultRotate: -3,
   },
 ];
