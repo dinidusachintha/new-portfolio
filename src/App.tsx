@@ -750,7 +750,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => navigateTo(currentPage === "blog" ? "home" : "blog")}
-              className={`nav-blog-btn-animated ${currentPage === "blog" ? "is-active" : ""}`}
+              className={`nav-blog-btn-animated shrink-0 ${currentPage === "blog" ? "is-active" : ""}`}
               aria-label="Read personal engineering blog"
               title="Explore Engineering Blog & Articles"
             >

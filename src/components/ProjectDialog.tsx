@@ -1160,82 +1160,78 @@ export default function ProjectDialog({
                   </div>
                 )}
 
-                {/* 8. E-WEDDING RSVP INVITATION INTERACTIVE SIMULATOR */}
-                {project.id === "e-wedding-rsvp" && (
+                {/* 8. FARMCART BLOG INTERACTIVE SIMULATOR */}
+                {project.id === "farmcart-blog" && (
                   <div className="p-6 sm:p-8 space-y-6 font-sans">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#c5d8a4] font-bold">
-                          E-WEDDING RSVP INVITATION · GIMASHA &amp; CHATHURA
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">
+                          FARMCART BLOG · AGRICULTURE CONTENT &amp; KNOWLEDGE HUB
                         </span>
                         <h4 className="text-xl font-bold text-white">
-                          Digital Wedding Experience &amp; Live RSVP Engine
+                          Practical Farming Knowledge for Better Harvests
                         </h4>
                       </div>
                       <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-semibold">
-                        Olive &amp; Gold Luxury Theme
+                        Lush Green Theme · MERN Stack
                       </span>
                     </div>
 
-                    {/* Wedding Hero Screenshot Display */}
+                    {/* Blog Hero Screenshot Display */}
                     <div className="rounded-xl overflow-hidden border border-white/15 bg-black/60 aspect-[16/9] relative group">
                       <img
                         src={asset(project.mockupImage || project.image)}
-                        alt="E-Wedding RSVP Invitation"
+                        alt="FarmCart Blog - Agriculture Content Platform"
                         className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
                       <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-mono text-white z-10">
-                        <span className="px-2.5 py-1 rounded bg-black/70 border border-white/20 text-[#c5d8a4]">
-                          Gimasha &amp; Chathura · Together Forever
+                        <span className="px-2.5 py-1 rounded bg-black/70 border border-white/20 text-emerald-300">
+                          Farming Insights · Crop Tips · Modern Practices
                         </span>
-                        <span className="px-2.5 py-1 rounded bg-[#708238]/80 text-white font-bold">
-                          Live Countdown Active
+                        <span className="px-2.5 py-1 rounded bg-emerald-600/80 text-white font-bold">
+                          Publishing Engine Active
                         </span>
                       </div>
                     </div>
 
-                    {/* Interactive RSVP Simulator Widget */}
+                    {/* Interactive Blog Explorer & PDF Simulator Widget */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
                         <span className="text-xs font-mono text-gray-400 block">
-                          1. WEDDING COUNTDOWN TIMER
+                          1. CATEGORIZED CROP GUIDES
                         </span>
-                        <div className="grid grid-cols-4 gap-2 text-center">
-                          <div className="p-2 rounded bg-black/40 border border-white/10">
-                            <div className="text-lg font-bold text-white font-unbounded">128</div>
-                            <div className="text-[9px] font-mono text-gray-400 uppercase">Days</div>
-                          </div>
-                          <div className="p-2 rounded bg-black/40 border border-white/10">
-                            <div className="text-lg font-bold text-white font-unbounded">14</div>
-                            <div className="text-[9px] font-mono text-gray-400 uppercase">Hours</div>
-                          </div>
-                          <div className="p-2 rounded bg-black/40 border border-white/10">
-                            <div className="text-lg font-bold text-white font-unbounded">36</div>
-                            <div className="text-[9px] font-mono text-gray-400 uppercase">Mins</div>
-                          </div>
-                          <div className="p-2 rounded bg-black/40 border border-white/10">
-                            <div className="text-lg font-bold text-white font-unbounded">42</div>
-                            <div className="text-[9px] font-mono text-gray-400 uppercase">Secs</div>
-                          </div>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          <span className="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-mono text-emerald-300">
+                            🍅 Tomato Cultivation
+                          </span>
+                          <span className="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-mono text-emerald-300">
+                            🌾 Paddy Best Practices
+                          </span>
+                          <span className="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-mono text-emerald-300">
+                            🌱 Organic Fertilizers
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-400 pt-1">
+                          ✓ Full-text keyword search &amp; instant category filtering
                         </div>
                       </div>
 
                       <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
                         <span className="text-xs font-mono text-gray-400 block">
-                          2. GUEST RSVP SIMULATOR
+                          2. PUBLISHING &amp; PDF REPORTS
                         </span>
                         <div className="flex items-center gap-2 pt-1">
                           <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-semibold flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            Confirmed Attending
+                            PDF Guides Ready
                           </span>
                           <span className="text-xs font-mono text-gray-400">
-                            2 Guests Reserved
+                            jsPDF + html2canvas
                           </span>
                         </div>
                         <div className="text-[11px] font-mono text-slate-400 pt-1">
-                          ✓ Flower Petals Animation Enabled · Audio Controller Ready
+                          ✓ Multer media upload · Mongoose article schema · Reader discussions
                         </div>
                       </div>
                     </div>

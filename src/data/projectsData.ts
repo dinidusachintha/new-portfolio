@@ -1,7 +1,7 @@
 import vikashaEBillingImg from "../assets/projects/vikasha-ebilling.jpg";
 import schoolrideLkImg from "../assets/projects/schoolride-lk.jpg";
 import waterboardInventoryImg from "../assets/projects/waterboard-inventory.jpg";
-import eWeddingRsvpImg from "../assets/projects/e-wedding-rsvp.jpg";
+import farmcartBlogImg from "../assets/projects/farmcart-blog.jpg";
 import spicySellingSiteImg from "../assets/projects/spicy-selling-site.jpg";
 
 export type ProjectDomain = "Full Stack" | "Cloud & Backend" | "AI & Media";
@@ -197,54 +197,57 @@ export const projectsData: ProjectItem[] = [
     imageAlt: "Waterboard Inventory Management - Inventory and Stock Control Platform",
   },
   {
-    id: "e-wedding-rsvp",
+    id: "farmcart-blog",
     number: "04",
-    category: "Client Project · Web Development",
+    category: "Full Stack · Blog Platform",
     domain: "Full Stack",
-    year: "2026",
-    role: "Lead Frontend & Creative Engineer",
-    status: "CLIENT PRODUCTION",
-    title: "E-Wedding RSVP Invitation",
+    year: "2024",
+    role: "Web Developer",
+    status: "AGRICULTURE PLATFORM",
+    title: "FarmCart Blog",
     shortDescription:
-      "A premium digital wedding invitation website designed for Gimasha & Chathura, delivering an elegant, interactive wedding experience with cinematic visuals, romantic animations, and seamless guest interaction.",
+      "A web-based agriculture blogging platform designed to share farming knowledge, crop cultivation guides, and agricultural insights through a structured, accessible, and responsive digital experience.",
     description:
-      "A premium digital wedding invitation website designed for Gimasha & Chathura, delivering an elegant, interactive wedding experience with cinematic visuals, romantic animations, and seamless guest interaction.",
+      "A web-based agriculture blogging platform designed to share farming knowledge, crop cultivation guides, and agricultural insights through a structured, accessible, and responsive digital experience. Features comprehensive article authoring, categorized crop guides, community comments, and client-side PDF summary reporting.",
     problem:
-      "Traditional paper wedding invitations are static, lack real-time RSVP tracking, cannot provide dynamic countdowns or interactive venue maps, and are easily lost or misplaced by wedding guests.",
+      "Farmers and agricultural communities often lack centralized, accessible digital resources for modern crop cultivation techniques, organic fertilizer practices, and actionable farming knowledge tailored for practical field application.",
     solution:
-      "Engineered a luxury digital wedding invitation platform featuring an interactive online RSVP system, live countdown timer, cinematic cover screen, animated flower petals, and Google Maps venue integration.",
+      "Engineered a full-stack digital publishing platform featuring categorized farming guides, multimedia article authoring with image uploads, interactive reader comments, and downloadable PDF crop guidelines.",
     architecture:
-      "Modern React & TypeScript architecture styled with Tailwind CSS, utilizing Framer Motion for cinematic physics-based animations, fluid scroll-driven transitions, and real-time guest RSVP state handling.",
+      "Full-stack MERN architecture powered by React 18, Vite, and Tailwind CSS for high-performance responsive browsing, backed by Express REST microservices, MongoDB Mongoose data models, Multer media storage, and jsPDF document generation.",
     highlights: [
-      "Interactive online RSVP with instant guest attendance confirmation and response tracking",
-      "Live wedding countdown timer synchronizing event milestones in real time",
-      "Cinematic wedding cover screen with romantic ambient visuals and audio controls",
-      "Animated flower petals with fluid physics and smooth scroll navigation",
-      "Wedding story and ceremony details with Google Maps location integration",
-      "Fully responsive mobile and desktop experience with premium olive-green and gold theme",
+      "Categorized agriculture guides covering crop cultivation, harvesting best practices, and organic farming tips",
+      "Rich article publishing & content management with image upload handling via Multer",
+      "Interactive community comments system enabling knowledge sharing among farming enthusiasts",
+      "Client-side PDF report and article manifest generation utilizing jsPDF and html2canvas",
+      "Instant keyword search and topic filtering for effortless discovery of farming solutions",
+      "Mobile-first, high-contrast green agricultural theme designed for seamless field and desktop reading",
     ],
     architectureNodes: [
-      { layer: "Presentation UI", tech: "React + Tailwind CSS", detail: "Luxury olive-green & champagne-gold aesthetic" },
-      { layer: "Motion Engine", tech: "Framer Motion", detail: "Animated falling flower petals & cinematic transitions" },
-      { layer: "Guest Utilities", tech: "Interactive RSVP & Maps", detail: "Online RSVP confirmation & Google Maps routing" },
-      { layer: "Event Core", tech: "Live Countdown & Audio", detail: "Real-time wedding day synchronizer & ambient audio controller" },
+      { layer: "Presentation UI", tech: "React 18 + Vite", detail: "Responsive UI with Tailwind CSS, Material UI & Lucide Icons" },
+      { layer: "Publishing Core", tech: "jsPDF & html2canvas", detail: "Client-side PDF document & crop guide export engine" },
+      { layer: "Backend API", tech: "Node.js + Express", detail: "RESTful routing for blogs, comments & Multer media uploads" },
+      { layer: "Data Persistence", tech: "MongoDB + Mongoose", detail: "Structured document schemas for articles, categories & reader discussions" },
     ],
-    technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    liveUrl: "https://www.chathuragimasha.site/",
-    sourceUrl: "https://github.com/Genula2003/WeddingSite-1",
-    screenshot: eWeddingRsvpImg,
-    demoUrl: "https://www.chathuragimasha.site/",
-    accentColor: "#849b5c",
-    cardBg: "linear-gradient(145deg, #0f1611 0%, #080d09 100%)",
-    borderColor: "rgba(132, 155, 92, 0.38)",
-    glowColor: "rgba(132, 155, 92, 0.28)",
-    tagBg: "rgba(132, 155, 92, 0.16)",
-    tagColor: "#c5d8a4",
+    technologies: ["React", "Vite", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+    liveUrl: "",
+    sourceUrl: "https://github.com/dinidusachintha/Farm-cart-blog-main",
+    screenshot: farmcartBlogImg,
+    demoUrl: "https://farmcart-blog.dinidu.dev",
+    accentColor: "#16a34a",
+    cardBg: "linear-gradient(145deg, #0a1b10 0%, #050f09 100%)",
+    borderColor: "rgba(34, 197, 94, 0.38)",
+    glowColor: "rgba(34, 197, 94, 0.28)",
+    tagBg: "rgba(34, 197, 94, 0.16)",
+    tagColor: "#86efac",
     metrics: [
-      { value: "100%", label: "Mobile Responsive" },
-      { value: "Live", label: "Interactive RSVP" },
-      { value: "60 FPS", label: "Cinematic Animations" },
+      { value: "Full Stack", label: "MERN Publishing Core" },
+      { value: "PDF Export", label: "Downloadable Guides" },
+      { value: "Mobile", label: "First Responsive UI" },
     ],
+    capabilitiesLabel: "PLATFORM CAPABILITIES",
+    capabilitiesText: "AGRICULTURE FOCUS ✦ CONTENT DISCOVERY ✦ DIGITAL PUBLISHING",
+    imageAlt: "FarmCart Blog - Agriculture Content and Blogging Platform",
   },
   {
     id: "spicy-selling-site",
