@@ -10,6 +10,7 @@ interface LeisureImageCardProps {
   isDimmed?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onClick?: () => void;
 }
 
 export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps>(
@@ -23,6 +24,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
       isDimmed = false,
       onMouseEnter,
       onMouseLeave,
+      onClick,
     },
     ref
   ) => {
@@ -34,6 +36,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
       <div
         ref={ref}
         data-card-id={card.id}
+        onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-white/14 bg-[#090a0f] shadow-[0_20px_50px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-350 ease-out ${

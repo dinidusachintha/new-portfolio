@@ -9035,22 +9035,7 @@ body {
 
 .leisure-composition-box {
   transform-origin: center center;
-  transition: transform 0.2s ease-out;
-}
-
-@media (max-width: 900px) {
-  .leisure-composition-box {
-    transform: scale(calc((100vw - 40px) / 860));
-  }
-}
-
-@media (max-width: 767px) {
-  .leisure-composition-box {
-    transform: scale(calc((100vw - 24px) / 860));
-  }
-  .leisure-perspective-stage {
-    min-height: calc(580px * ((100vw - 24px) / 860) + 20px);
-  }
+  transform-style: preserve-3d;
 }
 
 
