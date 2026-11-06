@@ -184,14 +184,26 @@ export default function ProjectCard({
                 <span>Interactive Live Demo</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => onSelect?.(project, "arch")}
-                className="glass-pill-outline py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Code2 size={14} className="text-violet-300 shrink-0" />
-                <span>Architecture & Specs</span>
-              </button>
+              {project.sourceUrl && !project.sourceUrl.endsWith("/dinidu") ? (
+                <a
+                  href={project.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-pill-outline py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Code2 size={14} className="text-violet-300 shrink-0" />
+                  <span>Architecture & Specs</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onSelect?.(project, "arch")}
+                  className="glass-pill-outline py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Code2 size={14} className="text-violet-300 shrink-0" />
+                  <span>Architecture & Specs</span>
+                </button>
+              )}
 
               {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
                 <a
@@ -277,7 +289,7 @@ export default function ProjectCard({
                     {!imgLoaded && <div className="skeleton absolute inset-0" />}
                     <img
                       src={project.screenshot}
-                      alt={`${project.title} mobile preview`}
+                      alt={project.imageAlt || `${project.title} mobile preview`}
                       onLoad={() => setImgLoaded(true)}
                       decoding="async"
                       className={`w-full h-full object-cover object-left-top transition-opacity duration-500 ${
@@ -297,7 +309,7 @@ export default function ProjectCard({
                       {!imgLoaded && <div className="skeleton absolute inset-0" />}
                       <img
                         src={project.screenshot}
-                        alt={`${project.title} desktop preview`}
+                        alt={project.imageAlt || `${project.title} desktop preview`}
                         onLoad={() => setImgLoaded(true)}
                         decoding="async"
                         className={`w-full h-full object-cover object-top transition-opacity duration-500 ${
@@ -319,7 +331,7 @@ export default function ProjectCard({
                     {!imgLoaded && <div className="skeleton absolute inset-0" />}
                     <img
                       src={project.screenshot}
-                      alt={`${project.title} tablet preview`}
+                      alt={project.imageAlt || `${project.title} tablet preview`}
                       onLoad={() => setImgLoaded(true)}
                       decoding="async"
                       className={`w-full h-full object-cover object-top transition-opacity duration-500 ${

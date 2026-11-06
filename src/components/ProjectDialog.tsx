@@ -349,32 +349,33 @@ export default function ProjectDialog({
                     : "max-w-[360px]"
                 }`}
               >
-                {/* 1. LESSONS2DRIVE INTERACTIVE SIMULATOR */}
-                {project.id === "lessons2drive" && (
+                {/* 1. SCHOOLRIDE LK INTERACTIVE SIMULATOR */}
+                {(project.id === "schoolride-lk" || project.id === "lessons2drive") && (
                   <div className="p-6 sm:p-8 space-y-6 font-sans">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
                         <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">
-                          LESSONS2DRIVE LIVE BOOKING ENGINE
+                          SCHOOLRIDE LK LIVE FLEET &amp; BOOKING ENGINE
                         </span>
                         <h4 className="text-xl font-bold text-white">
-                          Select an Instructor & Conflict-Free Slot
+                          Select Verified Van Operator &amp; School Route
                         </h4>
                       </div>
-                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold">
-                        PostgreSQL Row-Locks Active
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Live GPS Active
                       </span>
                     </div>
 
-                    {/* Step 1: Instructor Choice */}
+                    {/* Step 1: Instructor / Operator Choice */}
                     <div>
                       <label className="text-xs font-mono text-gray-400 block mb-2">
-                        1. AVAILABLE VERIFIED INSTRUCTOR
+                        1. AVAILABLE VERIFIED OPERATOR &amp; VAN
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {[
-                          { name: "Marcus Vance", rating: "4.98", car: "VW Golf (Manual)" },
-                          { name: "Sarah Chen", rating: "4.95", car: "Toyota Corolla (Auto)" },
+                          { name: "Anura Kumara", rating: "4.98", car: "Toyota HiAce (WP-NA-4821)", route: "Colombo 07 - Royal College" },
+                          { name: "Sunil Perera", rating: "4.95", car: "Nissan Caravan (WP-NB-1920)", route: "Nugegoda - Visakha Route" },
                         ].map((inst) => (
                           <button
                             key={inst.name}
@@ -394,18 +395,19 @@ export default function ProjectDialog({
                               <span className="text-xs text-amber-400 font-mono">⭐ {inst.rating}</span>
                             </div>
                             <span className="text-xs text-gray-400 block mt-1">{inst.car}</span>
+                            <span className="text-[11px] text-emerald-400 font-mono block mt-0.5">{inst.route}</span>
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    {/* Step 2: Time Slot Choice */}
+                    {/* Step 2: Time Slot / Pickup Choice */}
                     <div>
                       <label className="text-xs font-mono text-gray-400 block mb-2">
-                        2. CONFLICT-CHECKED CALENDAR SLOTS
+                        2. PICKUP WINDOW &amp; ROUTE SCHEDULE
                       </label>
                       <div className="grid grid-cols-3 gap-2">
-                        {["Today, 2:30 PM", "Tomorrow, 10:00 AM", "Friday, 4:00 PM"].map((slot) => (
+                        {["Morning (6:30 AM)", "Afternoon (1:30 PM)", "Full Day Round-Trip"].map((slot) => (
                           <button
                             key={slot}
                             type="button"
@@ -435,11 +437,11 @@ export default function ProjectDialog({
                           className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm font-mono flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
                         >
                           {bookingLoading ? (
-                            <span>Acquiring Distributed Mutex Lock...</span>
+                            <span>Confirming Verified Van Slot...</span>
                           ) : (
                             <>
                               <Zap size={16} />
-                              <span>Reserve Slot with Zero-Conflict Lock</span>
+                              <span>Reserve Verified School Van Seat</span>
                             </>
                           )}
                         </button>
@@ -447,11 +449,11 @@ export default function ProjectDialog({
                         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 text-xs font-mono space-y-1">
                           <div className="flex items-center gap-2 font-bold text-sm text-white">
                             <Check size={16} className="text-emerald-400" />
-                            <span>Slot Successfully Booked!</span>
+                            <span>Ride Confirmed &amp; Driver Linked!</span>
                           </div>
-                          <div>Instructor: {selectedInstructor} · {selectedSlot}</div>
+                          <div>Operator: {selectedInstructor} · {selectedSlot}</div>
                           <div className="text-[11px] text-gray-400">
-                            TxId: 0x4f89b21a · Row lock executed in 44ms · Stripe Escrow Ready
+                            Live Tracking: Active · Socket.io Gateway Connected · Parent Push SMS Dispatched
                           </div>
                         </div>
                       )}

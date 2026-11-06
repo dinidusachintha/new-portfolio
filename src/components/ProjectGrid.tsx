@@ -645,7 +645,7 @@ function GlassCardItem({
         {!imgLoaded && <div className="skeleton absolute inset-0" />}
         <img
           src={project.screenshot}
-          alt={`${project.title} system interface preview`}
+          alt={project.imageAlt || `${project.title} system interface preview`}
           onLoad={() => setImgLoaded(true)}
           decoding="async"
           className={`w-full h-full object-cover object-top transition-all duration-500 group-hover/img:scale-105 ${
@@ -685,19 +685,20 @@ function GlassCardItem({
             PRIMARY ARSENAL
           </div>
           <div className="text-[10.5px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
-            {project.technologies.slice(0, 5).join(" · ")}
+            {project.technologies.slice(0, 6).join(" · ")}
           </div>
         </div>
 
-        {/* Row 3: PRODUCTION IMPACT */}
+        {/* Row 3: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
         <div className="py-1 sm:py-1.5 border-t border-b border-white/10">
           <div className="text-[9px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
-            PRODUCTION IMPACT
+            {project.capabilitiesLabel || "PRODUCTION IMPACT"}
           </div>
           <div className="text-[10px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
-            {project.metrics
-              .map((m) => `${m.value} ${m.label.split(" ")[0]}`)
-              .join(" ✦ ")}
+            {project.capabilitiesText ||
+              project.metrics
+                .map((m) => `${m.value} ${m.label.split(" ")[0]}`)
+                .join(" ✦ ")}
           </div>
         </div>
       </div>
@@ -731,17 +732,30 @@ function GlassCardItem({
         )}
 
         {/* Bottom Button: Frosted Glass Outline Pill */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenArch();
-          }}
-          className="glass-pill-outline w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-        >
-          <Code2 size={13} className="shrink-0 text-violet-300" />
-          <span>VIEW ARCHITECTURE & CODE</span>
-        </button>
+        {project.sourceUrl && !project.sourceUrl.endsWith("/dinidu") ? (
+          <a
+            href={project.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="glass-pill-outline w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+          >
+            <Code2 size={13} className="shrink-0 text-violet-300" />
+            <span>VIEW ARCHITECTURE & CODE</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenArch();
+            }}
+            className="glass-pill-outline w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+          >
+            <Code2 size={13} className="shrink-0 text-violet-300" />
+            <span>VIEW ARCHITECTURE & CODE</span>
+          </button>
+        )}
       </div>
     </article>
   );

@@ -1,5 +1,5 @@
 import vikashaEBillingImg from "../assets/projects/vikasha-ebilling.jpg";
-import lessons2DriveImg from "../assets/projects/lessons2drive.jpg";
+import schoolrideLkImg from "../assets/projects/schoolride-lk.jpg";
 import nexusStreamImg from "../assets/projects/nexus-stream.jpg";
 import ceylonTrailsImg from "../assets/projects/ceylon-trails.jpg";
 import sentinelImg from "../assets/projects/sentinel.jpg";
@@ -44,6 +44,9 @@ export interface ProjectItem {
   tagBg: string;
   tagColor: string;
   metrics: { value: string; label: string }[];
+  capabilitiesLabel?: string;
+  capabilitiesText?: string;
+  imageAlt?: string;
 }
 
 export const projectsData: ProjectItem[] = [
@@ -96,52 +99,55 @@ export const projectsData: ProjectItem[] = [
     ],
   },
   {
-    id: "lessons2drive",
+    id: "schoolride-lk",
     number: "02",
-    category: "Marketplace",
+    category: "Transportation",
     domain: "Full Stack",
     year: "2026",
-    role: "Full Stack Lead Architect",
-    status: "LIVE PRODUCTION",
-    title: "Lessons2Drive",
+    role: "Full Stack Web Development",
+    status: "LIVE PLATFORM",
+    title: "SchoolRide LK",
     shortDescription:
-      "A dual-sided driving lesson marketplace connecting learners with certified instructors, featuring conflict-aware scheduling locks, automated credit bundles, and escrow Stripe payouts.",
+      "A full-stack school transportation platform designed for Sri Lankan families, connecting parents with verified school van operators through secure ride bookings, real-time GPS tracking, child safety monitoring, and role-based management dashboards.",
     description:
-      "A dual-sided driving lesson marketplace connecting learners with certified instructors, featuring conflict-aware scheduling locks, automated credit bundles, and escrow Stripe payouts.",
+      "A full-stack school transportation platform designed for Sri Lankan families, connecting parents with verified school van operators through secure ride bookings, real-time GPS tracking, child safety monitoring, and role-based management dashboards.",
     problem:
-      "Manual scheduling between freelance driving instructors and students led to calendar collisions, double-bookings under peak load, and delayed instructor payouts.",
+      "School transportation for children in Sri Lanka relied on informal verbal agreements with van operators, causing constant parental anxiety due to zero route visibility, unverified driver credentials, and lack of real-time pickup/drop-off status alerts.",
     solution:
-      "Built a unified dual-sided marketplace with atomic PostgreSQL row-level slot locking, automated lesson credit allocation, and instant Stripe Connect escrow payouts.",
+      "Built an all-in-one school ride management system empowering parents with live GPS vehicle tracking, direct child safety status confirmations, verified driver credential checks, and role-based portals for parents, van operators, and administrators.",
     architecture:
-      "Next.js App Router frontend, Express.js microservice API, PostgreSQL with Prisma ORM transactional row-locks, and Redis session & availability caching.",
+      "Next.js 15 App Router frontend with Tailwind CSS, NestJS 11 backend microservices with Socket.io real-time telemetry, PostgreSQL with Prisma ORM transactional persistence, and Leaflet/OpenStreetMap geospatial tracking.",
     highlights: [
-      "Atomic conditional slot allocation guaranteeing zero double-booking under load",
-      "Stripe Connect integration automating escrow releases upon lesson completion",
-      "Interactive multi-step learner onboarding wizard with strict runtime validation",
-      "Real-time SMS and email dispatch via webhooks and BullMQ background queues",
+      "School ride booking & trip management for verified school van operators",
+      "Real-time GPS tracking with live pickup and drop-off status monitoring",
+      "Parent, driver, and administrative role-based management dashboards",
+      "Driver verification, vehicle documentation, and child safety compliance",
     ],
     architectureNodes: [
-      { layer: "Client App", tech: "Next.js + TypeScript", detail: "Role-based learner & instructor portals" },
-      { layer: "Booking Engine", tech: "Express + Prisma", detail: "Serializable row locks & conflict detection" },
-      { layer: "Payments & Queue", tech: "Stripe Connect + BullMQ", detail: "Escrow split payouts & SMS reminders" },
-      { layer: "Data Store", tech: "PostgreSQL + Redis", detail: "ACID calendar ledger & <60ms slot cache" },
+      { layer: "Client UI", tech: "Next.js 15 + Tailwind CSS", detail: "Responsive parent, driver & admin web dashboards" },
+      { layer: "Backend API", tech: "NestJS 11 + Express", detail: "Modular REST microservices & Socket.io tracking" },
+      { layer: "Realtime Engine", tech: "Socket.io + Leaflet", detail: "Live GPS coordinates & route updates" },
+      { layer: "Persistence", tech: "PostgreSQL + Prisma ORM", detail: "Relational booking ledgers & driver verification" },
     ],
-    technologies: ["Next.js", "TypeScript", "Express", "PostgreSQL", "Prisma", "Stripe"],
-    liveUrl: "https://github.com/dinidu",
-    sourceUrl: "https://github.com/dinidu",
-    screenshot: lessons2DriveImg,
-    demoUrl: "https://lessons2drive.dinidu.dev",
-    accentColor: "#38bdf8",
-    cardBg: "linear-gradient(145deg, #0d1526 0%, #070a12 100%)",
-    borderColor: "rgba(56, 189, 248, 0.32)",
-    glowColor: "rgba(56, 189, 248, 0.26)",
-    tagBg: "rgba(56, 189, 248, 0.14)",
-    tagColor: "#7dd3fc",
+    technologies: ["Next.js", "TypeScript", "NestJS", "PostgreSQL", "Prisma", "Tailwind"],
+    liveUrl: "",
+    sourceUrl: "https://github.com/dinidusachintha/SchoolRide-LK-V2",
+    screenshot: schoolrideLkImg,
+    demoUrl: "https://schoolride.lk",
+    accentColor: "#22c55e",
+    cardBg: "linear-gradient(145deg, #0d2014 0%, #060e09 100%)",
+    borderColor: "rgba(34, 197, 94, 0.35)",
+    glowColor: "rgba(34, 197, 94, 0.28)",
+    tagBg: "rgba(34, 197, 94, 0.16)",
+    tagColor: "#86efac",
     metrics: [
-      { value: "0", label: "Booking Conflicts" },
-      { value: "+42%", label: "Instructor Utilization" },
-      { value: "<60ms", label: "Availability Latency" },
+      { value: "3 Roles", label: "Parent, Driver & Admin" },
+      { value: "Live GPS", label: "Real-Time Tracking" },
+      { value: "100%", label: "Child Safety Focus" },
     ],
+    capabilitiesLabel: "SYSTEM CAPABILITIES",
+    capabilitiesText: "3 USER ROLES ✦ LIVE TRACKING ✦ SECURE BOOKINGS",
+    imageAlt: "SchoolRide LK - Smart School Transportation Platform",
   },
   {
     id: "nexus",
