@@ -42,70 +42,22 @@ export default function LeisureSection() {
       const mm = gsap.matchMedia();
 
       // =========================================================================
-      // DESKTOP & TABLET (min-width: 768px): Pinned Cinematic Staged Animation
+      // DESKTOP & TABLET: Pinned Smooth Floating Stack Scrub Animation
       // =========================================================================
       mm.add("(min-width: 768px)", () => {
-        // STAGE 01: Entrance text initial state
-        if (heading) {
-          gsap.set(heading, { yPercent: 100, opacity: 0 });
-        }
-        if (desc) {
-          gsap.set(desc, { y: 20, opacity: 0 });
-        }
+        // Initial setup: Header
+        if (heading) gsap.set(heading, { yPercent: 100, opacity: 0 });
+        if (desc) gsap.set(desc, { y: 20, opacity: 0 });
 
-        // STAGE 02: Initial offscreen/dispersed positions for image cards
-        if (carGaming) {
-          gsap.set(carGaming, {
-            xPercent: -140,
-            yPercent: -20,
-            rotate: -14,
-            scale: 0.82,
-            opacity: 0,
-          });
-        }
-        if (netflix) {
-          gsap.set(netflix, {
-            xPercent: 140,
-            yPercent: -20,
-            rotate: 14,
-            scale: 0.82,
-            opacity: 0,
-          });
-        }
-        if (spotify) {
-          gsap.set(spotify, {
-            yPercent: -150,
-            scale: 0.85,
-            opacity: 0,
-          });
-        }
-        if (travel) {
-          gsap.set(travel, {
-            xPercent: -120,
-            yPercent: 130,
-            rotate: -10,
-            scale: 0.82,
-            opacity: 0,
-          });
-        }
-        if (coding) {
-          gsap.set(coding, {
-            xPercent: 120,
-            yPercent: 130,
-            rotate: 10,
-            scale: 0.82,
-            opacity: 0,
-          });
-        }
-        if (portrait) {
-          gsap.set(portrait, {
-            scale: 0.72,
-            opacity: 0,
-            clipPath: "inset(16% 16% 16% 16% round 32px)",
-          });
-        }
+        // Initial setup: Cards start slightly compacted near center
+        if (portrait) gsap.set(portrait, { scale: 0.8, opacity: 0 });
+        if (spotify) gsap.set(spotify, { y: 55, opacity: 0 });
+        if (carGaming) gsap.set(carGaming, { x: 65, y: 45, opacity: 0 });
+        if (netflix) gsap.set(netflix, { x: -65, y: 45, opacity: 0 });
+        if (travel) gsap.set(travel, { x: 55, y: -55, opacity: 0 });
+        if (coding) gsap.set(coding, { x: -55, y: -45, opacity: 0 });
 
-        // Section Heading Scroll Reveal Trigger
+        // Header Reveal
         ScrollTrigger.create({
           trigger: section,
           start: "top 80%",
@@ -133,317 +85,322 @@ export default function LeisureSection() {
             pin: pinViewport,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1.2,
+            scrub: 1.1,
             anticipatePin: 1,
           },
         });
 
-        // -----------------------------------------------------------------------
-        // STAGE 02: Staggered Fly-In into Overlapping Composition
-        // -----------------------------------------------------------------------
-        // 1. Car Gaming flies in from upper left
-        if (carGaming) {
+        // STAGE 01: Expansion into the exact reference screenshot arrangement
+        if (portrait) {
           tl.to(
-            carGaming,
+            portrait,
             {
-              xPercent: 0,
-              yPercent: 0,
-              rotate: -4,
               scale: 1,
               opacity: 1,
-              duration: 1.4,
-              ease: "power3.out",
+              duration: 1.2,
+              ease: "power2.out",
             },
             0
           );
         }
-
-        // 2. Netflix flies in from upper right (slight stagger)
+        if (carGaming) {
+          tl.to(
+            carGaming,
+            {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              ease: "power2.out",
+            },
+            0.1
+          );
+        }
         if (netflix) {
           tl.to(
             netflix,
             {
-              xPercent: 0,
-              yPercent: 0,
-              rotate: 3.5,
-              scale: 1,
+              x: 0,
+              y: 0,
               opacity: 1,
-              duration: 1.4,
-              ease: "power3.out",
+              duration: 1.2,
+              ease: "power2.out",
             },
             0.15
           );
         }
-
-        // 3. Spotify drops down from top center
         if (spotify) {
           tl.to(
             spotify,
             {
-              yPercent: 0,
-              rotate: -1.5,
-              scale: 1,
+              y: 0,
               opacity: 1,
-              duration: 1.3,
-              ease: "power3.out",
+              duration: 1.1,
+              ease: "power2.out",
+            },
+            0.2
+          );
+        }
+        if (travel) {
+          tl.to(
+            travel,
+            {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              ease: "power2.out",
             },
             0.25
           );
         }
-
-        // 4. Travel sweeps in from bottom left
-        if (travel) {
-          tl.to(
-            travel,
-            {
-              xPercent: 0,
-              yPercent: 0,
-              rotate: 2.5,
-              scale: 1,
-              opacity: 1,
-              duration: 1.4,
-              ease: "power3.out",
-            },
-            0.35
-          );
-        }
-
-        // 5. Coding sweeps in from bottom right
         if (coding) {
           tl.to(
             coding,
             {
-              xPercent: 0,
-              yPercent: 0,
-              rotate: -3,
-              scale: 1,
+              x: 0,
+              y: 0,
               opacity: 1,
-              duration: 1.4,
-              ease: "power3.out",
+              duration: 1.2,
+              ease: "power2.out",
             },
-            0.45
+            0.3
           );
         }
 
-        // 6. Central Portrait arrives last and expands prominently above all
+        // STAGE 02: Pinned Hold with Multi-Layer Floating Parallax
         if (portrait) {
           tl.to(
             portrait,
             {
-              scale: 1,
-              opacity: 1,
-              clipPath: "inset(0% 0% 0% 0% round 24px)",
-              duration: 1.6,
-              ease: "power3.out",
+              y: -8,
+              scale: 1.01,
+              duration: 1.5,
+              ease: "none",
             },
-            0.7
+            1.6
           );
         }
-
-        // -----------------------------------------------------------------------
-        // STAGE 03: Pinned Composition Layered Parallax Hold
-        // -----------------------------------------------------------------------
-        // Multi-layered depth parallax while user scrubs through the settled composition
         if (carGaming) {
           tl.to(
             carGaming,
             {
-              y: -30,
-              x: -12,
-              rotate: -5,
-              duration: 1.6,
-              ease: "none",
-            },
-            2.3
-          );
-        }
-        if (netflix) {
-          tl.to(
-            netflix,
-            {
-              y: -24,
-              x: 12,
-              rotate: 4.5,
-              duration: 1.6,
-              ease: "none",
-            },
-            2.3
-          );
-        }
-        if (spotify) {
-          tl.to(
-            spotify,
-            {
-              y: -36,
-              duration: 1.6,
-              ease: "none",
-            },
-            2.3
-          );
-        }
-        if (travel) {
-          tl.to(
-            travel,
-            {
-              y: 22,
+              y: -20,
               x: -10,
-              rotate: 3.5,
-              duration: 1.6,
+              duration: 1.5,
               ease: "none",
             },
-            2.3
-          );
-        }
-        if (coding) {
-          tl.to(
-            coding,
-            {
-              y: 26,
-              x: 10,
-              rotate: -4,
-              duration: 1.6,
-              ease: "none",
-            },
-            2.3
-          );
-        }
-        if (portrait) {
-          tl.to(
-            portrait,
-            {
-              y: -14,
-              scale: 1.02,
-              duration: 1.6,
-              ease: "none",
-            },
-            2.3
-          );
-        }
-
-        // -----------------------------------------------------------------------
-        // STAGE 05: Cinematic Exit Animation (Outward Dispersion & Pin Release)
-        // -----------------------------------------------------------------------
-        if (carGaming) {
-          tl.to(
-            carGaming,
-            {
-              xPercent: -70,
-              yPercent: -40,
-              opacity: 0.15,
-              scale: 0.9,
-              duration: 1.2,
-              ease: "power2.inOut",
-            },
-            3.9
+            1.6
           );
         }
         if (netflix) {
           tl.to(
             netflix,
             {
-              xPercent: 70,
-              yPercent: -40,
-              opacity: 0.15,
-              scale: 0.9,
-              duration: 1.2,
-              ease: "power2.inOut",
+              y: -18,
+              x: 10,
+              duration: 1.5,
+              ease: "none",
             },
-            3.9
+            1.6
           );
         }
         if (spotify) {
           tl.to(
             spotify,
             {
-              yPercent: -60,
-              opacity: 0.15,
-              duration: 1.2,
-              ease: "power2.inOut",
+              y: -26,
+              duration: 1.5,
+              ease: "none",
             },
-            3.9
+            1.6
           );
         }
         if (travel) {
           tl.to(
             travel,
             {
-              xPercent: -60,
-              yPercent: 60,
-              opacity: 0.15,
-              scale: 0.9,
-              duration: 1.2,
-              ease: "power2.inOut",
+              y: 18,
+              x: -8,
+              duration: 1.5,
+              ease: "none",
             },
-            3.9
+            1.6
           );
         }
         if (coding) {
           tl.to(
             coding,
             {
-              xPercent: 60,
-              yPercent: 60,
-              opacity: 0.15,
-              scale: 0.9,
-              duration: 1.2,
+              y: 20,
+              x: 8,
+              duration: 1.5,
+              ease: "none",
+            },
+            1.6
+          );
+        }
+
+        // STAGE 03: Smooth Outward Drift Exit into Next Section
+        if (carGaming) {
+          tl.to(
+            carGaming,
+            {
+              x: -45,
+              y: -30,
+              opacity: 0.2,
+              duration: 1.1,
               ease: "power2.inOut",
             },
-            3.9
+            3.2
+          );
+        }
+        if (netflix) {
+          tl.to(
+            netflix,
+            {
+              x: 45,
+              y: -30,
+              opacity: 0.2,
+              duration: 1.1,
+              ease: "power2.inOut",
+            },
+            3.2
+          );
+        }
+        if (spotify) {
+          tl.to(
+            spotify,
+            {
+              y: -40,
+              opacity: 0.2,
+              duration: 1.1,
+              ease: "power2.inOut",
+            },
+            3.2
+          );
+        }
+        if (travel) {
+          tl.to(
+            travel,
+            {
+              x: -40,
+              y: 40,
+              opacity: 0.2,
+              duration: 1.1,
+              ease: "power2.inOut",
+            },
+            3.2
+          );
+        }
+        if (coding) {
+          tl.to(
+            coding,
+            {
+              x: 40,
+              y: 40,
+              opacity: 0.2,
+              duration: 1.1,
+              ease: "power2.inOut",
+            },
+            3.2
           );
         }
         if (portrait) {
           tl.to(
             portrait,
             {
-              scale: 1.06,
+              scale: 1.05,
               opacity: 0.35,
-              duration: 1.2,
+              duration: 1.1,
               ease: "power2.inOut",
             },
-            3.9
+            3.2
           );
         }
         if (headerRef.current) {
           tl.to(
             headerRef.current,
             {
-              opacity: 0.2,
-              y: -25,
+              opacity: 0.25,
+              y: -20,
               duration: 0.8,
               ease: "power2.inOut",
             },
-            3.9
+            3.2
           );
         }
       });
 
       // =========================================================================
-      // MOBILE (< 768px): Fluid Responsive Layout without Sticky Traps
+      // MOBILE (< 768px): Smooth Mobile Touch Pinned Experience
       // =========================================================================
       mm.add("(max-width: 767px)", () => {
-        // Reset transform positions so cards render cleanly in fluid mobile viewport
-        const elements = [portrait, carGaming, netflix, spotify, travel, coding];
-        elements.forEach((el) => {
-          if (el) {
-            gsap.set(el, {
-              clearProps: "all",
-            });
-          }
-        });
+        // Initial setup for mobile
+        if (portrait) gsap.set(portrait, { scale: 0.85, opacity: 0 });
+        if (spotify) gsap.set(spotify, { y: 35, opacity: 0 });
+        if (carGaming) gsap.set(carGaming, { x: 40, y: 30, opacity: 0 });
+        if (netflix) gsap.set(netflix, { x: -40, y: 30, opacity: 0 });
+        if (travel) gsap.set(travel, { x: 35, y: -35, opacity: 0 });
+        if (coding) gsap.set(coding, { x: -35, y: -30, opacity: 0 });
 
-        // Smooth staggered reveal on scroll into view
-        gsap.from(elements.filter(Boolean), {
+        // Mobile Scrub Timeline
+        const mobileTl = gsap.timeline({
           scrollTrigger: {
             trigger: pinTrack,
-            start: "top 75%",
+            pin: pinViewport,
+            start: "top top",
+            end: "+=160%",
+            scrub: 0.9,
+            anticipatePin: 1,
           },
-          y: 40,
-          opacity: 0,
-          scale: 0.92,
-          stagger: 0.12,
-          duration: 0.8,
-          ease: "power3.out",
         });
+
+        // Expansion into place
+        mobileTl.to(
+          [portrait, carGaming, netflix, spotify, travel, coding].filter(Boolean),
+          {
+            x: 0,
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 1,
+            ease: "power2.out",
+          },
+          0
+        );
+
+        // Subtle floating drift
+        mobileTl.to(
+          [carGaming, spotify, netflix].filter(Boolean),
+          {
+            y: -12,
+            duration: 1,
+            ease: "none",
+          },
+          1.1
+        );
+        mobileTl.to(
+          [travel, coding].filter(Boolean),
+          {
+            y: 12,
+            duration: 1,
+            ease: "none",
+          },
+          1.1
+        );
+
+        // Gentle exit fade
+        mobileTl.to(
+          [portrait, carGaming, netflix, spotify, travel, coding].filter(Boolean),
+          {
+            opacity: 0.4,
+            duration: 0.6,
+            ease: "power2.inOut",
+          },
+          2.2
+        );
       });
 
       // =========================================================================
@@ -474,37 +431,37 @@ export default function LeisureSection() {
       className="leisure-floating-section relative bg-[#080808] text-white overflow-hidden border-t border-white/10"
       aria-label="Beyond the Code — Floating Image Composition"
     >
-      {/* Subtle Ambient Radial Lighting */}
+      {/* Background Radial Glow */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-5xl h-[500px] bg-violet-600/[0.08] rounded-full blur-[140px] pointer-events-none"
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-5xl h-[550px] bg-violet-600/[0.07] rounded-full blur-[140px] pointer-events-none"
         aria-hidden="true"
       />
 
       {/* Pinned Scroll Track Container */}
       <div
         ref={pinTrackRef}
-        className="leisure-pin-track relative w-full md:h-[380vh]"
+        className="leisure-pin-track relative w-full h-[220vh] md:h-[340vh]"
       >
         <div
           ref={pinViewportRef}
-          className="leisure-pin-viewport md:sticky md:top-0 w-full md:h-screen md:max-h-screen overflow-hidden flex flex-col justify-between py-12 md:py-16 px-4 sm:px-8"
+          className="leisure-pin-viewport sticky top-0 w-full h-screen max-h-screen overflow-hidden flex flex-col justify-between py-8 sm:py-12 md:py-14 px-3 sm:px-6"
         >
           {/* Header Block: Main Heading & Deck */}
           <div
             ref={headerRef}
-            className="leisure-header-block max-w-4xl mx-auto text-center space-y-3 z-40 relative select-none pointer-events-none mb-6"
+            className="leisure-header-block max-w-4xl mx-auto text-center space-y-2.5 z-40 relative select-none pointer-events-none shrink-0"
           >
             {/* Editorial Category Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/25 text-violet-300 font-mono text-[11px] sm:text-xs font-semibold tracking-widest uppercase">
-              <Compass size={13} className="text-violet-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-400/25 text-violet-300 font-mono text-[10px] sm:text-xs font-semibold tracking-widest uppercase">
+              <Compass size={12} className="text-violet-400 animate-pulse" />
               <span>LIFE OUTSIDE WORK / 001</span>
             </div>
 
             {/* Masked Upward Reveal Heading */}
-            <div className="overflow-hidden py-1">
+            <div className="overflow-hidden py-0.5">
               <h2
                 ref={headingTextRef}
-                className="font-unbounded font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-white uppercase leading-[1.02]"
+                className="font-unbounded font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight text-white uppercase leading-[1.02]"
               >
                 BEYOND THE CODE<span className="text-violet-400">.</span>
               </h2>
@@ -513,14 +470,14 @@ export default function LeisureSection() {
             {/* Supporting Description */}
             <p
               ref={descRef}
-              className="font-sans text-sm sm:text-base md:text-lg text-gray-300 font-light max-w-2xl mx-auto leading-relaxed"
+              className="font-sans text-xs sm:text-sm md:text-base text-gray-300 font-light max-w-2xl mx-auto leading-relaxed"
             >
               When I&apos;m not building digital experiences, I&apos;m exploring the things that inspire me.
             </p>
           </div>
 
           {/* Central Layered Floating Image Composition */}
-          <div className="flex-1 flex items-center justify-center relative w-full">
+          <div className="flex-1 flex items-center justify-center relative w-full overflow-visible py-2 sm:py-4">
             <LeisureImageStack
               portraitRef={portraitRef}
               carGamingRef={carGamingRef}
@@ -532,9 +489,9 @@ export default function LeisureSection() {
           </div>
 
           {/* Minimalist Bottom Subtle Legend */}
-          <div className="max-w-7xl mx-auto w-full flex items-center justify-between text-xs font-mono text-gray-500 z-30 pointer-events-none pt-4">
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between text-[10.5px] font-mono text-gray-500 z-30 pointer-events-none shrink-0 pt-2">
             <div className="flex items-center gap-2">
-              <Sparkles size={12} className="text-violet-400" />
+              <Sparkles size={11} className="text-violet-400" />
               <span className="tracking-widest uppercase text-gray-400">
                 SCROLL-DRIVEN COMPOSITION
               </span>

@@ -14,7 +14,6 @@ export const portraitCard: LeisureCardData = {
   image: portraitImg,
   alt: "Dinidu Sachintha portrait in white t-shirt against dark background",
   accentColor: "#9867ff",
-  defaultRotate: 0,
   isPortrait: true,
 };
 
@@ -27,7 +26,6 @@ export const floatingLeisureCards: LeisureCardData[] = [
     image: spotifyImg,
     alt: "Studio headphones and dedicated audio player setup",
     accentColor: "#10b981",
-    defaultRotate: -1.5,
   },
   {
     id: "car-gaming",
@@ -37,7 +35,6 @@ export const floatingLeisureCards: LeisureCardData[] = [
     image: carGamingImg,
     alt: "Triple-monitor racing simulator with steering wheel and red cockpit lighting",
     accentColor: "#ef4444",
-    defaultRotate: -4,
   },
   {
     id: "netflix",
@@ -47,7 +44,6 @@ export const floatingLeisureCards: LeisureCardData[] = [
     image: netflixImg,
     alt: "Cinematic home theater screen with ambient evening lighting",
     accentColor: "#f59e0b",
-    defaultRotate: 3.5,
   },
   {
     id: "travel",
@@ -57,7 +53,6 @@ export const floatingLeisureCards: LeisureCardData[] = [
     image: travelImg,
     alt: "Cinematic mountain highway road leading to misty glacier landscape",
     accentColor: "#38bdf8",
-    defaultRotate: 2.5,
   },
   {
     id: "coding",
@@ -67,6 +62,5 @@ export const floatingLeisureCards: LeisureCardData[] = [
     image: codingImg,
     alt: "Developer workstation at night with glowing code editor on wide monitor",
     accentColor: "#a855f7",
-    defaultRotate: -3,
   },
 ];

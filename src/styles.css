@@ -9015,18 +9015,20 @@ body {
   user-select: none;
 }
 
-@media (max-width: 767px) {
-  .leisure-pin-viewport {
-    height: auto !important;
-    max-height: none !important;
-    position: relative !important;
-    padding-top: 3.5rem !important;
-    padding-bottom: 4rem !important;
+.leisure-composition-box {
+  transform-origin: center center;
+  transition: transform 0.2s ease-out;
+}
+
+@media (max-width: 900px) {
+  .leisure-composition-box {
+    transform: scale(calc((100vw - 40px) / 860));
   }
-  .leisure-image-stack {
-    height: 480px !important;
-    transform: scale(0.9);
-    transform-origin: center center;
+}
+
+@media (max-width: 767px) {
+  .leisure-composition-box {
+    transform: scale(calc((100vw - 20px) / 860));
   }
 }
 

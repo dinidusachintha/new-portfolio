@@ -4,6 +4,7 @@ import type { LeisureCardData } from "./types";
 interface LeisureImageCardProps {
   card: LeisureCardData;
   className?: string;
+  style?: React.CSSProperties;
   isHovered?: boolean;
   isDimmed?: boolean;
   onMouseEnter?: () => void;
@@ -15,6 +16,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
     {
       card,
       className = "",
+      style,
       isHovered = false,
       isDimmed = false,
       onMouseEnter,
@@ -28,18 +30,15 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
         data-card-id={card.id}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15 bg-[#0a0a0f] shadow-[0_24px_60px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow] duration-300 ${
-          isDimmed ? "opacity-45 filter brightness-75 scale-[0.98]" : "opacity-100"
+        className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-white/12 bg-[#090a0f] shadow-[0_20px_50px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-300 ${
+          isDimmed ? "opacity-45 filter brightness-75" : "opacity-100"
         } ${
           isHovered
-            ? "!z-50 border-white/40 shadow-[0_30px_80px_rgba(0,0,0,0.95),0_0_35px_rgba(152,103,255,0.35)] scale-[1.03]"
+            ? "!z-50 border-white/40 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(152,103,255,0.3)] scale-[1.03]"
             : ""
         } ${className}`}
-        style={{
-          transformOrigin: "center center",
-        }}
+        style={style}
       >
-        {/* Image Container with subtle scale on hover */}
         <div className="relative w-full h-full overflow-hidden">
           <img
             src={card.image}
@@ -50,22 +49,14 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
             loading={card.isPortrait ? "eager" : "lazy"}
           />
 
-          {/* Cinematic Vignette Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none" />
+          {/* Subtle Contrast Vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10 opacity-60 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
 
-          {/* Subtle Accent Glow on Hover */}
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 100%, ${card.accentColor}, transparent 70%)`,
-            }}
-          />
-
-          {/* Interactive Floating Pill Label (Reveals / Brightens on Hover) */}
-          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-center justify-between gap-2 pointer-events-none transition-all duration-300">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-white/20 shadow-lg text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider uppercase transition-transform duration-300 group-hover:translate-y-0 translate-y-0.5">
+          {/* Minimal Floating Pill Tag on Hover */}
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3.5 sm:left-3.5 sm:right-3.5 flex items-center justify-between gap-2 pointer-events-none transition-all duration-300">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/20 shadow-md text-[9px] sm:text-[11px] font-mono font-bold text-white tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <span
-                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full shadow-[0_0_8px_currentColor]"
+                className="w-1.5 h-1.5 rounded-full shadow-[0_0_6px_currentColor]"
                 style={{
                   backgroundColor: card.accentColor,
                   color: card.accentColor,
@@ -74,8 +65,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
               <span>{card.label}</span>
             </div>
 
-            {/* Title Teaser */}
-            <span className="font-mono text-[9px] sm:text-[10px] text-gray-300 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:inline-block bg-black/60 px-2.5 py-1 rounded-full border border-white/10 backdrop-blur-sm">
+            <span className="font-mono text-[9px] text-gray-300 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline-block bg-black/70 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-sm">
               {card.title}
             </span>
           </div>
