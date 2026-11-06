@@ -48,7 +48,7 @@ export default function LeisureImageStack({
   useEffect(() => {
     let animId: number;
 
-    // Linear interpolation helper for buttery 60fps spring damping
+    // Linear interpolation helper for buttery 60fps spring damping (Campione physics)
     const lerp = (start: number, end: number, factor: number) =>
       start + (end - start) * factor;
 
@@ -74,14 +74,14 @@ export default function LeisureImageStack({
 
     animId = requestAnimationFrame(tick);
 
-    // Pointer move handler (Desktop mouse & Mobile touch)
+    // Pointer move handler (Desktop mouse & Mobile touch, Campione style)
     const handlePointerMove = (e: PointerEvent) => {
       const el = containerRef.current;
       if (!el) return;
 
       const rect = el.getBoundingClientRect();
-      // Only track if section is within or near visible viewport
-      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
+      // Only track when section is within or near viewport
+      if (rect.bottom < -120 || rect.top > window.innerHeight + 120) return;
 
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -90,11 +90,11 @@ export default function LeisureImageStack({
       const normX = Math.max(-1.3, Math.min(1.3, (e.clientX - centerX) / (rect.width / 2)));
       const normY = Math.max(-1.3, Math.min(1.3, (e.clientY - centerY) / (rect.height / 2)));
 
-      // 3D Rotation angles based on cursor offset (OVO Campione style)
-      targetRotY.current = normX * 16; // Degrees of Y rotation
-      targetRotX.current = -normY * 13; // Degrees of X rotation
-      targetTransX.current = normX * 18; // Subtle lateral float
-      targetTransY.current = normY * 14; // Subtle vertical float
+      // 3D Rotation angles based on cursor offset (OVO Campione perspective)
+      targetRotY.current = normX * 18; // Degrees of Y rotation
+      targetRotX.current = -normY * 14; // Degrees of X rotation
+      targetTransX.current = normX * 22; // Subtle lateral float
+      targetTransY.current = normY * 16; // Subtle vertical float
     };
 
     const handlePointerReset = () => {
@@ -137,7 +137,7 @@ export default function LeisureImageStack({
       ref={containerRef}
       className={`leisure-perspective-stage w-full flex items-center justify-center select-none overflow-visible ${className}`}
       style={{
-        perspective: "1200px",
+        perspective: "1500px",
         perspectiveOrigin: "center center",
       }}
     >
@@ -163,11 +163,11 @@ export default function LeisureImageStack({
             transformStyle: "preserve-3d",
           }}
         >
-          {/* 1. TOP CENTER: SPOTIFY (Depth: -15px, peeking directly above portrait) */}
+          {/* 1. TOP CENTER: SPOTIFY (Depth: -18px, peeking directly above portrait) */}
           <LeisureImageCard
             ref={spotifyRef || internalSpotifyRef}
             card={spotifyCard}
-            depthZ={-15}
+            depthZ={-18}
             isHovered={hoveredId === spotifyCard.id}
             isDimmed={hoveredId !== null && hoveredId !== spotifyCard.id}
             onMouseEnter={() => setHoveredId(spotifyCard.id)}
@@ -199,11 +199,11 @@ export default function LeisureImageStack({
             className="absolute left-[565px] top-[90px] w-[185px] h-[215px] z-12"
           />
 
-          {/* 4. LOWER LEFT: TRAVEL (Depth: +30px, White shirt position in reference image) */}
+          {/* 4. LOWER LEFT: TRAVEL (Depth: +32px, White shirt position in reference image) */}
           <LeisureImageCard
             ref={travelRef || internalTravelRef}
             card={travelCard}
-            depthZ={30}
+            depthZ={32}
             isHovered={hoveredId === travelCard.id}
             isDimmed={hoveredId !== null && hoveredId !== travelCard.id}
             onMouseEnter={() => setHoveredId(travelCard.id)}
@@ -211,11 +211,11 @@ export default function LeisureImageStack({
             className="absolute left-[145px] top-[290px] w-[230px] h-[270px] z-25"
           />
 
-          {/* 5. LOWER/MIDDLE RIGHT: CODING (Depth: +26px, Open book & coffee cup position in reference image) */}
+          {/* 5. LOWER/MIDDLE RIGHT: CODING (Depth: +28px, Open book & coffee cup position in reference image) */}
           <LeisureImageCard
             ref={codingRef || internalCodingRef}
             card={codingCard}
-            depthZ={26}
+            depthZ={28}
             isHovered={hoveredId === codingCard.id}
             isDimmed={hoveredId !== null && hoveredId !== codingCard.id}
             onMouseEnter={() => setHoveredId(codingCard.id)}
@@ -223,16 +223,16 @@ export default function LeisureImageStack({
             className="absolute left-[540px] top-[205px] w-[240px] h-[255px] z-25"
           />
 
-          {/* 6. CENTERPIECE: DINIDU PORTRAIT (Depth: +50px, Dominant Center Stage, White T-Shirt on Black) */}
+          {/* 6. CENTERPIECE: DINIDU PORTRAIT (Depth: +55px, Dominant Center Stage, White T-Shirt on Black) */}
           <LeisureImageCard
             ref={portraitRef || internalPortraitRef}
             card={portraitCard}
-            depthZ={50}
+            depthZ={55}
             isHovered={hoveredId === portraitCard.id}
             isDimmed={hoveredId !== null && hoveredId !== portraitCard.id}
             onMouseEnter={() => setHoveredId(portraitCard.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className="absolute left-[285px] top-[110px] w-[290px] h-[340px] z-30 shadow-[0_35px_100px_rgba(0,0,0,0.98),0_0_40px_rgba(152,103,255,0.25)] border-white/25"
+            className="absolute left-[285px] top-[110px] w-[290px] h-[340px] z-30 shadow-[0_32px_80px_rgba(0,0,0,0.24)] border-black/15"
           />
         </div>
       </div>

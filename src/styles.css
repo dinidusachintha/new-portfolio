@@ -9001,7 +9001,7 @@ body {
 }
 
 .leisure-perspective-stage {
-  perspective: 1200px;
+  perspective: 1500px;
   perspective-origin: center center;
 }
 
@@ -9027,6 +9027,7 @@ body {
 
 .leisure-floating-section {
   overflow-x: clip;
+  background-color: #ffffff;
 }
 
 .leisure-composition-box {
