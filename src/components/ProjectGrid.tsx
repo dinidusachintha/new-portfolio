@@ -168,6 +168,11 @@ export default function ProjectGrid({
   // Pointer drag events for horizontal spinning
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // safe fallback
+    }
     isDraggingRef.current = true;
     hasMovedRef.current = false;
     dragStartXRef.current = e.clientX;
@@ -186,7 +191,14 @@ export default function ProjectGrid({
     setAngle(angleRef.current);
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e?: React.PointerEvent) => {
+    if (e) {
+      try {
+        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {
+        // safe fallback
+      }
+    }
     isDraggingRef.current = false;
   };
 

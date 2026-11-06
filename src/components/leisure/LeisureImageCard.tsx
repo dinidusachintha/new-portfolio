@@ -69,6 +69,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
               card.isPortrait ? "object-top" : ""
             } group-hover:scale-105`}
             loading={card.isPortrait ? "eager" : "lazy"}
+            decoding="async"
           />
 
           {/* Subtle Bottom Vignette for Pill Legibility */}

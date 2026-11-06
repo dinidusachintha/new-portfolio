@@ -134,6 +134,17 @@ export default function ProjectDialog({
     }
   }, [project, initialTab]);
 
+  useEffect(() => {
+    if (!project) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [project, onClose]);
+
   const handleBookSlot = () => {
     setBookingLoading(true);
     setTimeout(() => {
@@ -177,6 +188,7 @@ export default function ProjectDialog({
       ref={dialogRef}
       className="project-dialog"
       aria-labelledby="project-dialog-title"
+      aria-modal="true"
       onCancel={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();

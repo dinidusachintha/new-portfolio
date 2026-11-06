@@ -224,8 +224,8 @@ svg {
 .ambient-spotlight {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(650px circle at var(--mouse-x, 50vw) var(--mouse-y, 35vh),
@@ -1305,9 +1305,17 @@ dialog::backdrop {
 
 .image-skeleton,
 .skeleton {
-  background: linear-gradient(100deg, #181818 20%, #2a2a2a 45%, #181818 70%);
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0.03) 15%,
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(152, 103, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 70%,
+    rgba(255, 255, 255, 0.03) 85%
+  );
   background-size: 250% 100%;
-  animation: shimmer 1.7s linear infinite;
+  animation: shimmer 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-radius: 8px;
 }
 
 .image-skeleton {
@@ -3469,9 +3477,8 @@ main {
 .hero-mesh-bg {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
+  left: 0;
+  width: 100%;
   height: 100%;
   pointer-events: none;
   background-image:
@@ -8187,6 +8194,16 @@ body {
   .preloader-floral-halo,
   .floral-ambient-watermark {
     animation: none !important;
+  }
+
+  .image-skeleton,
+  .skeleton {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+  }
+
+  .marquee-track {
+    animation-play-state: paused !important;
   }
 }
 

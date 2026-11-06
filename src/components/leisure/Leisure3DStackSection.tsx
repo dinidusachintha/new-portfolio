@@ -134,7 +134,7 @@ export default function Leisure3DStackSection() {
 
       if (width < 768) {
         // Mobile: leave 24px total padding
-        const s = Math.min(1, Math.max(0.38, (width - 24) / 860));
+        const s = Math.min(1, Math.max(0.30, (width - 24) / 860));
         setResponsiveScale(s);
       } else if (width < 960) {
         // Small tablet
@@ -601,13 +601,14 @@ export default function Leisure3DStackSection() {
                   WebkitBackfaceVisibility: "hidden",
                 }}
               >
-                <div className="relative w-[calc(100vw-36px)] sm:w-[380px] max-w-[390px] h-[440px] sm:h-[490px] rounded-3xl overflow-hidden border border-white/20 bg-[#0c0d14] shadow-[0_35px_100px_rgba(0,0,0,0.98),0_0_50px_rgba(152,103,255,0.25)] select-none">
+                <div className="relative w-[calc(100%-24px)] sm:w-[380px] max-w-[390px] h-[440px] sm:h-[490px] rounded-3xl overflow-hidden border border-white/20 bg-[#0c0d14] shadow-[0_35px_100px_rgba(0,0,0,0.98),0_0_50px_rgba(152,103,255,0.25)] select-none">
                   {/* Spotlight Image */}
                   <img
                     src={activeSpotlightCard.image}
                     alt={activeSpotlightCard.alt}
                     className="w-full h-full object-cover object-center transition-all duration-500 ease-out"
-                    loading="eager"
+                    loading="lazy"
+                    decoding="async"
                   />
 
                   {/* Cinematic Dark Gradient Overlay */}

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import Lenis from "lenis";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUp,
   ArrowUpRight,
@@ -250,23 +251,40 @@ function ProjectSkeleton() {
       {[0, 1].map((i) => (
         <div
           key={i}
-          className="p-8 sm:p-12 rounded-[2.5rem] bg-[#0a0c14] border border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl"
+          className="p-6 sm:p-10 lg:p-12 rounded-[2rem] sm:rounded-[2.5rem] bg-[#090b14] border border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center shadow-2xl"
         >
-          <div className="lg:col-span-6 space-y-5">
-            <div className="skeleton h-6 w-28 rounded-full" />
-            <div className="skeleton h-12 w-3/4 rounded-xl" />
-            <div className="skeleton h-16 w-full rounded-lg" />
-            <div className="flex gap-2 pt-2">
-              <div className="skeleton h-7 w-20 rounded-lg" />
-              <div className="skeleton h-7 w-24 rounded-lg" />
-              <div className="skeleton h-7 w-20 rounded-lg" />
+          <div className="lg:col-span-6 space-y-4 sm:space-y-5">
+            <div className="flex items-center gap-2">
+              <div className="skeleton h-5 w-24 rounded-full" />
+              <div className="skeleton h-5 w-16 rounded-full" />
+            </div>
+            <div className="skeleton h-8 sm:h-10 w-3/4 rounded-xl" />
+            <div className="skeleton h-14 sm:h-16 w-full rounded-lg" />
+            {/* Metrics Skeleton */}
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              <div className="skeleton h-12 w-full rounded-lg" />
+              <div className="skeleton h-12 w-full rounded-lg" />
+              <div className="skeleton h-12 w-full rounded-lg" />
+            </div>
+            {/* Tech Badges Skeleton */}
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
+              <div className="skeleton h-6 w-16 rounded-full" />
+              <div className="skeleton h-6 w-20 rounded-full" />
+              <div className="skeleton h-6 w-14 rounded-full" />
+              <div className="skeleton h-6 w-24 rounded-full" />
+            </div>
+            {/* Buttons Row Skeleton */}
+            <div className="flex gap-3 pt-2">
+              <div className="skeleton h-10 w-36 rounded-full" />
+              <div className="skeleton h-10 w-36 rounded-full" />
             </div>
           </div>
-          <div className="lg:col-span-6">
-            <div className="skeleton h-64 rounded-2xl" />
+          <div className="lg:col-span-6 w-full aspect-[4/3] rounded-2xl sm:rounded-3xl bg-black/40 border border-white/5 p-4 flex items-center justify-center">
+            <div className="skeleton w-full h-full rounded-xl sm:rounded-2xl" />
           </div>
         </div>
       ))}
+      <span className="sr-only">Loading system architecture previews...</span>
     </div>
   );
 }
@@ -553,6 +571,7 @@ export default function App() {
         String(Math.max(0, 1 - scrollY / 550)),
       );
       setScrolled(scrollY > 40);
+      ScrollTrigger.update();
     };
 
     const onScroll = () => {
