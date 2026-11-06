@@ -470,7 +470,15 @@ export type BlogPost = {
   slug: string;
   title: string;
   section: BlogSection;
-  category: "Company Spotlight" | "Distributed Systems" | "AI & Video Tech" | "Software Architecture" | "Career & Mentorship" | "Engineering Culture";
+  category:
+    | "Company Spotlight"
+    | "Distributed Systems"
+    | "AI & Video Tech"
+    | "Software Architecture"
+    | "Career & Mentorship"
+    | "Engineering Culture"
+    | "Project Announcement"
+    | "PROJECT ANNOUNCEMENT";
   date: string;
   readTime: string;
   summary: string;
@@ -478,6 +486,8 @@ export type BlogPost = {
   badge?: string;
   highlightPill?: string;
   featured?: boolean;
+  status?: string;
+  github?: string;
   author: {
     name: string;
     role: string;
@@ -525,7 +535,87 @@ export const companySpotlight: CompanySpotlight = {
 };
 
 export const blogPosts: BlogPost[] = [
-  // SECTION 1: COMPANY UPDATES
+  // SECTION 1: COMPANY UPDATES / LATEST ANNOUNCEMENT
+  {
+    id: "schoolride-lk-coming-soon",
+    slug: "schoolride-lk-coming-soon",
+    title: "SchoolRide LK — A Smarter Way to Travel to School",
+    section: "Company Updates",
+    category: "Project Announcement",
+    date: "NOV 2026",
+    readTime: "2 MIN READ",
+    featured: true,
+    highlightPill: "LATEST BLOG",
+    status: "COMING SOON",
+    github: "https://github.com/dinidusachintha/SchoolRide-LK-V2",
+    summary:
+      "Meet SchoolRide LK, an upcoming school transportation platform designed to make school van bookings, ride tracking, and communication easier for parents and transport providers across Sri Lanka. A safer, smarter school travel experience is on the way.",
+    image: "assets/images/schoolride-lk-blog.jpg",
+    author: {
+      name: "Dinidu Sachintha",
+      role: "Founder & Full Stack Developer, SchoolRide LK",
+    },
+    tags: [
+      "SchoolRide LK",
+      "Project Announcement",
+      "Coming Soon",
+      "Smart Transportation",
+      "Child Safety",
+      "Live GPS",
+      "Next.js",
+      "NestJS",
+      "Sri Lanka",
+    ],
+    content: [
+      {
+        heading: "1. The Need for Smarter School Transport",
+        paragraphs: [
+          "School transportation is an important part of everyday life for thousands of families in Sri Lanka. Finding reliable school transport, staying informed about daily journeys, and communicating with van drivers can sometimes be challenging.",
+          "That's why we're developing SchoolRide LK: an upcoming digital platform designed to connect parents, school van operators, and transport administrators through a more organized, transparent, and convenient experience.",
+        ],
+        callout:
+          "Status: COMING SOON — SchoolRide LK has not launched publicly yet. Development is actively underway, with features designed to build a safer and more connected daily travel network.",
+      },
+      {
+        heading: "2. What We're Building",
+        paragraphs: [
+          "Our goal is to make school transportation easier and safer to manage, with planned capabilities including:",
+          "• Smart Ride Booking: A convenient way for parents to discover school routes and manage transport bookings seamlessly.",
+          "• Live GPS Tracking: Location visibility designed to help parents stay informed about their children's journeys in real-time.",
+          "• Child Safety & Monitoring: Dedicated pickup and drop-off verification to support safer, accountable transportation.",
+          "• Verified Drivers & Vehicles: Transparent driver credentials, vehicle documentation, and safety compliance management.",
+          "• Real-Time Updates: Instant ride notifications, delay alerts, and transportation status updates delivered directly to parents.",
+          "• Dedicated Dashboards: Separate, role-based experiences designed specifically for parents, drivers, and transport administrators.",
+        ],
+        callout:
+          "Planned Capabilities: These features describe our development roadmap and architectural direction as we build out the platform. Features are currently in active pre-launch development.",
+      },
+      {
+        heading: "3. Built With Modern Technology",
+        paragraphs: [
+          "SchoolRide LK is being developed using a modern, resilient full-stack architecture built for high reliability, real-time telemetry, and secure role-based access:",
+          "• Frontend: Next.js 15 · React 19 · TypeScript · Tailwind CSS · Framer Motion for responsive, accessible dashboards.",
+          "• Backend: NestJS · Node.js enterprise microservice architecture with modular controllers, guards, and services.",
+          "• Database: PostgreSQL · Prisma ORM for relational integrity, audit logs, and type-safe data queries.",
+          "• Real-Time: Socket.io bidirectional event gateway for low-latency live GPS coordinate streaming and instant alerts.",
+        ],
+        codeSnippet: {
+          language: "typescript",
+          code: `// SchoolRide LK: Real-Time Telemetry & Safety Checksum Interface\nexport interface StudentTransitEvent {\n  bookingId: string;\n  studentId: string;\n  operatorId: string;\n  status: 'BOARDED' | 'IN_TRANSIT' | 'ARRIVED_SCHOOL' | 'DROPPED_HOME';\n  telemetry: {\n    latitude: number;\n    longitude: number;\n    speedKmh: number;\n    headingDeg: number;\n  };\n  timestamp: string;\n  safetyVerified: boolean;\n}`,
+        },
+      },
+      {
+        heading: "4. What's Next & Development Roadmap",
+        paragraphs: [
+          "We're continuing to refine the platform, optimize real-time routing engines, improve user workflows, and prepare for initial user testing.",
+          "SchoolRide LK is not publicly launched yet, but we're excited to share more updates and milestones as development progresses.",
+          "Stay tuned — something exciting is on the way! Smarter journeys. Safer rides. Better connections.",
+        ],
+        callout:
+          "Official Repository: Track open development progress and architectural updates at https://github.com/dinidusachintha/SchoolRide-LK-V2",
+      },
+    ],
+  },
   {
     id: "ai-desk-vikasha-ebilling",
     slug: "ai-desk-vikasha-ebilling",

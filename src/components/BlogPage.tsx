@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Clock,
   FileText,
+  Github,
   Share2,
   Sparkles,
   Tag,
@@ -60,6 +61,40 @@ export default function BlogPage({
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Deep-linking & Hash Routing support (#/blog/:slug)
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith("#/blog/")) {
+        const slug = hash.replace("#/blog/", "").trim();
+        const found = blogPosts.find((p) => p.slug === slug || p.id === slug);
+        if (found) {
+          setSelectedPost(found);
+          return;
+        }
+      }
+      if (hash === "#/blog" || hash === "#/blog/") {
+        setSelectedPost(null);
+      }
+    };
+
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  const openPost = (post: BlogPost) => {
+    setSelectedPost(post);
+    window.location.hash = `#/blog/${post.slug}`;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const closePost = () => {
+    setSelectedPost(null);
+    window.location.hash = "#/blog";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const copyArticleLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -79,8 +114,7 @@ export default function BlogPage({
           type="button"
           onClick={() => {
             if (selectedPost) {
-              setSelectedPost(null);
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              closePost();
             } else {
               onBackToHome();
             }
@@ -118,9 +152,20 @@ export default function BlogPage({
         /* Full Article Reader View */
         <article className="blog-reader-view max-w-3xl mx-auto reveal animate-in fade-in duration-300">
           <div className="blog-reader-meta flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
-            <span className="blog-category-tag font-mono text-xs px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 font-semibold">
+            <span className="blog-category-tag font-mono text-xs px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 font-semibold uppercase">
               {selectedPost.category}
             </span>
+            {selectedPost.highlightPill && (
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-violet-600/30 border border-violet-400/40 text-violet-200">
+                {selectedPost.highlightPill}
+              </span>
+            )}
+            {selectedPost.status && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{selectedPost.status}</span>
+              </span>
+            )}
             <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/10 text-gray-400">
               {selectedPost.section}
             </span>
@@ -165,7 +210,11 @@ export default function BlogPage({
           <div className="blog-reader-image-wrap rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-2xl shadow-black/80">
             <SmartImage
               src={asset(selectedPost.image)}
-              alt={selectedPost.title}
+              alt={
+                selectedPost.id === "schoolride-lk-coming-soon"
+                  ? "SchoolRide LK Coming Soon - School Transportation Platform"
+                  : selectedPost.title
+              }
               eager
               className="w-full aspect-[16/9] object-cover"
             />
@@ -231,24 +280,36 @@ export default function BlogPage({
           <div className="mt-12 pt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10">
             <button
               type="button"
-              onClick={() => {
-                setSelectedPost(null);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+              onClick={closePost}
               className="button button-outline text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer"
             >
               <ArrowLeft size={14} />
               <span>Back to all blog sections</span>
             </button>
 
-            <button
-              type="button"
-              onClick={onBackToHome}
-              className="button button-primary text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer"
-            >
-              <span>Explore Portfolio</span>
-              <ArrowUpRight size={14} />
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              {selectedPost.github && (
+                <a
+                  href={selectedPost.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button button-outline text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer hover:border-emerald-400/50 hover:text-emerald-300 transition-colors"
+                >
+                  <Github size={14} />
+                  <span>GitHub Repository</span>
+                  <ArrowUpRight size={14} />
+                </a>
+              )}
+
+              <button
+                type="button"
+                onClick={onBackToHome}
+                className="button button-primary text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer"
+              >
+                <span>Explore Portfolio</span>
+                <ArrowUpRight size={14} />
+              </button>
+            </div>
           </div>
         </article>
       ) : (
@@ -378,10 +439,7 @@ export default function BlogPage({
                       type="button"
                       onClick={() => {
                         const post = blogPosts.find((p) => p.id === "ai-desk-vikasha-ebilling");
-                        if (post) {
-                          setSelectedPost(post);
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }
+                        if (post) openPost(post);
                       }}
                       className="button button-primary text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer shadow-lg shadow-violet-900/40"
                     >
@@ -401,10 +459,7 @@ export default function BlogPage({
                     className="company-project-frame relative rounded-2xl overflow-hidden border-2 border-violet-500/40 shadow-2xl shadow-violet-950/60 group cursor-pointer"
                     onClick={() => {
                       const post = blogPosts.find((p) => p.id === "ai-desk-vikasha-ebilling");
-                      if (post) {
-                        setSelectedPost(post);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }
+                      if (post) openPost(post);
                     }}
                   >
                     <SmartImage
@@ -480,29 +535,45 @@ export default function BlogPage({
                       <article
                         key={post.id}
                         className="blog-card reveal-card cursor-pointer group flex flex-col justify-between p-4 rounded-2xl bg-[#0c0a17]/80 hover:bg-[#120f24] border border-white/10 hover:border-violet-500/50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-violet-950/40"
-                        onClick={() => {
-                          setSelectedPost(post);
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}
+                        onClick={() => openPost(post)}
                       >
                         <div>
                           {/* Image Thumbnail with Overlay Pill */}
                           <div className="blog-card-image-shell relative rounded-xl overflow-hidden aspect-[16/10] mb-4 border border-white/10 bg-black/40">
                             <SmartImage
                               src={asset(post.image)}
-                              alt={post.title}
+                              alt={
+                                post.id === "schoolride-lk-coming-soon"
+                                  ? "SchoolRide LK Coming Soon - School Transportation Platform"
+                                  : post.title
+                              }
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
-                            <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1">
-                              <span className="blog-badge-float text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-violet-300">
+                            <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 items-center">
+                              <span className="blog-badge-float text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-violet-300 uppercase">
                                 {post.category}
                               </span>
+                              {post.highlightPill && (
+                                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-600/90 text-white border border-violet-400/40 shadow-sm">
+                                  {post.highlightPill}
+                                </span>
+                              )}
                               {post.badge && (
                                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/80 text-black">
                                   {post.badge}
                                 </span>
                               )}
                             </div>
+
+                            {/* Status badge: COMING SOON in top-right */}
+                            {post.status && (
+                              <div className="absolute top-2.5 right-2.5 z-10">
+                                <span className="inline-flex items-center gap-1.5 text-[9.5px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/85 text-emerald-300 border border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.35)] backdrop-blur-md uppercase tracking-wider">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
+                                  <span>{post.status}</span>
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Post Meta */}
