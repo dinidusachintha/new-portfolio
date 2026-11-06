@@ -8992,6 +8992,67 @@ body {
   }
 }
 
+/* ==========================================================================
+   BEYOND THE CODE — LEISURE & LIFESTYLE (CAMPIONE-INSPIRED SCROLL)
+   ========================================================================== */
+.leisure-section {
+  position: relative;
+  background: #06070a;
+}
+
+.leisure-frame-card {
+  will-change: clip-path, transform, border-radius;
+  transform-origin: center center;
+}
+
+.leisure-activity-panel {
+  will-change: clip-path, transform;
+}
+
+.leisure-panel-img-wrap {
+  will-change: transform;
+}
+
+.leisure-panel-img {
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.leisure-panel-title-mask {
+  line-height: 1.05;
+}
+
+.leisure-panel-title {
+  will-change: transform, opacity;
+}
+
+.leisure-watermark-number {
+  font-family: "Unbounded", "Manrope Variable", sans-serif;
+  user-select: none;
+  pointer-events: none;
+}
+
+.leisure-progress-widget {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leisure-progress-widget:hover {
+  border-color: rgba(152, 103, 255, 0.45);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(152, 103, 255, 0.25);
+}
+
+@media (max-width: 767px) {
+  .leisure-mobile-card {
+    position: relative;
+  }
+  .leisure-mobile-card .leisure-activity-panel {
+    position: relative !important;
+    inset: auto !important;
+    height: 100% !important;
+  }
+}
+
+
 
 
 
