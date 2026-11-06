@@ -7006,6 +7006,75 @@ body {
     0 0 50px rgba(152, 103, 255, 0.28) !important;
 }
 
+.glass-pill-white-3d {
+  background: #ffffff !important;
+  color: #05060b !important;
+  font-family: "Unbounded", "Manrope Variable", sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 9999px !important;
+  box-shadow: 
+    0 4px 16px rgba(255, 255, 255, 0.22),
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.12) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.glass-pill-white-3d:hover {
+  background: #f8fafc !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 
+    0 8px 24px rgba(255, 255, 255, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 1),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.glass-pill-white-3d:active {
+  transform: translateY(0.5px) scale(0.98) !important;
+  box-shadow: 
+    0 2px 8px rgba(255, 255, 255, 0.15),
+    inset 0 1px 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.glass-pill-dark-3d {
+  background: rgba(12, 13, 20, 0.85) !important;
+  color: #ffffff !important;
+  font-family: "Unbounded", "Manrope Variable", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 9999px !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.55),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.22),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.glass-pill-dark-3d:hover {
+  background: rgba(22, 24, 38, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 
+    0 8px 22px rgba(0, 0, 0, 0.7),
+    0 0 16px rgba(152, 103, 255, 0.25),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.32),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.glass-pill-dark-3d:active {
+  transform: translateY(0.5px) scale(0.98) !important;
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
 .glass-pill-violet,
 .glass-pill-gold {
   background: linear-gradient(135deg, #7c3aed 0%, #9867ff 50%, #6366f1 100%) !important;

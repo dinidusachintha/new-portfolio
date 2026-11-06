@@ -5,7 +5,7 @@ import {
   Pause,
   ChevronLeft,
   ChevronRight,
-  ExternalLink,
+  ArrowUpRight,
   Code2,
   LayoutGrid,
   Layers,
@@ -91,15 +91,15 @@ export default function ProjectGrid({
       const w = containerRef.current?.offsetWidth || window.innerWidth;
       if (w < 480) {
         setStageDimensions({
-          rx: Math.min(125, w * 0.34),
-          rz: 185,
-          cardW: Math.min(312, w - 24),
+          rx: Math.min(110, w * 0.28),
+          rz: 195,
+          cardW: Math.min(328, w - 20),
         });
       } else if (w < 640) {
         setStageDimensions({
-          rx: Math.min(175, w * 0.4),
-          rz: 225,
-          cardW: Math.min(340, w - 32),
+          rx: Math.min(160, w * 0.35),
+          rz: 230,
+          cardW: Math.min(348, w - 28),
         });
       } else if (w < 1024) {
         setStageDimensions({
@@ -355,7 +355,7 @@ export default function ProjectGrid({
       {/* ===================================================================== */}
       {viewMode === "carousel" && (
         <div
-          className="glass-project-stage relative w-full h-[610px] sm:h-[720px] lg:h-[760px] rounded-[1.75rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
+          className="glass-project-stage relative w-full h-[650px] sm:h-[720px] lg:h-[770px] rounded-[1.75rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -593,7 +593,7 @@ function GlassCardItem({
         background: project.cardBg,
         borderColor: isFront ? project.borderColor : "rgba(255, 255, 255, 0.14)",
       }}
-      className={`glass-card-frosted w-full rounded-[1.6rem] sm:rounded-[2.15rem] p-4 sm:p-6 flex flex-col justify-between overflow-hidden relative text-center select-none ${
+      className={`glass-card-frosted w-full rounded-[1.35rem] sm:rounded-[2.15rem] p-3 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden relative text-center select-none ${
         isFront ? "ring-1 ring-violet-400/30" : ""
       }`}
     >
@@ -604,9 +604,9 @@ function GlassCardItem({
       />
 
       {/* Top Index & Live Status Corner Pills */}
-      <div className="relative z-10 flex items-center justify-between gap-2 mb-2">
+      <div className="relative z-10 flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
         <span
-          className="px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-unbounded font-bold uppercase border"
+          className="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-unbounded font-bold uppercase border"
           style={{
             background: project.tagBg,
             color: project.tagColor,
@@ -616,32 +616,32 @@ function GlassCardItem({
           {project.number} · {project.domain}
         </span>
 
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9.5px] font-mono font-bold text-violet-200">
+        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] sm:text-[9.5px] font-mono font-bold text-violet-200">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span>{project.year}</span>
         </span>
       </div>
 
       {/* 1. TOP HEADER WITH UNBOUNDED FONT */}
-      <div className="relative z-10 space-y-1 mb-2.5 sm:mb-3">
-        <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[10.5px] sm:text-xs font-semibold tracking-wider uppercase">
-          <Sparkles size={12} className="text-violet-400 shrink-0" />
+      <div className="relative z-10 space-y-0.5 sm:space-y-1 mb-2 sm:mb-3">
+        <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[9.5px] sm:text-xs font-semibold tracking-wider uppercase">
+          <Sparkles size={11} className="text-violet-400 shrink-0" />
           <span className="truncate">{project.role}</span>
         </div>
 
         {/* Project Title in Unbounded Font */}
-        <h3 className="text-lg sm:text-2xl font-black text-white tracking-tight leading-snug font-unbounded">
+        <h3 className="text-base sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug font-unbounded truncate">
           {project.title}
         </h3>
 
         {/* Latency & Category Badge */}
-        <div className="text-[9.5px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5">
+        <div className="text-[9px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5">
           {project.metrics[1]?.value || "<50MS TTFB"} · {categoryTag}
         </div>
       </div>
 
       {/* 2. FROSTED SCREENSHOT PREVIEW FRAME */}
-      <div className="relative z-10 w-full aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-inner mb-3 sm:mb-3.5 group/img">
+      <div className="relative z-10 w-full aspect-[16/8.8] sm:aspect-[16/9] rounded-lg sm:rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-inner mb-2 sm:mb-3.5 group/img">
         {!imgLoaded && <div className="skeleton absolute inset-0" />}
         <img
           src={project.screenshot}
@@ -654,25 +654,25 @@ function GlassCardItem({
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070810]/85 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[9.5px] sm:text-[10px] font-mono text-slate-200">
-          <span className="px-2 py-0.5 rounded bg-black/70 border border-white/15 text-cyan-300 truncate max-w-[65%]">
+        <div className="absolute bottom-1.5 sm:bottom-2 left-2 sm:left-2.5 right-2 sm:right-2.5 flex items-center justify-between text-[8.5px] sm:text-[10px] font-mono text-slate-200">
+          <span className="px-1.5 sm:px-2 py-0.5 rounded bg-black/75 border border-white/15 text-cyan-300 truncate max-w-[65%]">
             {project.demoUrl.replace(/^https?:\/\//, "")}
           </span>
-          <span className="px-2 py-0.5 rounded bg-violet-600/80 border border-violet-400/40 text-white font-bold">
+          <span className="px-1.5 sm:px-2 py-0.5 rounded bg-violet-600/80 border border-violet-400/40 text-white font-bold">
             LIVE ↗
           </span>
         </div>
       </div>
 
       {/* 3. STRUCTURED METADATA WITH HAIRLINE DIVIDERS */}
-      <div className="relative z-10 space-y-1.5 sm:space-y-2 mb-3.5 sm:mb-4">
+      <div className="relative z-10 space-y-1 sm:space-y-1.5 mb-2.5 sm:mb-3.5">
         {/* Row 1: SYSTEM ARCHITECTURE */}
-        <div className="py-1 sm:py-1.5 border-t border-white/10">
-          <div className="text-[9px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+        <div className="py-0.5 sm:py-1 border-t border-white/10">
+          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             SYSTEM ARCHITECTURE
           </div>
           <p
-            className="text-[11px] sm:text-xs line-clamp-2 leading-relaxed px-1 font-normal"
+            className="text-[10px] sm:text-xs line-clamp-2 leading-relaxed px-1 font-normal"
             style={{ color: "#e2e8f0" }}
           >
             {project.shortDescription || project.description}
@@ -680,21 +680,21 @@ function GlassCardItem({
         </div>
 
         {/* Row 2: CORE TECHNOLOGIES */}
-        <div className="py-1 sm:py-1.5 border-t border-white/10">
-          <div className="text-[9px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+        <div className="py-0.5 sm:py-1 border-t border-white/10">
+          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             PRIMARY ARSENAL
           </div>
-          <div className="text-[10.5px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
+          <div className="text-[9.5px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
             {project.technologies.slice(0, 6).join(" · ")}
           </div>
         </div>
 
         {/* Row 3: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
-        <div className="py-1 sm:py-1.5 border-t border-b border-white/10">
-          <div className="text-[9px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+        <div className="py-0.5 sm:py-1 border-t border-b border-white/10">
+          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             {project.capabilitiesLabel || "PRODUCTION IMPACT"}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
+          <div className="text-[9.5px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
             {project.capabilitiesText ||
               project.metrics
                 .map((m) => `${m.value} ${m.label.split(" ")[0]}`)
@@ -703,19 +703,19 @@ function GlassCardItem({
         </div>
       </div>
 
-      {/* 4. TWO PILL ACTION BUTTONS IN MATCHING VIOLET/OBSIDIAN THEME */}
-      <div className="relative z-10 space-y-2">
-        {/* Top Button: Electric Violet / Indigo Gradient Filled Pill */}
+      {/* 4. TWO 3D GLASS PILL ACTION BUTTONS (MATCHING IMAGE 2) */}
+      <div className="relative z-10 space-y-1.5 sm:space-y-2">
+        {/* Top Button: White 3D Elevated Glass Pill with Dark Text & Arrow ↗ (Image 2 style) */}
         {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
           <a
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-violet w-full py-2.5 sm:py-3 px-4 sm:px-5 rounded-full text-white font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
+            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
           >
-            <ExternalLink size={13} className="shrink-0" />
             <span>EXPLORE LIVE SYSTEM</span>
+            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
           </a>
         ) : (
           <button
@@ -724,21 +724,21 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenDemo();
             }}
-            className="glass-pill-violet w-full py-2.5 sm:py-3 px-4 sm:px-5 rounded-full text-white font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-98"
+            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
           >
-            <ExternalLink size={13} className="shrink-0" />
             <span>EXPLORE LIVE SYSTEM</span>
+            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
           </button>
         )}
 
-        {/* Bottom Button: Frosted Glass Outline Pill */}
+        {/* Bottom Button: Obsidian 3D Frosted Glass Pill with White Text (Image 2 style) */}
         {project.sourceUrl && !project.sourceUrl.endsWith("/dinidu") ? (
           <a
             href={project.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-outline w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+            className="glass-pill-dark-3d w-full py-1.5 sm:py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
           >
             <Code2 size={13} className="shrink-0 text-violet-300" />
             <span>VIEW ARCHITECTURE & CODE</span>
@@ -750,7 +750,7 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenArch();
             }}
-            className="glass-pill-outline w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+            className="glass-pill-dark-3d w-full py-1.5 sm:py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
           >
             <Code2 size={13} className="shrink-0 text-violet-300" />
             <span>VIEW ARCHITECTURE & CODE</span>

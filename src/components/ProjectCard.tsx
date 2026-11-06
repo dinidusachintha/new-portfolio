@@ -178,7 +178,7 @@ export default function ProjectCard({
               <button
                 type="button"
                 onClick={() => onSelect?.(project, "demo")}
-                className="glass-pill-violet py-2.5 sm:py-3 px-5 rounded-full text-white font-unbounded font-bold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                className="glass-pill-white-3d py-2.5 sm:py-3 px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Play size={13} className="fill-current shrink-0" />
                 <span>Interactive Live Demo</span>
@@ -189,7 +189,7 @@ export default function ProjectCard({
                   href={project.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="glass-pill-outline py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
+                  className="glass-pill-dark-3d py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Code2 size={14} className="text-violet-300 shrink-0" />
                   <span>Architecture & Specs</span>
@@ -198,7 +198,7 @@ export default function ProjectCard({
                 <button
                   type="button"
                   onClick={() => onSelect?.(project, "arch")}
-                  className="glass-pill-outline py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
+                  className="glass-pill-dark-3d py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Code2 size={14} className="text-violet-300 shrink-0" />
                   <span>Architecture & Specs</span>
