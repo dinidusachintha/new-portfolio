@@ -94,7 +94,7 @@ export const projects: Project[] = [
       "Citizen web portal for real-time bill inquiry, consumption analytics, and receipts",
     ],
     role: "Founder & Web Developer (AI Desk)",
-    liveUrl: "https://github.com/dinidu",
+    liveUrl: "https://vikashacbo.com/",
     sourceUrl: "https://github.com/dinidu",
   },
   {
@@ -329,8 +329,8 @@ export const projects: Project[] = [
       "Fully responsive mobile and desktop experience with premium olive-green and gold theme",
     ],
     role: "Lead Frontend & Creative Engineer",
-    liveUrl: "https://github.com/dinidu",
-    sourceUrl: "https://github.com/dinidu",
+    liveUrl: "https://www.chathuragimasha.site/",
+    sourceUrl: "https://github.com/Genula2003/WeddingSite-1",
   },
   {
     id: "spicy-selling-site",

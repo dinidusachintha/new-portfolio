@@ -7998,9 +7998,8 @@ body {
    SUBTLE FLORAL / BOTANICAL ANIMATIONS & MOBILE RESPONSIVE POLISH
    ========================================================================== */
 .floral-lotus-svg {
-  animation: floralBloomSpin 14s ease-in-out infinite alternate;
+  animation: none !important;
   transform-origin: center center;
-  will-change: transform, filter;
 }
 
 .preloader-floral-halo {
@@ -8028,7 +8027,7 @@ body {
   pointer-events: none;
   z-index: 0;
   opacity: 0.7;
-  animation: floralWatermarkDrift 18s ease-in-out infinite alternate;
+  animation: none !important;
 }
 
 @keyframes floralBloomSpin {

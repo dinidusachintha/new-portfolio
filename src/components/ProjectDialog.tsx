@@ -1181,7 +1181,7 @@ export default function ProjectDialog({
                       href={liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all shadow-lg cursor-pointer"
+                      className="glass-pill-violet inline-flex items-center gap-2 px-5 py-2.5 rounded-full !text-white font-unbounded font-bold text-xs shadow-lg cursor-pointer"
                     >
                       <span>Open External Live Deployment</span>
                       <ExternalLink size={14} />
@@ -1386,7 +1386,7 @@ export default function ProjectDialog({
                     </button>
                     {liveUrl && (
                       <a
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all shadow-lg cursor-pointer"
+                        className="glass-pill-violet inline-flex items-center gap-2 px-5 py-2.5 rounded-full !text-white font-unbounded font-bold text-xs shadow-lg cursor-pointer"
                         href={liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
