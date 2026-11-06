@@ -36,20 +36,29 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
         data-card-id={card.id}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-black/[0.09] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-350 ease-out ${
-          isDimmed ? "opacity-55 filter brightness-95" : "opacity-100"
+        className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-white/14 bg-[#090a0f] shadow-[0_20px_50px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-350 ease-out ${
+          isDimmed ? "opacity-45 filter brightness-75" : "opacity-100"
         } ${
           isHovered
-            ? "!z-50 border-black/30 shadow-[0_32px_75px_rgba(0,0,0,0.25),0_0_25px_rgba(124,58,237,0.14)]"
+            ? "!z-50 border-white/40 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(152,103,255,0.3)]"
             : ""
         } ${className}`}
         style={{
           ...style,
           transform: `translateZ(${z}px) scale(${scale})`,
           transformStyle: "preserve-3d",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
         }}
       >
-        <div className="relative w-full h-full overflow-hidden" style={{ transformStyle: "preserve-3d" }}>
+        <div
+          className="relative w-full h-full overflow-hidden"
+          style={{
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
+        >
           <img
             src={card.image}
             alt={card.alt}
@@ -60,7 +69,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
           />
 
           {/* Subtle Bottom Vignette for Pill Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10 opacity-60 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
 
           {/* Minimal Floating Pill Tag on Hover */}
           <div
@@ -78,7 +87,7 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
               <span>{card.label}</span>
             </div>
 
-            <span className="font-mono text-[9px] text-gray-200 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline-block bg-black/75 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-sm">
+            <span className="font-mono text-[9px] text-gray-300 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:inline-block bg-black/75 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-sm">
               {card.title}
             </span>
           </div>

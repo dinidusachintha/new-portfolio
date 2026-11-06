@@ -9001,12 +9001,13 @@ body {
 }
 
 .leisure-perspective-stage {
-  perspective: 1500px;
+  perspective: 1200px;
   perspective-origin: center center;
 }
 
 .leisure-3d-cluster {
   transform-style: preserve-3d;
+  transform-origin: center center;
   will-change: transform;
 }
 
@@ -9018,6 +9019,8 @@ body {
               border-color 0.35s ease,
               box-shadow 0.35s ease;
   user-select: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .leisure-image-card img {
@@ -9027,7 +9030,7 @@ body {
 
 .leisure-floating-section {
   overflow-x: clip;
-  background-color: #ffffff;
+  background-color: #080808;
 }
 
 .leisure-composition-box {
