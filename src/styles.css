@@ -9000,6 +9000,16 @@ body {
   background: #080808;
 }
 
+.leisure-perspective-stage {
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+.leisure-3d-cluster {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
 .leisure-image-card {
   will-change: transform, opacity, filter;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -9015,6 +9025,10 @@ body {
   user-select: none;
 }
 
+.leisure-floating-section {
+  overflow-x: clip;
+}
+
 .leisure-composition-box {
   transform-origin: center center;
   transition: transform 0.2s ease-out;
@@ -9028,7 +9042,10 @@ body {
 
 @media (max-width: 767px) {
   .leisure-composition-box {
-    transform: scale(calc((100vw - 20px) / 860));
+    transform: scale(calc((100vw - 24px) / 860));
+  }
+  .leisure-perspective-stage {
+    min-height: calc(580px * ((100vw - 24px) / 860) + 20px);
   }
 }
 
