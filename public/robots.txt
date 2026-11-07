@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://dinidu.dev/sitemap.xml
+

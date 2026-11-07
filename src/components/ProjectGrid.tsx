@@ -625,20 +625,27 @@ function GlassCardItem({
             borderColor: project.borderColor,
           }}
         >
-          {project.number} · {project.domain}
+          {project.badgeCategory || `${project.number} · ${project.domain}`}
         </span>
 
-        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] sm:text-[9.5px] font-mono font-bold text-violet-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>{project.year}</span>
-        </span>
+        {project.status === "COMING SOON" ? (
+          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[9px] sm:text-[9.5px] font-mono font-bold text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>COMING SOON</span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] sm:text-[9.5px] font-mono font-bold text-violet-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>{project.year}</span>
+          </span>
+        )}
       </div>
 
       {/* 1. TOP HEADER WITH UNBOUNDED FONT */}
       <div className="relative z-10 space-y-0.5 sm:space-y-1 mb-2 sm:mb-3">
         <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[9.5px] sm:text-xs font-semibold tracking-wider uppercase">
           <Sparkles size={11} className="text-violet-400 shrink-0" />
-          <span className="truncate">{project.role}</span>
+          <span className="truncate">{project.role} · {project.year}</span>
         </div>
 
         {/* Project Title in Unbounded Font */}
@@ -646,9 +653,9 @@ function GlassCardItem({
           {project.title}
         </h3>
 
-        {/* Latency & Category Badge */}
-        <div className="text-[9px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5">
-          {project.metrics[1]?.value || "<50MS TTFB"} · {categoryTag}
+        {/* Subtitle / Latency & Category Badge */}
+        <div className="text-[9px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5 truncate">
+          {project.subtitle ? project.subtitle : `${project.metrics[1]?.value || "<50MS TTFB"} · ${categoryTag}`}
         </div>
       </div>
 
@@ -668,11 +675,19 @@ function GlassCardItem({
         <div className="absolute inset-0 bg-gradient-to-t from-[#070810]/85 via-transparent to-transparent pointer-events-none" />
         <div className="absolute bottom-1.5 sm:bottom-2 left-2 sm:left-2.5 right-2 sm:right-2.5 flex items-center justify-between text-[8.5px] sm:text-[10px] font-mono text-slate-200">
           <span className="px-1.5 sm:px-2 py-0.5 rounded bg-black/75 border border-white/15 text-cyan-300 truncate max-w-[65%]">
-            {project.demoUrl.replace(/^https?:\/\//, "")}
+            {project.status === "COMING SOON"
+              ? "schoolride-lk.dev [COMING SOON]"
+              : project.demoUrl.replace(/^https?:\/\//, "")}
           </span>
-          <span className="px-1.5 sm:px-2 py-0.5 rounded bg-violet-600/80 border border-violet-400/40 text-white font-bold">
-            LIVE ↗
-          </span>
+          {project.status === "COMING SOON" ? (
+            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-600/80 border border-emerald-400/50 text-white font-bold text-[8.5px] sm:text-[9.5px] tracking-wider shadow-[0_0_10px_rgba(34,197,94,0.4)]">
+              COMING SOON
+            </span>
+          ) : (
+            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-violet-600/80 border border-violet-400/40 text-white font-bold">
+              LIVE ↗
+            </span>
+          )}
         </div>
       </div>
 
@@ -691,7 +706,19 @@ function GlassCardItem({
           </p>
         </div>
 
-        {/* Row 2: CORE TECHNOLOGIES */}
+        {/* Row 2: CORE FEATURES (if provided) */}
+        {project.coreFeatures && (
+          <div className="py-0.5 sm:py-1 border-t border-white/10">
+            <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+              CORE FEATURES
+            </div>
+            <div className="text-[9.5px] sm:text-[11px] font-mono text-emerald-300 font-semibold tracking-wide truncate px-1">
+              {project.coreFeatures}
+            </div>
+          </div>
+        )}
+
+        {/* Row 3: PRIMARY ARSENAL */}
         <div className="py-0.5 sm:py-1 border-t border-white/10">
           <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             PRIMARY ARSENAL
@@ -701,7 +728,7 @@ function GlassCardItem({
           </div>
         </div>
 
-        {/* Row 3: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
+        {/* Row 4: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
         <div className="py-0.5 sm:py-1 border-t border-b border-white/10">
           <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             {project.capabilitiesLabel || "PRODUCTION IMPACT"}
@@ -718,7 +745,19 @@ function GlassCardItem({
       {/* 4. TWO 3D GLASS PILL ACTION BUTTONS (MATCHING IMAGE 2) */}
       <div className="relative z-10 space-y-1.5 sm:space-y-2">
         {/* Top Button: White 3D Elevated Glass Pill with Dark Text & Arrow ↗ (Image 2 style) */}
-        {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
+        {project.status === "COMING SOON" ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenDemo();
+            }}
+            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+          >
+            <span>EXPLORE PROJECT</span>
+            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
+          </button>
+        ) : project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
           <a
             href={project.liveUrl}
             target="_blank"

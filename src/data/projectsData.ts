@@ -17,15 +17,18 @@ export interface ProjectItem {
   number: string;
   category: string;
   domain: ProjectDomain;
+  badgeCategory?: string;
   year: string;
   role: string;
   status: string;
   title: string;
+  subtitle?: string;
   shortDescription: string;
   description: string;
   problem: string;
   solution: string;
   architecture: string;
+  coreFeatures?: string;
   highlights: string[];
   architectureNodes: ArchitectureNode[];
   technologies: string[];
@@ -97,33 +100,38 @@ export const projectsData: ProjectItem[] = [
   {
     id: "schoolride-lk",
     number: "02",
-    category: "Transportation",
+    badgeCategory: "04 · FULL STACK",
+    category: "Full Stack",
     domain: "Full Stack",
     year: "2026",
-    role: "Full Stack Web Development",
-    status: "LIVE PLATFORM",
+    role: "FULL STACK WEB DEVELOPMENT",
+    status: "COMING SOON",
     title: "SchoolRide LK",
+    subtitle: "SMART SCHOOL TRANSPORTATION PLATFORM",
     shortDescription:
-      "A full-stack school transportation platform designed for Sri Lankan families, connecting parents with verified school van operators through secure ride bookings, real-time GPS tracking, child safety monitoring, and role-based management dashboards.",
+      "A modern school transportation platform connecting parents, drivers, and administrators through smart ride bookings, GPS tracking, and safety-focused management.",
     description:
-      "A full-stack school transportation platform designed for Sri Lankan families, connecting parents with verified school van operators through secure ride bookings, real-time GPS tracking, child safety monitoring, and role-based management dashboards.",
+      "A full-stack school transportation management platform designed to connect parents, school van drivers, and administrators across Sri Lanka. The platform aims to simplify school ride bookings, provide real-time GPS tracking, improve communication, and support child safety through a centralized digital experience.",
     problem:
       "School transportation for children in Sri Lanka relied on informal verbal agreements with van operators, causing constant parental anxiety due to zero route visibility, unverified driver credentials, and lack of real-time pickup/drop-off status alerts.",
     solution:
       "Built an all-in-one school ride management system empowering parents with live GPS vehicle tracking, direct child safety status confirmations, verified driver credential checks, and role-based portals for parents, van operators, and administrators.",
     architecture:
-      "Next.js 15 App Router frontend with Tailwind CSS, NestJS 11 backend microservices with Socket.io real-time telemetry, PostgreSQL with Prisma ORM transactional persistence, and Leaflet/OpenStreetMap geospatial tracking.",
+      "A modern school transportation platform connecting parents, drivers, and administrators through smart ride bookings, GPS tracking, and safety-focused management.",
+    coreFeatures: "Ride Booking · Live GPS · Child Safety · Driver Management",
     highlights: [
-      "School ride booking & trip management for verified school van operators",
+      "Smart school ride booking & trip management for verified school van operators",
       "Real-time GPS tracking with live pickup and drop-off status monitoring",
       "Parent, driver, and administrative role-based management dashboards",
-      "Driver verification, vehicle documentation, and child safety compliance",
+      "Driver & vehicle verification, documentation, and child safety compliance",
+      "School van route management & automated real-time ride notifications",
+      "Role-based access control with secure authentication & responsive UI",
     ],
     architectureNodes: [
-      { layer: "Client UI", tech: "Next.js 15 + Tailwind CSS", detail: "Responsive parent, driver & admin web dashboards" },
-      { layer: "Backend API", tech: "NestJS 11 + Express", detail: "Modular REST microservices & Socket.io tracking" },
-      { layer: "Realtime Engine", tech: "Socket.io + Leaflet", detail: "Live GPS coordinates & route updates" },
-      { layer: "Persistence", tech: "PostgreSQL + Prisma ORM", detail: "Relational booking ledgers & driver verification" },
+      { layer: "Presentation UI", tech: "Next.js 15 + React 19 + Tailwind", detail: "Responsive parent, driver & admin web dashboards with Framer Motion" },
+      { layer: "Backend API", tech: "NestJS 11 + Express + Socket.io", detail: "Modular microservices, low-latency live GPS telemetry & notifications" },
+      { layer: "Data Persistence", tech: "PostgreSQL + Prisma ORM", detail: "Relational booking ledgers, vehicle audits & type-safe data access" },
+      { layer: "Geospatial Engine", tech: "Leaflet + OpenStreetMap", detail: "Interactive school van route mapping & live coordinate tracking" },
     ],
     technologies: ["Next.js", "TypeScript", "NestJS", "PostgreSQL", "Prisma", "Tailwind"],
     liveUrl: "",
@@ -142,8 +150,8 @@ export const projectsData: ProjectItem[] = [
       { value: "100%", label: "Child Safety Focus" },
     ],
     capabilitiesLabel: "SYSTEM CAPABILITIES",
-    capabilitiesText: "3 USER ROLES ✦ LIVE TRACKING ✦ SECURE BOOKINGS",
-    imageAlt: "SchoolRide LK - Smart School Transportation Platform",
+    capabilitiesText: "3 USER ROLES ✦ LIVE GPS ✦ SMART BOOKINGS",
+    imageAlt: "SchoolRide LK — Smart School Transportation Platform",
   },
   {
     id: "waterboard-inventory",

@@ -107,17 +107,25 @@ export default function ProjectCard({
                     borderColor: project.borderColor,
                   }}
                 >
-                  {project.number} // {categoryTag}
+                  {project.badgeCategory || `${project.number} // ${categoryTag}`}
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/15 bg-white/[0.04] text-[9.5px] sm:text-[10px] font-mono font-semibold text-slate-300 uppercase">
                   {project.domain}
                 </span>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9.5px] sm:text-[10px] font-mono font-bold text-violet-200">
+              <div
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9.5px] sm:text-[10px] font-mono font-bold ${
+                  project.status === "COMING SOON"
+                    ? "bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)]"
+                    : "bg-violet-500/15 border border-violet-400/30 text-violet-200"
+                }`}
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>
-                  {project.status} · {project.year}
+                  {project.status === "COMING SOON"
+                    ? `COMING SOON · ${project.year}`
+                    : `${project.status} · ${project.year}`}
                 </span>
               </div>
             </div>
@@ -127,6 +135,11 @@ export default function ProjectCard({
               <h3 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-[1.12] font-unbounded break-words">
                 {project.title}
               </h3>
+              {project.subtitle && (
+                <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase text-emerald-300/90 mt-1">
+                  {project.subtitle}
+                </div>
+              )}
               <div className="flex items-center gap-2 mt-1.5 text-[11px] sm:text-xs font-mono text-violet-300">
                 <Sparkles size={12} style={{ color: project.accentColor }} />
                 <span>{project.role}</span>
@@ -140,6 +153,30 @@ export default function ProjectCard({
             >
               {project.description || project.shortDescription}
             </p>
+
+            {/* Optional Core Features Strip */}
+            {project.coreFeatures && (
+              <div className="pt-0.5 flex flex-wrap items-center gap-1.5">
+                <span className="text-[9px] sm:text-[10px] font-unbounded font-bold tracking-wider text-slate-400 uppercase">
+                  CORE FEATURES:
+                </span>
+                <span className="text-[10.5px] sm:text-xs font-mono text-emerald-300 font-semibold">
+                  {project.coreFeatures}
+                </span>
+              </div>
+            )}
+
+            {/* Optional System Capabilities Strip */}
+            {project.capabilitiesText && (
+              <div className="pt-0.5 flex flex-wrap items-center gap-1.5">
+                <span className="text-[9px] sm:text-[10px] font-unbounded font-bold tracking-wider text-slate-400 uppercase">
+                  {project.capabilitiesLabel || "SYSTEM CAPABILITIES"}:
+                </span>
+                <span className="text-[10.5px] sm:text-xs font-mono text-cyan-300 font-bold tracking-wide">
+                  {project.capabilitiesText}
+                </span>
+              </div>
+            )}
 
             {/* 3-Column Production Impact Metrics Strip */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-0.5">
@@ -181,7 +218,9 @@ export default function ProjectCard({
                 className="glass-pill-white-3d py-2.5 sm:py-3 px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Play size={13} className="fill-current shrink-0" />
-                <span>Interactive Live Demo</span>
+                <span>
+                  {project.status === "COMING SOON" ? "EXPLORE PROJECT" : "Interactive Live Demo"}
+                </span>
               </button>
 
               {project.sourceUrl && !project.sourceUrl.endsWith("/dinidu") ? (
@@ -192,7 +231,11 @@ export default function ProjectCard({
                   className="glass-pill-dark-3d py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Code2 size={14} className="text-violet-300 shrink-0" />
-                  <span>Architecture & Specs</span>
+                  <span>
+                    {project.status === "COMING SOON"
+                      ? "VIEW ARCHITECTURE & CODE"
+                      : "Architecture & Specs"}
+                  </span>
                 </a>
               ) : (
                 <button
@@ -201,37 +244,43 @@ export default function ProjectCard({
                   className="glass-pill-dark-3d py-2.5 sm:py-3 px-4 rounded-full text-white font-unbounded font-semibold text-[10.5px] sm:text-xs tracking-wider uppercase inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Code2 size={14} className="text-violet-300 shrink-0" />
-                  <span>Architecture & Specs</span>
+                  <span>
+                    {project.status === "COMING SOON"
+                      ? "VIEW ARCHITECTURE & CODE"
+                      : "Architecture & Specs"}
+                  </span>
                 </button>
               )}
 
-              {project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
-                  aria-label={`Visit live site for ${project.title}`}
-                >
-                  <span>Visit live site</span>
-                  <ArrowUpRight
-                    size={15}
-                    className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
-                  />
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => onSelect?.(project, "demo")}
-                  className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
-                  aria-label={`Visit live site for ${project.title}`}
-                >
-                  <span>Visit live site</span>
-                  <ArrowUpRight
-                    size={15}
-                    className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
-                  />
-                </button>
+              {project.status !== "COMING SOON" && (
+                project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
+                    aria-label={`Visit live site for ${project.title}`}
+                  >
+                    <span>Visit live site</span>
+                    <ArrowUpRight
+                      size={15}
+                      className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                    />
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => onSelect?.(project, "demo")}
+                    className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-violet-300 hover:text-white font-unbounded font-bold text-[11px] sm:text-xs tracking-wide underline underline-offset-8 decoration-violet-400/50 hover:decoration-white transition-all group/link cursor-pointer bg-transparent border-0 px-2 py-1.5"
+                    aria-label={`Visit live site for ${project.title}`}
+                  >
+                    <span>Visit live site</span>
+                    <ArrowUpRight
+                      size={15}
+                      className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                    />
+                  </button>
+                )
               )}
             </div>
           </div>
@@ -271,12 +320,16 @@ export default function ProjectCard({
                   <span className="w-2 h-2 rounded-full bg-amber-500/80 shrink-0" />
                   <span className="w-2 h-2 rounded-full bg-emerald-500/80 shrink-0" />
                   <span className="ml-1 text-cyan-300 font-semibold truncate">
-                    {project.demoUrl.replace(/^https?:\/\//, "")}
+                    {project.status === "COMING SOON"
+                      ? "schoolride-lk.dev [COMING SOON]"
+                      : project.demoUrl.replace(/^https?:\/\//, "")}
                   </span>
                 </div>
                 <span className="inline-flex items-center gap-1 text-[9.5px] sm:text-[10px] text-violet-300 font-bold shrink-0">
                   <ExternalLink size={11} />
-                  <span className="hidden xs:inline">SANDBOX</span>
+                  <span className="hidden xs:inline">
+                    {project.status === "COMING SOON" ? "PREVIEW" : "SANDBOX"}
+                  </span>
                 </span>
               </div>
 

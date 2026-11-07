@@ -315,11 +315,13 @@ export default function ProjectDialog({
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
                   </div>
                   <span className="px-3 py-1 rounded-md bg-black/60 border border-white/10 text-emerald-400 font-semibold truncate">
-                    {liveUrl || `https://${project.id}.dinidu.dev`}
+                    {detailedItem?.status === "COMING SOON"
+                      ? "https://schoolride-lk.dev [COMING SOON]"
+                      : liveUrl || `https://${project.id}.dinidu.dev`}
                   </span>
                   <span className="hidden md:inline-flex items-center gap-1 text-[11px] text-gray-400 bg-white/5 px-2 py-0.5 rounded">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    200 OK · 38ms
+                    {detailedItem?.status === "COMING SOON" ? "PRE-LAUNCH" : "200 OK · 38ms"}
                   </span>
                 </div>
 

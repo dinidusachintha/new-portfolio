@@ -58,6 +58,7 @@ export type Project = {
   architecture: string;
   highlights: string[];
   role: string;
+  status?: string;
   liveUrl?: string;
   sourceUrl?: string;
 };
@@ -104,30 +105,33 @@ export const projects: Project[] = [
     kind: "SMART SCHOOL TRANSPORTATION PLATFORM",
     category: "Full Stack",
     year: "2026",
+    status: "COMING SOON",
     summary:
-      "A full-stack school transportation platform designed for Sri Lankan families, connecting parents with verified school van operators through secure ride bookings, real-time GPS tracking, child safety monitoring, and role-based management dashboards.",
-    image: "assets/images/project-pulse.svg",
+      "A full-stack school transportation management platform designed to connect parents, school van drivers, and administrators across Sri Lanka. The platform aims to simplify school ride bookings, provide real-time GPS tracking, improve communication, and support child safety through a centralized digital experience.",
+    image: "assets/images/schoolride-lk.jpg",
     mockupImage: "src/assets/projects/schoolride-lk.jpg",
     accent: "#22c55e",
     stack: ["NEXT.JS 15", "TYPESCRIPT", "NESTJS 11", "POSTGRESQL", "PRISMA", "TAILWIND CSS"],
     metrics: [
       { value: "3 Roles", label: "Parent, Driver & Admin" },
       { value: "Live GPS", label: "Real-Time Tracking" },
-      { value: "100%", label: "Verified Drivers" },
+      { value: "100%", label: "Child Safety Focus" },
     ],
     problem:
       "School transportation for children in Sri Lanka relied on informal verbal agreements with van operators, causing constant parental anxiety due to zero route visibility, unverified driver credentials, and lack of real-time pickup/drop-off status alerts.",
     solution:
       "Built an all-in-one school ride management system empowering parents with live GPS vehicle tracking, direct child safety status confirmations, verified driver credential checks, and role-based portals for parents, van operators, and administrators.",
     architecture:
-      "Next.js 15 App Router frontend with Tailwind CSS, NestJS 11 backend microservices with Socket.io real-time telemetry, PostgreSQL with Prisma ORM transactional persistence, and Leaflet/OpenStreetMap geospatial tracking.",
+      "A modern school transportation platform connecting parents, drivers, and administrators through smart ride bookings, GPS tracking, and safety-focused management.",
     highlights: [
-      "School ride booking & trip management for verified school van operators",
+      "Smart school ride booking & trip management for verified school van operators",
       "Real-time GPS tracking with live pickup and drop-off status monitoring",
       "Parent, driver, and administrative role-based management dashboards",
-      "Driver verification, vehicle documentation, and child safety compliance",
+      "Driver & vehicle verification, documentation, and child safety compliance",
+      "School van route management & automated real-time ride notifications",
+      "Role-based access control with secure authentication & responsive UI",
     ],
-    role: "Full Stack Web Development",
+    role: "FULL STACK WEB DEVELOPMENT",
     liveUrl: "",
     sourceUrl: "https://github.com/dinidusachintha/SchoolRide-LK-V2",
   },
