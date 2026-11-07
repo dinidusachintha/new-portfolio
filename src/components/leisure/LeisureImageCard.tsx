@@ -28,8 +28,8 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
     },
     ref
   ) => {
-    // When hovered, lift the card forward in 3D space
-    const z = isHovered ? depthZ + 35 : depthZ;
+    // When hovered, gently elevate the card forward in 3D space
+    const z = isHovered ? depthZ + 30 : depthZ;
     const scale = isHovered ? 1.03 : 1;
 
     return (
@@ -39,29 +39,20 @@ export const LeisureImageCard = forwardRef<HTMLDivElement, LeisureImageCardProps
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`leisure-image-card group select-none overflow-hidden rounded-2xl sm:rounded-3xl border border-white/14 bg-[#090a0f] shadow-[0_20px_50px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-350 ease-out ${
-          isDimmed ? "opacity-45 filter brightness-75" : "opacity-100"
+        className={`leisure-image-card group select-none rounded-2xl sm:rounded-3xl border border-white/20 bg-[#090a0f] shadow-[0_20px_50px_rgba(0,0,0,0.85)] cursor-pointer will-change-transform transition-[filter,opacity,border-color,box-shadow,transform] duration-300 ease-out ${
+          isDimmed ? "opacity-50 filter brightness-75" : "opacity-100"
         } ${
           isHovered
-            ? "!z-50 border-white/40 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(152,103,255,0.3)]"
+            ? "!z-50 border-white/50 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_35px_rgba(152,103,255,0.35)]"
             : ""
         } ${className}`}
         style={{
           ...style,
           transform: `translateZ(${z}px) scale(${scale})`,
           transformStyle: "preserve-3d",
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
         }}
       >
-        <div
-          className="relative w-full h-full overflow-hidden"
-          style={{
-            transformStyle: "preserve-3d",
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-          }}
-        >
+        <div className="relative w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden">
           <img
             src={card.image}
             alt={card.alt}

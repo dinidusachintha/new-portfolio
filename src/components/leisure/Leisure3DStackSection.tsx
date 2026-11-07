@@ -34,22 +34,22 @@ export default function Leisure3DStackSection() {
     floatingLeisureCards.find((c) => c.id === selectedCardId) || carGamingCard;
 
   // ---------------------------------------------------------------------------
-  // INTERACTIVE 3D CURSOR & TOUCH TILT (LERP ENGINE)
-  // Replicates the tactile 3D hover rotation from https://ovo-campione.webflow.io/
+  // INTERACTIVE 3D CURSOR & TOUCH TILT (SPRING / LERP PHYSICS)
+  // Replicates the tactile 3D hover rotation from the reference video
   // ---------------------------------------------------------------------------
   const targetTiltRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const currentTiltRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Smooth lerp loop
+  // Smooth 60fps lerp loop
   useEffect(() => {
     let active = true;
 
     const tick = () => {
       if (!active) return;
 
-      const factor = 0.08;
+      const factor = 0.085;
       currentTiltRef.current.x +=
         (targetTiltRef.current.x - currentTiltRef.current.x) * factor;
       currentTiltRef.current.y +=
@@ -72,7 +72,7 @@ export default function Leisure3DStackSection() {
     };
   }, []);
 
-  // Mouse move handler (Desktop)
+  // Mouse move handler (Desktop) - bounded to +/- 12deg Y, +/- 8deg X
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
@@ -82,10 +82,10 @@ export default function Leisure3DStackSection() {
     const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width / 2)));
     const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height / 2)));
 
-    // Campione-style calibrated tilt: +/- 15deg Y, -/+ 10deg X
+    // Calibrated gentle tilt (keeps cards fully facing viewer and never edge-on)
     targetTiltRef.current = {
-      x: -normY * 11,
-      y: normX * 15,
+      x: -normY * 8,
+      y: normX * 12,
     };
   }, []);
 
@@ -94,7 +94,7 @@ export default function Leisure3DStackSection() {
     setHoveredId(null);
   }, []);
 
-  // Touch handlers (Mobile & Tablet)
+  // Touch handlers (Mobile & Tablet) - bounded to +/- 10deg
   const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     setIsTouchDevice(true);
     if (e.touches.length === 1) {
@@ -111,8 +111,8 @@ export default function Leisure3DStackSection() {
     const dy = e.touches[0].clientY - touchStartRef.current.y;
 
     targetTiltRef.current = {
-      x: Math.max(-12, Math.min(12, -dy * 0.14)),
-      y: Math.max(-18, Math.min(18, dx * 0.18)),
+      x: Math.max(-8, Math.min(8, -dy * 0.08)),
+      y: Math.max(-11, Math.min(11, dx * 0.11)),
     };
   }, []);
 
@@ -123,7 +123,7 @@ export default function Leisure3DStackSection() {
 
   // ---------------------------------------------------------------------------
   // RESPONSIVE SCALE COMPUTATION
-  // Fits 860px x 580px composition smoothly across mobile (320px–430px) & tablet
+  // Fits composition cleanly across viewports from 320px small mobile to 4K
   // ---------------------------------------------------------------------------
   useEffect(() => {
     const updateScale = () => {
@@ -132,16 +132,20 @@ export default function Leisure3DStackSection() {
         "ontouchstart" in window || navigator.maxTouchPoints > 0
       );
 
-      if (width < 768) {
-        // Mobile: leave 24px total padding
-        const s = Math.min(1, Math.max(0.30, (width - 24) / 860));
+      if (width < 440) {
+        // Small/modern mobile (320px - 430px): leave 20px padding
+        const s = Math.min(0.48, Math.max(0.36, (width - 20) / 860));
         setResponsiveScale(s);
-      } else if (width < 960) {
-        // Small tablet
-        const s = Math.min(1, Math.max(0.75, (width - 48) / 860));
+      } else if (width < 768) {
+        // Large mobile / phablet
+        const s = Math.min(0.68, Math.max(0.48, (width - 32) / 860));
+        setResponsiveScale(s);
+      } else if (width < 1024) {
+        // Tablet
+        const s = Math.min(0.85, Math.max(0.70, (width - 48) / 860));
         setResponsiveScale(s);
       } else {
-        // Desktop
+        // Laptop & Desktop
         setResponsiveScale(1);
       }
     };
@@ -152,7 +156,7 @@ export default function Leisure3DStackSection() {
   }, []);
 
   // ---------------------------------------------------------------------------
-  // GSAP SCROLLTRIGGER 3D CHOREOGRAPHY
+  // GSAP SCROLLTRIGGER 3D CHOREOGRAPHY (Matches Reference Video Exactly)
   // ---------------------------------------------------------------------------
   useEffect(() => {
     const section = sectionRef.current;
@@ -173,27 +177,27 @@ export default function Leisure3DStackSection() {
       const mm = gsap.matchMedia();
 
       // =======================================================================
-      // DESKTOP & TABLET TIMELINE
+      // DESKTOP & TABLET TIMELINE (>= 768px)
       // =======================================================================
       mm.add("(min-width: 768px)", () => {
-        // Initial 3D state: angled perspective (-42deg) where all cards are visible
+        // Initial state: elegant angled 3D perspective from video (capped at -26deg)
         gsap.set(clusterScroll, {
-          rotateY: -42,
-          rotateX: 4,
-          scale: 0.94,
+          rotateY: -26,
+          rotateX: 3,
+          scale: 0.95,
           opacity: 1,
           filter: "blur(0px)",
-          transformPerspective: 1500,
+          transformPerspective: 1400,
           transformOrigin: "center center",
           transformStyle: "preserve-3d",
         });
 
         gsap.set(singleCard, {
-          rotateY: -45,
+          rotateY: -22,
           opacity: 0,
-          scale: 0.9,
+          scale: 0.92,
           pointerEvents: "none",
-          transformPerspective: 1500,
+          transformPerspective: 1400,
           transformOrigin: "center center",
           transformStyle: "preserve-3d",
         });
@@ -204,7 +208,7 @@ export default function Leisure3DStackSection() {
             pin: pinViewport,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1,
+            scrub: 1.1,
             anticipatePin: 1,
             onUpdate: (self) => {
               if (!phaseIndicator) return;
@@ -222,7 +226,7 @@ export default function Leisure3DStackSection() {
           },
         });
 
-        // 1. Entrance: Rotate smoothly from -42deg into 0deg
+        // 1. Entrance: Smoothly rotate into view (-26deg -> 0deg)
         masterTl.to(
           clusterScroll,
           {
@@ -235,7 +239,7 @@ export default function Leisure3DStackSection() {
           0
         );
 
-        // 2. Hold front-facing (22% -> 68%) - full cursor tilt active
+        // 2. Center hold (0.22 -> 0.68): Front-facing with dynamic cursor tilt
         masterTl.to(
           clusterScroll,
           {
@@ -248,37 +252,38 @@ export default function Leisure3DStackSection() {
           0.22
         );
 
-        // 3. Rotate out: 0deg -> +48deg while blurring & fading
+        // 3. Exit rotation: Gently revolve to +24deg (NEVER past 26deg to avoid slivers!)
         masterTl.to(
           clusterScroll,
           {
-            rotateY: 48,
-            rotateX: -4,
+            rotateY: 24,
+            rotateX: -3,
             scale: 0.93,
-            duration: 0.18,
-            ease: "power2.in",
+            duration: 0.20,
+            ease: "power2.inOut",
           },
           0.68
         );
 
+        // Soft fade out that overlaps with spotlight entrance (no black void!)
         masterTl.to(
           clusterScroll,
           {
             opacity: 0,
-            filter: "blur(8px)",
-            duration: 0.08,
+            filter: "blur(6px)",
+            duration: 0.12,
             ease: "power1.in",
           },
-          0.78
+          0.76
         );
 
         // 4. Spotlight single card reveal facing viewer
         masterTl.fromTo(
           singleCard,
           {
-            rotateY: -45,
+            rotateY: -22,
             opacity: 0,
-            scale: 0.9,
+            scale: 0.92,
             pointerEvents: "none",
           },
           {
@@ -286,21 +291,21 @@ export default function Leisure3DStackSection() {
             opacity: 1,
             scale: 1,
             pointerEvents: "auto",
-            duration: 0.15,
+            duration: 0.18,
             ease: "power2.out",
           },
-          0.85
+          0.78
         );
       });
 
       // =======================================================================
-      // MOBILE (< 768px) TIMELINE — Smooth Touch Scrub
+      // MOBILE (< 768px) TIMELINE — Smooth Touch Scrub, Zero Slivers
       // =======================================================================
       mm.add("(max-width: 767px)", () => {
         gsap.set(clusterScroll, {
-          rotateY: -36,
-          rotateX: 3,
-          scale: 0.92,
+          rotateY: -20,
+          rotateX: 2,
+          scale: 0.96,
           opacity: 1,
           filter: "blur(0px)",
           transformPerspective: 1100,
@@ -309,9 +314,9 @@ export default function Leisure3DStackSection() {
         });
 
         gsap.set(singleCard, {
-          rotateY: -40,
+          rotateY: -18,
           opacity: 0,
-          scale: 0.92,
+          scale: 0.94,
           pointerEvents: "none",
           transformPerspective: 1100,
           transformOrigin: "center center",
@@ -354,23 +359,23 @@ export default function Leisure3DStackSection() {
         );
         mobileTl.to(
           clusterScroll,
-          { rotateY: 42, rotateX: -3, scale: 0.92, duration: 0.18, ease: "power2.in" },
+          { rotateY: 20, rotateX: -2, scale: 0.93, duration: 0.20, ease: "power2.inOut" },
           0.68
         );
         mobileTl.to(
           clusterScroll,
-          { opacity: 0, filter: "blur(6px)", duration: 0.08 },
-          0.78
+          { opacity: 0, filter: "blur(5px)", duration: 0.12 },
+          0.76
         );
         mobileTl.fromTo(
           singleCard,
-          { rotateY: -40, opacity: 0, scale: 0.92, pointerEvents: "none" },
-          { rotateY: 0, opacity: 1, scale: 1, pointerEvents: "auto", duration: 0.15, ease: "power2.out" },
-          0.85
+          { rotateY: -18, opacity: 0, scale: 0.94, pointerEvents: "none" },
+          { rotateY: 0, opacity: 1, scale: 1, pointerEvents: "auto", duration: 0.18, ease: "power2.out" },
+          0.78
         );
       });
 
-      // Reduced motion fallback
+      // Reduced motion accessibility fallback
       mm.add("(prefers-reduced-motion: reduce)", () => {
         gsap.set(clusterScroll, { rotateY: 0, rotateX: 0, scale: 1, opacity: 1 });
         gsap.set(singleCard, { display: "none" });
@@ -392,12 +397,12 @@ export default function Leisure3DStackSection() {
     <section
       ref={sectionRef}
       id="beyond-the-code"
-      className="leisure-floating-section relative bg-[#080808] text-white overflow-x-hidden border-t border-b border-white/10 select-none"
+      className="leisure-floating-section relative bg-[#080808] text-white overflow-x-clip border-t border-b border-white/10 select-none"
       aria-label="Beyond the Code — 3D Rotating Leisure Image Stack"
     >
-      {/* Background Radial Glow */}
+      {/* Background Radial Atmosphere Glow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-5xl h-[550px] bg-violet-600/[0.06] rounded-full blur-[140px] pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-5xl h-[550px] bg-violet-600/[0.07] rounded-full blur-[140px] pointer-events-none"
         aria-hidden="true"
       />
 
@@ -408,10 +413,10 @@ export default function Leisure3DStackSection() {
       >
         <div
           ref={pinViewportRef}
-          className="leisure-pin-viewport relative w-full h-screen max-h-screen overflow-hidden flex flex-col justify-between py-5 sm:py-8 px-3 sm:px-6"
+          className="leisure-pin-viewport relative w-full h-screen max-h-screen overflow-hidden flex flex-col justify-between pt-16 pb-16 sm:pt-20 sm:pb-8 px-3 sm:px-6"
         >
           {/* Header Block: Category Pill, Headline & Subtitle */}
-          <div className="leisure-header-block max-w-4xl mx-auto text-center space-y-2 z-40 relative select-none shrink-0 pointer-events-none">
+          <div className="leisure-header-block max-w-4xl mx-auto text-center space-y-1.5 sm:space-y-2 z-40 relative select-none shrink-0 pointer-events-none">
             {/* Category Pill */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-400/25 text-violet-300 font-mono text-[10px] sm:text-xs font-semibold tracking-widest uppercase">
               <Compass size={12} className="text-violet-400 animate-pulse" />
@@ -429,12 +434,12 @@ export default function Leisure3DStackSection() {
             </p>
 
             {/* Interactive Mode Pill */}
-            <div className="pt-1 flex items-center justify-center">
+            <div className="pt-0.5 sm:pt-1 flex items-center justify-center">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[9.5px] sm:text-[10.5px] font-mono text-gray-400">
                 {isTouchDevice ? (
                   <>
                     <Hand size={11} className="text-violet-400 animate-pulse" />
-                    <span>DRAG TO TILT 3D STACK · SCROLL FOR SPOTLIGHT</span>
+                    <span>TOUCH & DRAG TO TILT · SCROLL FOR SPOTLIGHT</span>
                   </>
                 ) : (
                   <>
@@ -457,34 +462,32 @@ export default function Leisure3DStackSection() {
             className="flex-1 flex items-center justify-center relative w-full overflow-visible py-2 sm:py-4 touch-pan-y"
           >
             <div
-              className="leisure-perspective-stage relative w-full flex items-center justify-center select-none overflow-visible"
+              className="leisure-perspective-stage relative w-full h-full flex items-center justify-center select-none overflow-visible"
               style={{
-                perspective: "1500px",
+                perspective: "1400px",
                 perspectiveOrigin: "center center",
               }}
             >
               {/* 
                 1. GSAP SCROLL ROTATION CONTAINER:
-                Rotated around Y-axis by ScrollTrigger (-42deg -> 0deg -> +48deg).
+                Rotated gracefully around Y-axis by ScrollTrigger (-26deg -> 0deg -> +24deg).
+                Transform origin centered so cards never pivot off-screen or into a sliver!
               */}
               <div
                 ref={clusterScrollRef}
-                className="leisure-scroll-cluster relative will-change-transform"
+                className="leisure-scroll-cluster relative flex items-center justify-center will-change-transform"
                 style={{
                   transformStyle: "preserve-3d",
                   transformOrigin: "center center",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
                 }}
               >
                 {/* 
                   2. INTERACTIVE MOUSE & TOUCH TILT CONTAINER:
                   Smoothly lerped in 3D (rotateX & rotateY) based on cursor / touch.
-                  Multiplies seamlessly with GSAP scroll rotation.
                 */}
                 <div
                   ref={clusterTiltRef}
-                  className="leisure-tilt-container relative will-change-transform"
+                  className="leisure-tilt-container relative flex items-center justify-center will-change-transform"
                   style={{
                     transformStyle: "preserve-3d",
                     transformOrigin: "center center",
@@ -493,7 +496,7 @@ export default function Leisure3DStackSection() {
                   {/* 
                     3. RESPONSIVE SIZING WRAPPER:
                     Takes exact pixel bounds of (860 * scale) x (580 * scale) in layout,
-                    preventing any horizontal overflow or clipping on small mobile viewports!
+                    scaling smoothly from center center across any viewport width!
                   */}
                   <div
                     className="relative flex items-center justify-center pointer-events-auto"
@@ -502,12 +505,12 @@ export default function Leisure3DStackSection() {
                       height: `${Math.round(580 * responsiveScale)}px`,
                     }}
                   >
-                    {/* Fixed 860px x 580px canvas scaled via transform */}
+                    {/* Fixed 860px x 580px canvas scaled symmetrically from center */}
                     <div
-                      className="leisure-composition-box absolute top-0 left-0 w-[860px] h-[580px] shrink-0"
+                      className="leisure-composition-box relative w-[860px] h-[580px] shrink-0"
                       style={{
                         transform: `scale(${responsiveScale})`,
-                        transformOrigin: "top left",
+                        transformOrigin: "center center",
                         transformStyle: "preserve-3d",
                       }}
                     >
@@ -523,7 +526,7 @@ export default function Leisure3DStackSection() {
                         className="absolute left-[355px] top-[15px] w-[150px] h-[190px] z-10"
                       />
 
-                      {/* 2. UPPER LEFT: CAR GAMING (Depth: +20px, Digital clock position in screenshot) */}
+                      {/* 2. UPPER LEFT: CAR GAMING (Depth: +20px, Digital clock position in reference image) */}
                       <LeisureImageCard
                         card={carGamingCard}
                         depthZ={20}
@@ -535,7 +538,7 @@ export default function Leisure3DStackSection() {
                         className="absolute left-[95px] top-[85px] w-[230px] h-[220px] z-15"
                       />
 
-                      {/* 3. UPPER RIGHT: NETFLIX (Depth: +14px, Orange doorway position in screenshot) */}
+                      {/* 3. UPPER RIGHT: NETFLIX (Depth: +14px, Orange doorway position in reference image) */}
                       <LeisureImageCard
                         card={netflixCard}
                         depthZ={14}
@@ -547,7 +550,7 @@ export default function Leisure3DStackSection() {
                         className="absolute left-[565px] top-[90px] w-[185px] h-[215px] z-12"
                       />
 
-                      {/* 4. LOWER LEFT: TRAVEL (Depth: +32px, White linen shirt position in screenshot) */}
+                      {/* 4. LOWER LEFT: TRAVEL (Depth: +32px, White shirt position in reference image) */}
                       <LeisureImageCard
                         card={travelCard}
                         depthZ={32}
@@ -559,7 +562,7 @@ export default function Leisure3DStackSection() {
                         className="absolute left-[145px] top-[290px] w-[230px] h-[270px] z-25"
                       />
 
-                      {/* 5. LOWER/MIDDLE RIGHT: CODING (Depth: +28px, Book & coffee position in screenshot) */}
+                      {/* 5. LOWER/MIDDLE RIGHT: CODING (Depth: +28px, Open book & coffee cup position in reference image) */}
                       <LeisureImageCard
                         card={codingCard}
                         depthZ={28}
@@ -571,7 +574,7 @@ export default function Leisure3DStackSection() {
                         className="absolute left-[540px] top-[205px] w-[240px] h-[255px] z-25"
                       />
 
-                      {/* 6. CENTERPIECE: DINIDU PORTRAIT (Depth: +55px, Dominant centerpiece, White T-Shirt on Black) */}
+                      {/* 6. CENTERPIECE: DINIDU PORTRAIT (Depth: +55px, Dominant centerpiece) */}
                       <LeisureImageCard
                         card={portraitCard}
                         depthZ={55}
@@ -579,6 +582,7 @@ export default function Leisure3DStackSection() {
                         isDimmed={hoveredId !== null && hoveredId !== portraitCard.id}
                         onMouseEnter={() => setHoveredId(portraitCard.id)}
                         onMouseLeave={() => setHoveredId(null)}
+                        onClick={() => setSelectedCardId("car-gaming")}
                         className="absolute left-[285px] top-[110px] w-[290px] h-[340px] z-30 shadow-[0_35px_95px_rgba(0,0,0,0.98),0_0_40px_rgba(152,103,255,0.25)] border-white/25"
                       />
                     </div>
@@ -588,8 +592,8 @@ export default function Leisure3DStackSection() {
 
               {/* 
                 SINGLE-CARD REVEAL (Phase 04):
-                Smoothly rotates in around Y-axis (-45deg -> 0deg) facing the viewer after stack rotates out.
-                Fully responsive on mobile (w-[calc(100vw-36px)]) and desktop (w-[380px]).
+                Smoothly rotates in around Y-axis (-22deg -> 0deg) facing the viewer.
+                Sized responsively to fit mobile screens comfortably without clipping.
               */}
               <div
                 ref={singleCardRef}
@@ -597,11 +601,9 @@ export default function Leisure3DStackSection() {
                 style={{
                   transformStyle: "preserve-3d",
                   transformOrigin: "center center",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
                 }}
               >
-                <div className="relative w-[calc(100%-24px)] sm:w-[380px] max-w-[390px] h-[440px] sm:h-[490px] rounded-3xl overflow-hidden border border-white/20 bg-[#0c0d14] shadow-[0_35px_100px_rgba(0,0,0,0.98),0_0_50px_rgba(152,103,255,0.25)] select-none">
+                <div className="relative w-[min(380px,calc(100vw-36px))] h-[min(480px,calc(100vh-230px))] min-h-[380px] rounded-3xl overflow-hidden border border-white/20 bg-[#0c0d14] shadow-[0_35px_100px_rgba(0,0,0,0.98),0_0_50px_rgba(152,103,255,0.25)] select-none">
                   {/* Spotlight Image */}
                   <img
                     src={activeSpotlightCard.image}
@@ -633,7 +635,7 @@ export default function Leisure3DStackSection() {
                   </div>
 
                   {/* Bottom Activity Info & Interactive Switcher */}
-                  <div className="absolute bottom-5 left-5 right-5 space-y-2 pointer-events-auto">
+                  <div className="absolute bottom-4 sm:bottom-5 left-4 sm:left-5 right-4 sm:right-5 space-y-1.5 sm:space-y-2 pointer-events-auto">
                     <div className="flex items-center justify-between">
                       <span
                         className="text-[11px] font-mono font-bold tracking-widest uppercase"
@@ -661,10 +663,10 @@ export default function Leisure3DStackSection() {
                       </div>
                     </div>
 
-                    <h3 className="font-unbounded font-black text-xl sm:text-2xl text-white uppercase tracking-tight">
+                    <h3 className="font-unbounded font-black text-lg sm:text-xl md:text-2xl text-white uppercase tracking-tight">
                       {activeSpotlightCard.title}
                     </h3>
-                    <p className="font-sans text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
+                    <p className="font-sans text-xs sm:text-sm text-gray-300 font-light leading-relaxed line-clamp-2 sm:line-clamp-none">
                       {activeSpotlightCard.id === "car-gaming" &&
                         "Virtual roads, real excitement. Precision sim racing setup built for maximum adrenaline."}
                       {activeSpotlightCard.id === "netflix" &&
