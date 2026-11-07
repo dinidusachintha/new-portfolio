@@ -23,9 +23,9 @@ export const profile = {
     "I’m a software engineer who builds systems with scale, clarity, and reliability in mind. My focus spans end-to-end engineering: from relational schema design and event-driven backend microservices to responsive, accessible client interfaces. I believe great software is not just about writing code — it is about problem decomposition, architectural rigor, and shipping solutions that thrive in production.",
   email: "dinidusachintha7@gmail.com", // Ready for direct contact
   phone: "+94727839803",
-  github: "https://github.com", // Ready to be customized
-  linkedin: "https://linkedin.com", // Ready to be customized
-  cv: "assets/documents/ADD_YOUR_CV.txt", // CV document link
+  github: "https://github.com/dinidusachintha",
+  linkedin: "https://linkedin.com/in/dinidusachintha",
+  cv: "assets/documents/Dinidu_Sachintha_Resume.pdf",
   music: "assets/music/ambientd-loop.mp3",
   video: "assets/videos/video1.mp4",
   portrait: "assets/images/dinidu-portrait.png",
@@ -96,7 +96,7 @@ export const projects: Project[] = [
     ],
     role: "Founder & Web Developer (AI Desk)",
     liveUrl: "https://vikashacbo.com/",
-    sourceUrl: "https://github.com/dinidu",
+    sourceUrl: "https://github.com/dinidusachintha",
   },
   {
     id: "schoolride-lk",
@@ -109,7 +109,7 @@ export const projects: Project[] = [
     summary:
       "A full-stack school transportation management platform designed to connect parents, school van drivers, and administrators across Sri Lanka. The platform aims to simplify school ride bookings, provide real-time GPS tracking, improve communication, and support child safety through a centralized digital experience.",
     image: "assets/images/schoolride-lk.jpg",
-    mockupImage: "src/assets/projects/schoolride-lk.jpg",
+    mockupImage: "assets/images/schoolride-lk.jpg",
     accent: "#22c55e",
     stack: ["NEXT.JS 15", "TYPESCRIPT", "NESTJS 11", "POSTGRESQL", "PRISMA", "TAILWIND CSS"],
     metrics: [
@@ -144,8 +144,8 @@ export const projects: Project[] = [
     year: "2026",
     summary:
       "A centralized inventory solution for water utility operations, simplifying inventory tracking, stock movements, supplier records, section categorization, and automated operational reporting with PDF exports.",
-    image: "src/assets/projects/waterboard-inventory.jpg",
-    mockupImage: "src/assets/projects/waterboard-inventory.jpg",
+    image: "assets/images/waterboard-inventory.jpg",
+    mockupImage: "assets/images/waterboard-inventory.jpg",
     accent: "#0284c7",
     stack: ["REACT", "TYPESCRIPT", "EXPRESS", "MONGODB", "NODE.JS", "TAILWIND CSS"],
     metrics: [

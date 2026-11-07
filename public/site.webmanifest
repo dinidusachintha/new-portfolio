@@ -1,0 +1,15 @@
+{
+  "name": "Dinidu Sachintha — Senior Software Engineer",
+  "short_name": "Dinidu",
+  "icons": [
+    {
+      "src": "/assets/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#080808",
+  "background_color": "#080808",
+  "display": "standalone",
+  "start_url": "/"
+}

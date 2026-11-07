@@ -1,0 +1,143 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 3400 >>
+stream
+BT
+/F1 22 Tf
+50 750 Td
+(DINIDU SACHINTHA) Tj
+/F2 11 Tf
+0 -18 Td
+(Senior Software Engineer & Full Stack Architect) Tj
+/F3 9 Tf
+0 -15 Td
+(Colombo, Sri Lanka  |  dinidusachintha7@gmail.com  |  +94 72 783 9803  |  github.com/dinidusachintha) Tj
+0 -8 Td
+ET
+0.5 0.5 0.5 RG 1 w 50 700 m 550 700 l S
+BT
+/F2 12 Tf
+50 682 Td
+(EXECUTIVE SUMMARY) Tj
+/F3 9.5 Tf
+0 -15 Td
+(Full Stack Engineer and Distributed Systems Architect with deep expertise in React, Next.js, TypeScript, Node.js,) Tj
+0 -13 Td
+(NestJS, and PostgreSQL. Proven track record engineering enterprise solutions, including Sri Lanka's 1st Digitalised) Tj
+0 -13 Td
+(CBO Water Billing System (Vikasha CBO) under NWSDB, smart school transportation, and utility inventory cores.) Tj
+0 -22 Td
+/F2 12 Tf
+(CORE TECHNICAL ARSENAL) Tj
+/F2 9.5 Tf
+0 -16 Td
+(Frontend:) Tj
+/F3 9.5 Tf
+55 0 Td
+(React 19, Next.js 15, TypeScript, Tailwind CSS, Framer Motion, TanStack Query, Redux) Tj
+-55 -14 Td
+/F2 9.5 Tf
+(Backend:) Tj
+/F3 9.5 Tf
+55 0 Td
+(Node.js, Express, NestJS 11, Spring Boot, REST APIs, WebSockets, Redis, Microservices) Tj
+-55 -14 Td
+/F2 9.5 Tf
+(Databases:) Tj
+/F3 9.5 Tf
+55 0 Td
+(PostgreSQL, MongoDB, Prisma ORM, Mongoose, MySQL, ACID Relational Modeling) Tj
+-55 -14 Td
+/F2 9.5 Tf
+(DevOps & Tools:) Tj
+/F3 9.5 Tf
+75 0 Td
+(Docker, AWS (S3, EC2, CloudFront), Git, CI/CD GitHub Actions, Linux, Nginx, Vite) Tj
+-75 -22 Td
+/F2 12 Tf
+(KEY PRODUCTION PROJECTS) Tj
+0 -16 Td
+/F2 10 Tf
+(1. Vikasha CBO E-Billing System  --  Founder & Web Developer (AI Desk)) Tj
+/F3 9 Tf
+0 -13 Td
+(- Sri Lanka's 1st Digitalised CBO Project operating under National Water Supply & Drainage Board (NWSDB).) Tj
+0 -12 Td
+(- Automated tiered water tariff computing engine, offline-first meter reader app, and instant SMS audit invoicing.) Tj
+0 -12 Td
+(- Tech Stack: React, TypeScript, Node.js, Express, PostgreSQL, Tailwind CSS, Bluetooth Printing.) Tj
+0 -17 Td
+/F2 10 Tf
+(2. SchoolRide LK  --  Smart School Transportation Platform (Full Stack Developer)) Tj
+/F3 9 Tf
+0 -13 Td
+(- Full-stack school transit platform with live GPS telemetry, ride bookings, and child transit safety checks.) Tj
+0 -12 Td
+(- 3-role permission portals (Parent, Driver, Admin) with Socket.io real-time coordinate streaming.) Tj
+0 -12 Td
+(- Tech Stack: Next.js 15, React 19, TypeScript, NestJS 11, PostgreSQL, Prisma, Leaflet.) Tj
+0 -17 Td
+/F2 10 Tf
+(3. Waterboard Inventory Management  --  Smart Utility Stock & Resource Control) Tj
+/F3 9 Tf
+0 -13 Td
+(- Centralized inventory management with SKU tracking, regional section quotas, and automated PDF audit reporting.) Tj
+0 -12 Td
+(- Tech Stack: React 18, TypeScript, Node.js, Express, MongoDB, TanStack Query, jsPDF.) Tj
+0 -22 Td
+/F2 12 Tf
+(PROFESSIONAL EXPERIENCE & EDUCATION) Tj
+0 -16 Td
+/F2 10 Tf
+(Software Engineer & Founder  |  AI Desk  (2024 - Present)) Tj
+/F3 9 Tf
+0 -13 Td
+(- Spearhead architectural design and engineering of enterprise web platforms and public-sector digital transformations.) Tj
+0 -15 Td
+/F2 10 Tf
+(Full Stack Developer Intern  |  Waterboard CBO Project  (2024)) Tj
+/F3 9 Tf
+0 -13 Td
+(- Built Spring Boot REST microservices, refactored React components, and tuned complex SQL queries.) Tj
+0 -15 Td
+/F2 10 Tf
+(BSc (Hons) in Software Engineering  |  SLIIT (Sri Lanka Institute of Information Technology)) Tj
+/F3 9 Tf
+0 -13 Td
+(- Focus: Distributed Systems, Relational Schema Design, Object-Oriented Engineering, Cloud Computing.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000261 00000 n 
+0000003713 00000 n 
+0000003788 00000 n 
+0000003863 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3933
+%%EOF

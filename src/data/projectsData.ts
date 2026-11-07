@@ -82,7 +82,7 @@ export const projectsData: ProjectItem[] = [
     ],
     technologies: ["React", "TypeScript", "Node.js", "PostgreSQL", "Tailwind", "NWSDB"],
     liveUrl: "https://vikashacbo.com/",
-    sourceUrl: "https://github.com/dinidu",
+    sourceUrl: "https://github.com/dinidusachintha",
     screenshot: vikashaEBillingImg,
     demoUrl: "https://vikashacbo.com/",
     accentColor: "#0284c7",
