@@ -5,7 +5,6 @@ import {
   ArrowUp,
   ArrowUpRight,
   ChevronUp,
-  Code2,
   Mail,
   Menu,
   Pause,
@@ -21,6 +20,7 @@ import ExperienceTimeline from "./components/ExperienceTimeline";
 import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
 import FlyingHeading from "./components/FlyingHeading";
+import MobileSidebar from "./components/MobileSidebar";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -424,7 +424,7 @@ export default function App() {
       : "home";
   });
 
-  const menu = useRef<HTMLDialogElement>(null);
+  const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const lenis = useRef<Lenis | null>(null);
   const work = useRef<HTMLElement>(null);
 
@@ -655,9 +655,6 @@ export default function App() {
   }, [workReady, currentPage]);
 
   useEffect(() => {
-    if (menuOpen) menu.current?.showModal();
-    else menu.current?.close();
-
     if (menuOpen || selected) {
       lenis.current?.stop();
       document.documentElement.classList.add("dialog-open");
@@ -778,82 +775,30 @@ export default function App() {
             </button>
 
             <button
-              className="circle-button mobile-menu-toggle"
-              aria-label="Open navigation"
+              ref={mobileMenuTriggerRef}
+              type="button"
+              className="circle-button mobile-menu-toggle min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-95"
+              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
-              aria-controls="mobile-nav"
-              onClick={() => setMenuOpen(true)}
+              aria-controls="mobile-sidebar"
+              onClick={() => setMenuOpen((prev) => !prev)}
             >
-              <Menu size={22} />
+              {menuOpen ? <X size={20} className="text-white" /> : <Menu size={20} className="text-white" />}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Drawer Navigation */}
-      <dialog
-        id="mobile-nav"
-        ref={menu}
-        className="mobile-dialog"
-        onCancel={() => setMenuOpen(false)}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) setMenuOpen(false);
-        }}
-        aria-label="Navigation menu"
-        data-lenis-prevent
-      >
-        <div className="flex items-center justify-between">
-          <span className="eyebrow flex items-center gap-1.5 text-gray-300">
-            <Code2 size={13} className="text-white" />
-            NAVIGATION
-          </span>
-          <button
-            type="button"
-            className="circle-button"
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close navigation"
-          >
-            <X size={22} />
-          </button>
-        </div>
-
-        {/* Mobile Clean Blog Button without star icon */}
-        <div className="pt-2 pb-4">
-          <button
-            type="button"
-            onClick={() => navigateTo(currentPage === "blog" ? "home" : "blog")}
-            className="w-full nav-blog-btn-animated justify-center py-2.5 text-sm"
-          >
-            <span>{currentPage === "blog" ? "← RETURN TO PORTFOLIO" : "EXPLORE BLOG ARTICLES"}</span>
-            <span className="blog-new-pill">NEW</span>
-          </button>
-        </div>
-
-        <nav>
-          {navLinks.map((l, i) => (
-            <a
-              href={`#${l.id}`}
-              key={l.id}
-              onClick={(e) => {
-                e.preventDefault();
-                navigateTo("home", l.id);
-              }}
-            >
-              <span>0{i + 1}</span>
-              {l.name}
-              <ArrowUpRight size={18} />
-            </a>
-          ))}
-        </nav>
-        <div className="mt-auto pt-6 border-t border-white/10 space-y-2">
-          <div className="text-xs text-muted font-mono">
-            {profile.education}
-          </div>
-          <p className="text-xs text-gray-400">
-            Colombo, Sri Lanka · Open to high-impact opportunities
-          </p>
-        </div>
-      </dialog>
+      {/* Premium Mobile Slide-In Sidebar Navigation */}
+      <MobileSidebar
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        navLinks={navLinks}
+        activeSection={activeSection}
+        currentPage={currentPage}
+        onNavigate={navigateTo}
+        triggerRef={mobileMenuTriggerRef}
+      />
 
       <main id="main">
         {currentPage === "blog" ? (

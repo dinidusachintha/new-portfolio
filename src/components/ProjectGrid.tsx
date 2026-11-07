@@ -743,7 +743,7 @@ function GlassCardItem({
       </div>
 
       {/* 4. TWO 3D GLASS PILL ACTION BUTTONS (MATCHING IMAGE 2) */}
-      <div className="relative z-10 space-y-1.5 sm:space-y-2">
+      <div className="relative z-10 space-y-2">
         {/* Top Button: White 3D Elevated Glass Pill with Dark Text & Arrow ↗ (Image 2 style) */}
         {project.status === "COMING SOON" ? (
           <button
@@ -752,7 +752,7 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenDemo();
             }}
-            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
           >
             <span>EXPLORE PROJECT</span>
             <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
@@ -763,7 +763,7 @@ function GlassCardItem({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
           >
             <span>EXPLORE LIVE SYSTEM</span>
             <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
@@ -775,7 +775,7 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenDemo();
             }}
-            className="glass-pill-white-3d w-full py-2 sm:py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
           >
             <span>EXPLORE LIVE SYSTEM</span>
             <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
@@ -789,7 +789,7 @@ function GlassCardItem({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-dark-3d w-full py-1.5 sm:py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
+            className="glass-pill-dark-3d w-full min-h-[44px] py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
           >
             <Code2 size={13} className="shrink-0 text-violet-300" />
             <span>VIEW ARCHITECTURE & CODE</span>
@@ -801,7 +801,7 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenArch();
             }}
-            className="glass-pill-dark-3d w-full py-1.5 sm:py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
+            className="glass-pill-dark-3d w-full min-h-[44px] py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
           >
             <Code2 size={13} className="shrink-0 text-violet-300" />
             <span>VIEW ARCHITECTURE & CODE</span>

@@ -172,6 +172,39 @@ svg {
   margin-inline: auto;
 }
 
+/* ==========================================================================
+   PHASE 2 — GLOBAL MOBILE SPACING SYSTEM & SCROLL ANCHOR OFFSETS
+   ========================================================================== */
+section[id],
+div[id] {
+  scroll-margin-top: 76px;
+}
+
+@media (max-width: 1023px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 32px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    width: 100%;
+    padding-inline: 20px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 374px) {
+  .container {
+    width: 100%;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+}
+
 .section {
   padding-block: 118px;
 }
@@ -2664,21 +2697,21 @@ dialog::backdrop {
 }
 
 @media (max-width: 767px) {
-  .container {
-    width: 88%;
-  }
-
   .header {
-    padding-block: 10px;
+    height: 66px;
+    padding-block: 0;
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
   .header.scrolled {
-    padding-block: 8px;
+    height: 66px;
+    padding-block: 0;
   }
 
   .header .container {
-    width: 92%;
-    padding-inline: 0;
+    width: 100%;
+    padding-inline: 20px;
+    height: 100%;
   }
 
   .brand {
@@ -2698,8 +2731,16 @@ dialog::backdrop {
   }
 
   .header .circle-button {
-    width: 37px;
-    height: 37px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  @media (max-width: 374px) {
+    .header .container {
+      padding-inline: 16px;
+    }
   }
 
   .hero {
@@ -5750,6 +5791,13 @@ main {
   position: relative;
   padding-top: 110px;
   padding-bottom: 50px;
+}
+
+@media (max-width: 768px) {
+  .hero-dymas-section {
+    padding-top: 86px;
+    padding-bottom: 36px;
+  }
 }
 
 /* Atmospheric Multi-Hue Neon Aura */

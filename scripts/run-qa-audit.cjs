@@ -176,16 +176,18 @@ async function run() {
     // Wait for load
     await new Promise((r) => setTimeout(r, 2000));
 
-    // Test Target Viewports for Horizontal Overflow & Sizing
+    // Test Target Viewports for Horizontal Overflow & Sizing (All 10 required viewports)
     const viewports = [
-      { name: 'Small Mobile', width: 320, height: 640 },
-      { name: 'Standard iPhone', width: 375, height: 812 },
-      { name: 'Modern Smartphone', width: 390, height: 844 },
-      { name: 'Large Mobile', width: 430, height: 932 },
+      { name: 'Small mobile', width: 320, height: 640 },
+      { name: 'Android mobile', width: 360, height: 740 },
+      { name: 'iPhone', width: 375, height: 812 },
+      { name: 'Modern smartphone', width: 390, height: 844 },
+      { name: 'Large smartphone', width: 414, height: 896 },
+      { name: 'Large mobile', width: 430, height: 932 },
       { name: 'Tablet', width: 768, height: 1024 },
-      { name: 'Small Laptop', width: 1024, height: 768 },
-      { name: 'Large Desktop', width: 1440, height: 900 },
-      { name: 'Full HD Desktop', width: 1920, height: 1080 },
+      { name: 'Small laptop', width: 1024, height: 768 },
+      { name: 'Desktop', width: 1280, height: 800 },
+      { name: 'Large desktop', width: 1440, height: 900 },
     ];
 
     console.log('[5/5] Evaluating viewports & layout overflow...');
@@ -340,6 +342,77 @@ async function run() {
       returnByValue: true,
     });
 
+    // Test Mobile Sidebar Navigation Opening, Links, and Escape Dismissal
+    console.log('Testing Mobile Sidebar Navigation...');
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: 375,
+      height: 812,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    await new Promise((r) => setTimeout(r, 400));
+
+    // Click mobile hamburger button
+    const openMenuResult = await client.send('Runtime.evaluate', {
+      expression: `
+        (() => {
+          const btn = document.querySelector('button.mobile-menu-toggle');
+          if (btn) {
+            btn.click();
+            return { clicked: true };
+          }
+          return { clicked: false };
+        })()
+      `,
+      returnByValue: true,
+    });
+
+    await new Promise((r) => setTimeout(r, 500));
+
+    const sidebarOpenCheck = await client.send('Runtime.evaluate', {
+      expression: `
+        (() => {
+          const sidebar = document.querySelector('[role="dialog"][aria-label="Mobile Navigation"]');
+          const navLinks = sidebar ? sidebar.querySelectorAll('nav a') : [];
+          return {
+            sidebarFound: !!sidebar,
+            linkCount: navLinks.length,
+            bodyScrollLocked: document.body.style.overflow === 'hidden'
+          };
+        })()
+      `,
+      returnByValue: true,
+    });
+
+    // Test Escape key dismissal
+    await client.send('Input.dispatchKeyEvent', {
+      type: 'keyDown',
+      key: 'Escape',
+      code: 'Escape',
+      windowsVirtualKeyCode: 27,
+    });
+    await client.send('Input.dispatchKeyEvent', {
+      type: 'keyUp',
+      key: 'Escape',
+      code: 'Escape',
+      windowsVirtualKeyCode: 27,
+    });
+
+    await new Promise((r) => setTimeout(r, 650));
+
+    const sidebarClosedCheck = await client.send('Runtime.evaluate', {
+      expression: `
+        (() => {
+          const sidebar = document.querySelector('[role="dialog"][aria-label="Mobile Navigation"]');
+          return {
+            isClosed: !sidebar,
+            bodyScrollRestored: document.body.style.overflow !== 'hidden'
+          };
+        })()
+      `,
+      returnByValue: true,
+    });
+
     client.close();
 
     console.log('\n========================================');
@@ -352,6 +425,15 @@ async function run() {
       console.log(`  - [${r.name}] ${r.width}px: ${status}`);
       if (r.hasOverflow) allPassedOverflow = false;
     }
+
+    console.log('\nMOBILE SIDEBAR AUDIT:');
+    const sidebarOpened = sidebarOpenCheck.result.value.sidebarFound && sidebarOpenCheck.result.value.linkCount > 0;
+    const sidebarClosed = sidebarClosedCheck.result.value.isClosed;
+    console.log(`  - Mobile sidebar opens on hamburger click: ${sidebarOpened ? 'PASS ✓' : 'FAIL ✗'}`);
+    console.log(`  - Sidebar links rendered (${sidebarOpenCheck.result.value.linkCount} sections): ${sidebarOpenCheck.result.value.linkCount >= 6 ? 'PASS ✓' : 'FAIL ✗'}`);
+    console.log(`  - Body scroll locks when open: ${sidebarOpenCheck.result.value.bodyScrollLocked ? 'PASS ✓' : 'FAIL ✗'}`);
+    console.log(`  - Escape key dismisses sidebar: ${sidebarClosed ? 'PASS ✓' : 'FAIL ✗'}`);
+    console.log(`  - Body scroll restored when closed: ${sidebarClosedCheck.result.value.bodyScrollRestored ? 'PASS ✓' : 'FAIL ✗'}`);
 
     console.log('\nNETWORK REQUEST AUDIT:');
     if (failedRequests.length === 0) {
