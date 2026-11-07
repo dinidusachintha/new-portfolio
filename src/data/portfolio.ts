@@ -21,7 +21,7 @@ export const profile = {
     "I design and engineer resilient distributed systems, high-throughput APIs, and polished web applications that balance strict performance with exceptional user experience.",
   about:
     "I’m a software engineer who builds systems with scale, clarity, and reliability in mind. My focus spans end-to-end engineering: from relational schema design and event-driven backend microservices to responsive, accessible client interfaces. I believe great software is not just about writing code — it is about problem decomposition, architectural rigor, and shipping solutions that thrive in production.",
-  email: "dinidusachintha@gmail.com", // Ready for direct contact
+  email: "dinidusachintha7@gmail.com", // Ready for direct contact
   phone: "+94727839803",
   github: "https://github.com", // Ready to be customized
   linkedin: "https://linkedin.com", // Ready to be customized
@@ -475,14 +475,14 @@ export type BlogPost = {
   title: string;
   section: BlogSection;
   category:
-    | "Company Spotlight"
-    | "Distributed Systems"
-    | "AI & Video Tech"
-    | "Software Architecture"
-    | "Career & Mentorship"
-    | "Engineering Culture"
-    | "Project Announcement"
-    | "PROJECT ANNOUNCEMENT";
+  | "Company Spotlight"
+  | "Distributed Systems"
+  | "AI & Video Tech"
+  | "Software Architecture"
+  | "Career & Mentorship"
+  | "Engineering Culture"
+  | "Project Announcement"
+  | "PROJECT ANNOUNCEMENT";
   date: string;
   readTime: string;
   summary: string;
