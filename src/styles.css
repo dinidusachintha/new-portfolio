@@ -4212,13 +4212,13 @@ main {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  opacity: 0.72;
-  filter: contrast(1.08) brightness(0.92);
+  opacity: 0.92;
+  filter: contrast(1.06) brightness(1.02);
   transition: opacity 0.5s ease;
 }
 
 .video-banner-card:hover .video-banner-media {
-  opacity: 0.85;
+  opacity: 1;
 }
 
 .video-banner-overlay {
@@ -4226,8 +4226,8 @@ main {
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(8, 9, 14, 0.45) 0%, rgba(8, 9, 14, 0.88) 85%),
-    linear-gradient(180deg, rgba(8, 9, 14, 0.75) 0%, rgba(8, 9, 14, 0.3) 45%, rgba(8, 9, 14, 0.92) 100%);
+    radial-gradient(ellipse at 50% 50%, rgba(8, 9, 14, 0.15) 0%, rgba(8, 9, 14, 0.48) 85%),
+    linear-gradient(180deg, rgba(8, 9, 14, 0.3) 0%, rgba(8, 9, 14, 0.08) 45%, rgba(8, 9, 14, 0.52) 100%);
   pointer-events: none;
 }
 
@@ -4360,9 +4360,10 @@ main {
 .video-lead {
   max-width: 620px;
   font-size: clamp(14px, 1.4vw, 17px);
-  color: #cbd5e1;
+  color: #e2e8f0;
   line-height: 1.65;
   margin-bottom: 24px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95);
 }
 
 .video-actions {
