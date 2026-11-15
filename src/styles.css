@@ -5925,6 +5925,16 @@ main {
   border: none !important;
 }
 
+/* Three.js Hero Interactive Background Layer */
+.hero-three-canvas-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 22px;
+}
+
 /* Top bar: Left Pill, Center Nav, Right Button */
 .hero-dymas-topbar {
   display: flex;
@@ -6083,6 +6093,7 @@ main {
 /* Central Stage */
 .hero-dymas-stage {
   position: relative;
+  z-index: 2;
   min-height: 610px;
   display: flex;
   flex-direction: column;
