@@ -2698,24 +2698,34 @@ dialog::backdrop {
 
 @media (max-width: 767px) {
   .header {
-    height: 66px;
+    height: 64px;
     padding-block: 0;
     padding-top: env(safe-area-inset-top, 0px);
+    background: rgba(8, 8, 12, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .header.scrolled {
-    height: 66px;
+    height: 64px;
     padding-block: 0;
+    background: rgba(5, 5, 8, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom-color: rgba(152, 103, 255, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(152, 103, 255, 0.1);
   }
 
   .header .container {
     width: 100%;
-    padding-inline: 20px;
+    padding-inline: 16px;
     height: 100%;
   }
 
   .brand {
-    font-size: 18px;
+    font-size: 16px;
+    gap: 8px;
   }
 
   .music-button {
@@ -2731,15 +2741,15 @@ dialog::backdrop {
   }
 
   .header .circle-button {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
   }
 
   @media (max-width: 374px) {
     .header .container {
-      padding-inline: 16px;
+      padding-inline: 12px;
     }
   }
 
@@ -3436,20 +3446,39 @@ main {
   display: none;
 }
 
-.hero-art {
-  mix-blend-mode: screen;
-}
-
-.sculpture {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: auto;
-}
-
 @media (max-width: 767px) {
   .mobile-menu-toggle {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-toggle:hover,
+  .mobile-menu-toggle:focus-visible {
+    background: rgba(152, 103, 255, 0.16);
+    border-color: rgba(152, 103, 255, 0.5);
+    box-shadow: 0 0 16px rgba(152, 103, 255, 0.35);
+  }
+
+  .mobile-menu-toggle:active {
+    transform: scale(0.94);
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] {
+    background: rgba(152, 103, 255, 0.25);
+    border-color: rgba(152, 103, 255, 0.6);
+    box-shadow: 0 0 20px rgba(152, 103, 255, 0.45);
   }
 
   .sculpture {
@@ -5309,10 +5338,12 @@ main {
 @media (max-width: 640px) {
   .nav-blog-btn-animated {
     display: inline-flex !important;
-    padding: 6px 11px;
-    font-size: 10.5px;
-    gap: 5px;
-    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 11px;
+    gap: 6px;
+    min-height: 40px;
+    height: 40px;
+    border-radius: 9999px;
     flex-shrink: 0;
   }
 }

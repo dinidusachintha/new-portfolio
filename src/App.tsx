@@ -453,7 +453,12 @@ export default function App() {
         setTimeout(() => {
           const el = document.getElementById(targetSection);
           if (el) {
-            lenis.current?.scrollTo(el, { offset: -86 });
+            if (lenis.current) {
+              lenis.current.scrollTo(el, { offset: -86 });
+            } else {
+              const top = el.getBoundingClientRect().top + window.pageYOffset - 86;
+              window.scrollTo({ top, behavior: "smooth" });
+            }
           }
         }, 60);
       } else {
@@ -732,10 +737,18 @@ export default function App() {
               e.preventDefault();
               navigateTo("home");
             }}
-            className="brand flex items-center min-w-0 shrink"
+            className="brand flex items-center gap-2.5 min-w-0 shrink cursor-pointer group"
             aria-label="Dinidu Sachintha, back to home"
           >
             <BrandMark />
+            <div className="flex flex-col leading-none">
+              <span className="font-unbounded font-black text-sm sm:text-base tracking-tight text-white whitespace-nowrap group-hover:text-violet-300 transition-colors">
+                Dinidu<span className="text-violet-400">.</span>
+              </span>
+              <span className="font-mono text-[8px] sm:text-[9px] text-gray-400 tracking-wider uppercase hidden min-[360px]:block mt-0.5">
+                ARCHITECT
+              </span>
+            </div>
           </a>
 
           {/* Desktop Navigation */}
@@ -776,7 +789,7 @@ export default function App() {
             <button
               ref={mobileMenuTriggerRef}
               type="button"
-              className="circle-button mobile-menu-toggle min-w-[44px] min-h-[44px] md:hidden flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-95"
+              className="mobile-menu-toggle md:hidden cursor-pointer transition-all duration-200 active:scale-95"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-sidebar"
