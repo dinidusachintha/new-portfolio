@@ -75,7 +75,120 @@ const STAGES: StageInfo[] = [
 ];
 
 /**
- * Creates an in-memory high-res radial glow sprite for Three.js particles and energy core.
+ * Creates a smoothly chamfered / rounded 3D box geometry using ExtrudeGeometry with beveling.
+ * Real glass and titanium products have beveled edges where specular highlights reflect.
+ */
+function createRoundedBoxGeometry(
+  width: number,
+  height: number,
+  depth: number,
+  radius: number,
+  smoothness: number
+): THREE.BufferGeometry {
+  const shape = new THREE.Shape();
+  const eps = 0.0001;
+  const radiusMinus = Math.max(0.01, radius - eps);
+  shape.absarc(-width / 2 + radius, -height / 2 + radius, radiusMinus, Math.PI, 1.5 * Math.PI, true);
+  shape.absarc(width / 2 - radius, -height / 2 + radius, radiusMinus, 1.5 * Math.PI, 2 * Math.PI, true);
+  shape.absarc(width / 2 - radius, height / 2 - radius, radiusMinus, 0, 0.5 * Math.PI, true);
+  shape.absarc(-width / 2 + radius, height / 2 - radius, radiusMinus, 0.5 * Math.PI, Math.PI, true);
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: Math.max(0.1, depth - radius * 2),
+    bevelEnabled: true,
+    bevelSegments: smoothness * 2,
+    steps: 1,
+    bevelSize: radius,
+    bevelThickness: radius,
+    curveSegments: smoothness,
+  });
+  geometry.center();
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/**
+ * Procedurally generates an HDR studio reflection environment using PMREMGenerator.
+ * This supplies physically based glass and metallic surfaces with studio reflections.
+ */
+function createStudioEnvironment(renderer: THREE.WebGLRenderer): THREE.Texture {
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+
+  const envScene = new THREE.Scene();
+  envScene.background = new THREE.Color(0x060913); // Deep night studio
+
+  // Overhead Key Softbox
+  const keySoftboxGeo = new THREE.PlaneGeometry(24, 24);
+  const keySoftboxMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const keySoftbox = new THREE.Mesh(keySoftboxGeo, keySoftboxMat);
+  keySoftbox.position.set(0, 18, 0);
+  keySoftbox.rotation.x = Math.PI / 2;
+  envScene.add(keySoftbox);
+
+  // Warm Gold Rim Strip (#FACC15)
+  const warmSoftboxGeo = new THREE.PlaneGeometry(10, 24);
+  const warmSoftboxMat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+  const warmSoftbox = new THREE.Mesh(warmSoftboxGeo, warmSoftboxMat);
+  warmSoftbox.position.set(18, 0, 6);
+  warmSoftbox.rotation.y = -Math.PI / 2;
+  envScene.add(warmSoftbox);
+
+  // Cool Blueprint Cyan Rim Strip
+  const coolSoftboxGeo = new THREE.PlaneGeometry(12, 24);
+  const coolSoftboxMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+  const coolSoftbox = new THREE.Mesh(coolSoftboxGeo, coolSoftboxMat);
+  coolSoftbox.position.set(-18, 0, -6);
+  coolSoftbox.rotation.y = Math.PI / 2;
+  envScene.add(coolSoftbox);
+
+  // Backlit Electric Violet Rim
+  const violetSoftboxGeo = new THREE.PlaneGeometry(24, 10);
+  const violetSoftboxMat = new THREE.MeshBasicMaterial({ color: 0x818cf8 });
+  const violetSoftbox = new THREE.Mesh(violetSoftboxGeo, violetSoftboxMat);
+  violetSoftbox.position.set(0, -6, -18);
+  envScene.add(violetSoftbox);
+
+  const renderTarget = pmremGenerator.fromScene(envScene, 0.04);
+  const texture = renderTarget.texture;
+
+  pmremGenerator.dispose();
+  keySoftboxGeo.dispose();
+  keySoftboxMat.dispose();
+  warmSoftboxGeo.dispose();
+  warmSoftboxMat.dispose();
+  coolSoftboxGeo.dispose();
+  coolSoftboxMat.dispose();
+  violetSoftboxGeo.dispose();
+  violetSoftboxMat.dispose();
+
+  return texture;
+}
+
+/**
+ * Radial dark contact shadow texture grounded beneath the floating cube.
+ */
+function createContactShadowTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 120);
+    gradient.addColorStop(0, "rgba(0, 0, 0, 0.88)");
+    gradient.addColorStop(0.35, "rgba(0, 0, 0, 0.55)");
+    gradient.addColorStop(0.7, "rgba(0, 0, 0, 0.16)");
+    gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 256, 256);
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  return texture;
+}
+
+/**
+ * Creates in-memory high-res radial glow sprite for Three.js particles and energy core.
  */
 function createEnergyGlowTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
@@ -93,6 +206,64 @@ function createEnergyGlowTexture(): THREE.CanvasTexture {
     ctx.fillRect(0, 0, 64, 64);
   }
   const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  return texture;
+}
+
+/**
+ * Realistic silicon microchip motherboard texture with gold etched bus lines.
+ */
+function createCircuitBoardTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = "#070c17";
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Center CPU socket frame
+    ctx.fillStyle = "#0c1424";
+    ctx.fillRect(192, 192, 128, 128);
+    ctx.strokeStyle = "#facc15";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(192, 192, 128, 128);
+
+    // Inner silicon die
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(216, 216, 80, 80);
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(216, 216, 80, 80);
+
+    // Gold circuit traces
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.75)";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < 8; i++) {
+      const angle = (i * Math.PI) / 4;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      ctx.moveTo(256 + cos * 70, 256 + sin * 70);
+      ctx.lineTo(256 + cos * 150, 256 + sin * 150);
+      ctx.lineTo(256 + cos * 220 + (i % 2 === 0 ? 25 : -25), 256 + sin * 220);
+    }
+    ctx.stroke();
+
+    // Circuit contact pads
+    ctx.fillStyle = "#facc15";
+    for (let x = 40; x < 480; x += 64) {
+      for (let y = 40; y < 480; y += 64) {
+        if (x > 180 && x < 330 && y > 180 && y < 330) continue;
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
   texture.needsUpdate = true;
   return texture;
 }
@@ -139,12 +310,12 @@ export default function InfiniteCodeCubeSection() {
     const initialHeight = container.clientHeight || 640;
 
     const camera = new THREE.PerspectiveCamera(
-      46,
+      44,
       initialWidth / initialHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 1.2, 24);
+    camera.position.set(0, 1.2, 23);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({
@@ -156,93 +327,136 @@ export default function InfiniteCodeCubeSection() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(initialWidth, initialHeight, false);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.25;
 
-    // 2. Soft Sophisticated Physically Based Lighting
-    // Deep Navy ambient fill (#0B1120) with electric yellow specular rims
-    const ambientLight = new THREE.AmbientLight(0x0f172a, 2.2);
+    // 2. Realistic Studio Lighting & Environment Map Reflections
+    const studioEnvTexture = createStudioEnvironment(renderer);
+    scene.environment = studioEnvTexture;
+
+    const ambientLight = new THREE.AmbientLight(0x0f172a, 1.8);
     scene.add(ambientLight);
 
-    const mainKeyLight = new THREE.DirectionalLight(0xf8fafc, 2.4);
+    const mainKeyLight = new THREE.DirectionalLight(0xf8fafc, 2.6);
     mainKeyLight.position.set(20, 25, 20);
     scene.add(mainKeyLight);
 
-    const fillNavyLight = new THREE.DirectionalLight(0x0284c7, 1.8);
+    const fillNavyLight = new THREE.DirectionalLight(0x0284c7, 1.9);
     fillNavyLight.position.set(-22, -18, 16);
     scene.add(fillNavyLight);
 
-    const rimYellowLight = new THREE.DirectionalLight(0xfacc15, 2.6);
+    const rimYellowLight = new THREE.DirectionalLight(0xfacc15, 2.8);
     rimYellowLight.position.set(0, -20, -22);
     scene.add(rimYellowLight);
 
     // Central core point light casting golden luminescence through glass layers
-    const corePointLight = new THREE.PointLight(0xfacc15, 2.8, 25);
+    const corePointLight = new THREE.PointLight(0xfacc15, 3.2, 28);
     corePointLight.position.set(0, 0, 0);
     scene.add(corePointLight);
 
-    // 3. Master Cube Assembly
+    // 3. Ground Contact Shadow & Studio Pedestal Grid
+    const shadowTexture = createContactShadowTexture();
+    const shadowGeo = new THREE.PlaneGeometry(16, 16);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      map: shadowTexture,
+      transparent: true,
+      opacity: 0.8,
+      depthWrite: false,
+    });
+    const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+    shadowMesh.rotation.x = -Math.PI / 2;
+    shadowMesh.position.y = -5.8;
+    scene.add(shadowMesh);
+
+    // Holographic Circular Studio Pedestal Floor Ring
+    const floorRingGeo = new THREE.RingGeometry(5.8, 6.0, 64);
+    const floorRingMat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.15,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    const floorRingMesh = new THREE.Mesh(floorRingGeo, floorRingMat);
+    floorRingMesh.rotation.x = -Math.PI / 2;
+    floorRingMesh.position.y = -5.79;
+    scene.add(floorRingMesh);
+
+    // 4. Master Cube Assembly
     const cubeMasterGroup = new THREE.Group();
     scene.add(cubeMasterGroup);
 
-    // Texture for point particles
+    // Shared reusable textures
     const glowTexture = createEnergyGlowTexture();
+    const circuitTexture = createCircuitBoardTexture();
 
     // =========================================================================
-    // LAYER 1: IDEA — Outer Glass Cube with Metallic Chamfered Edges
+    // LAYER 1: IDEA — Smooth Chamfered Glass Cube with Titanium Corner Brackets
     // =========================================================================
     const ideaGroup = new THREE.Group();
     cubeMasterGroup.add(ideaGroup);
 
-    const ideaSize = 7.4;
-    const ideaBoxGeo = new THREE.BoxGeometry(ideaSize, ideaSize, ideaSize);
+    const ideaSize = 7.2;
+    const ideaBoxGeo = createRoundedBoxGeometry(ideaSize, ideaSize, ideaSize, 0.42, 4);
 
-    // Physically based refractive glass material
+    // Photorealistic Optical Glass Material with IOR, transmission and dispersion
     const ideaGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x0b1120, // Deep Navy
-      roughness: 0.08,
-      metalness: 0.12,
-      transmission: 0.88,
-      ior: 1.52,
-      reflectivity: 0.85,
+      color: 0x0a101d, // Deep Navy
+      roughness: 0.03,
+      metalness: 0.05,
+      transmission: 0.94,
+      ior: 1.54, // Crown Optical Glass
+      thickness: 2.4,
+      attenuationColor: new THREE.Color(0x38bdf8),
+      attenuationDistance: 4.2,
+      specularIntensity: 1.0,
+      specularColor: new THREE.Color(0xffffff),
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.03,
+      envMapIntensity: 2.6,
       transparent: true,
-      opacity: 0.65,
       depthWrite: false,
     });
 
     const ideaMesh = new THREE.Mesh(ideaBoxGeo, ideaGlassMat);
     ideaGroup.add(ideaMesh);
 
-    // Thin metallic edges
-    const ideaEdgesGeo = new THREE.EdgesGeometry(ideaBoxGeo);
-    const ideaEdgesMat = new THREE.LineBasicMaterial({
-      color: 0xf8fafc,
-      transparent: true,
-      opacity: 0.38,
-      blending: THREE.AdditiveBlending,
+    // Titanium Corner Brackets (8 precision corner braces)
+    const cornerBracketGeo = new THREE.BoxGeometry(0.85, 0.85, 0.85);
+    const cornerBracketMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2638,
+      metalness: 0.92,
+      roughness: 0.2,
+      envMapIntensity: 2.2,
     });
-    const ideaEdges = new THREE.LineSegments(ideaEdgesGeo, ideaEdgesMat);
-    ideaGroup.add(ideaEdges);
 
-    // Glowing Electric Yellow corner node markers
-    const cornerMarkersGeo = new THREE.BufferGeometry();
     const halfS = ideaSize / 2;
-    const cornerVertices = new Float32Array([
-      -halfS, -halfS, -halfS,
-       halfS, -halfS, -halfS,
-       halfS,  halfS, -halfS,
-      -halfS,  halfS, -halfS,
-      -halfS, -halfS,  halfS,
-       halfS, -halfS,  halfS,
-       halfS,  halfS,  halfS,
-      -halfS,  halfS,  halfS,
-    ]);
+    const cornerOffsets = [
+      [-halfS, -halfS, -halfS],
+      [ halfS, -halfS, -halfS],
+      [ halfS,  halfS, -halfS],
+      [-halfS,  halfS, -halfS],
+      [-halfS, -halfS,  halfS],
+      [ halfS, -halfS,  halfS],
+      [ halfS,  halfS,  halfS],
+      [-halfS,  halfS,  halfS],
+    ];
+
+    cornerOffsets.forEach(([cx, cy, cz]) => {
+      const bracket = new THREE.Mesh(cornerBracketGeo, cornerBracketMat);
+      bracket.position.set(cx, cy, cz);
+      ideaGroup.add(bracket);
+    });
+
+    // Glowing Electric Yellow Bevel Edge Markers
+    const cornerMarkersGeo = new THREE.BufferGeometry();
+    const cornerVertices = new Float32Array(cornerOffsets.flat());
     cornerMarkersGeo.setAttribute("position", new THREE.BufferAttribute(cornerVertices, 3));
     const cornerMarkersMat = new THREE.PointsMaterial({
-      size: 0.6,
+      size: 0.7,
       map: glowTexture,
       color: 0xfacc15,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.95,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
@@ -250,33 +464,36 @@ export default function InfiniteCodeCubeSection() {
     ideaGroup.add(cornerMarkers);
 
     // =========================================================================
-    // LAYER 2: DESIGN — UI/UX & Architecture Blueprint Lattice
+    // LAYER 2: DESIGN — UI/UX & Architectural Blueprint Grid Lattice
     // =========================================================================
     const designGroup = new THREE.Group();
     cubeMasterGroup.add(designGroup);
 
-    const designSize = 5.8;
-    const designBoxGeo = new THREE.BoxGeometry(designSize, designSize, designSize);
+    const designSize = 5.6;
+    const designBoxGeo = createRoundedBoxGeometry(designSize, designSize, designSize, 0.3, 3);
 
     const designGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x111827, // Dark Charcoal
-      roughness: 0.15,
-      metalness: 0.45,
-      transmission: 0.72,
-      ior: 1.45,
+      color: 0x0f172a, // Dark Charcoal
+      roughness: 0.22,
+      metalness: 0.35,
+      transmission: 0.75,
+      thickness: 1.6,
+      ior: 1.48,
+      envMapIntensity: 2.0,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.5,
       depthWrite: false,
     });
     const designMesh = new THREE.Mesh(designBoxGeo, designGlassMat);
     designGroup.add(designMesh);
 
     // Architectural Wireframe Blueprint Lines
-    const designWireGeo = new THREE.WireframeGeometry(designBoxGeo);
+    const rawDesignBox = new THREE.BoxGeometry(designSize, designSize, designSize);
+    const designWireGeo = new THREE.WireframeGeometry(rawDesignBox);
     const designWireMat = new THREE.LineBasicMaterial({
       color: 0x38bdf8, // Blueprint Cyan
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.45,
       blending: THREE.AdditiveBlending,
     });
     const designWire = new THREE.LineSegments(designWireGeo, designWireMat);
@@ -287,75 +504,63 @@ export default function InfiniteCodeCubeSection() {
     const designOctaMat = new THREE.LineBasicMaterial({
       color: 0xfacc15,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.32,
       blending: THREE.AdditiveBlending,
     });
     const designOcta = new THREE.LineSegments(new THREE.WireframeGeometry(designOctaGeo), designOctaMat);
     designGroup.add(designOcta);
 
     // =========================================================================
-    // LAYER 3: CODE — Frontend & Backend Engineering Matrix
+    // LAYER 3: CODE — Silicon Motherboard Wafer & Micro-Circuit Bus Traces
     // =========================================================================
     const codeGroup = new THREE.Group();
     cubeMasterGroup.add(codeGroup);
 
-    const codeSize = 4.3;
-    const codeBoxGeo = new THREE.BoxGeometry(codeSize, codeSize, codeSize);
+    const codeSize = 4.2;
+    // Dual intersecting silicon motherboards with etched gold circuitry
+    const codeBoardGeo = new THREE.BoxGeometry(codeSize, 0.1, codeSize);
+    const codeBoardMat = new THREE.MeshStandardMaterial({
+      map: circuitTexture,
+      roughness: 0.2,
+      metalness: 0.75,
+      envMapIntensity: 1.8,
+    });
+    const codeBoard1 = new THREE.Mesh(codeBoardGeo, codeBoardMat);
+    codeGroup.add(codeBoard1);
 
-    const codeMat = new THREE.MeshPhysicalMaterial({
+    const codeBoard2 = new THREE.Mesh(codeBoardGeo, codeBoardMat);
+    codeBoard2.rotation.x = Math.PI / 2;
+    codeGroup.add(codeBoard2);
+
+    // Central CPU Silicon Processor Core
+    const cpuGeo = new THREE.BoxGeometry(1.4, 0.22, 1.4);
+    const cpuMat = new THREE.MeshStandardMaterial({
       color: 0x0f172a,
-      roughness: 0.25,
-      metalness: 0.7,
-      transmission: 0.55,
-      transparent: true,
-      opacity: 0.4,
-      depthWrite: false,
+      metalness: 0.9,
+      roughness: 0.15,
+      envMapIntensity: 2.2,
     });
-    const codeMesh = new THREE.Mesh(codeBoxGeo, codeMat);
-    codeGroup.add(codeMesh);
+    const cpuMesh = new THREE.Mesh(cpuGeo, cpuMat);
+    codeGroup.add(cpuMesh);
 
-    const codeEdgesGeo = new THREE.EdgesGeometry(codeBoxGeo);
-    const codeEdgesMat = new THREE.LineBasicMaterial({
-      color: 0xa855f7, // Violet syntax
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-    });
-    const codeEdges = new THREE.LineSegments(codeEdgesGeo, codeEdgesMat);
-    codeGroup.add(codeEdges);
-
-    // Code Matrix Particle Nodes (120 structured nodes on faces)
-    const codePointsCount = 120;
+    // Dynamic Data Pulse Nodes (Luminous circuit nodes travelling along buses)
+    const codePointsCount = 64;
     const codePointPositions = new Float32Array(codePointsCount * 3);
     for (let i = 0; i < codePointsCount; i++) {
-      const axis = i % 3;
-      const sign = i % 2 === 0 ? 1 : -1;
-      const h = (codeSize / 2) * sign;
-      const u = ((Math.random() - 0.5) * codeSize * 0.85);
-      const v = ((Math.random() - 0.5) * codeSize * 0.85);
-
-      if (axis === 0) {
-        codePointPositions[i * 3] = h;
-        codePointPositions[i * 3 + 1] = u;
-        codePointPositions[i * 3 + 2] = v;
-      } else if (axis === 1) {
-        codePointPositions[i * 3] = u;
-        codePointPositions[i * 3 + 1] = h;
-        codePointPositions[i * 3 + 2] = v;
-      } else {
-        codePointPositions[i * 3] = u;
-        codePointPositions[i * 3 + 1] = v;
-        codePointPositions[i * 3 + 2] = h;
-      }
+      const angle = (i / codePointsCount) * Math.PI * 2;
+      const rad = 0.8 + (i % 4) * 0.65;
+      codePointPositions[i * 3] = Math.cos(angle) * rad;
+      codePointPositions[i * 3 + 1] = (i % 2 === 0 ? 0.08 : -0.08);
+      codePointPositions[i * 3 + 2] = Math.sin(angle) * rad;
     }
     const codePointsGeo = new THREE.BufferGeometry();
     codePointsGeo.setAttribute("position", new THREE.BufferAttribute(codePointPositions, 3));
     const codePointsMat = new THREE.PointsMaterial({
-      size: 0.4,
+      size: 0.35,
       map: glowTexture,
       color: 0xfacc15,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
@@ -363,328 +568,269 @@ export default function InfiniteCodeCubeSection() {
     codeGroup.add(codePoints);
 
     // =========================================================================
-    // LAYER 4: TEST — Automated Verification & Optimization Cage
+    // LAYER 4: TEST — Precision Dual-Axis Quantum Gyroscope Gimbal Rings
     // =========================================================================
     const testGroup = new THREE.Group();
     cubeMasterGroup.add(testGroup);
 
-    const testSize = 2.9;
-    const testBoxGeo = new THREE.BoxGeometry(testSize, testSize, testSize);
-
-    const testEdgesGeo = new THREE.EdgesGeometry(testBoxGeo);
-    const testEdgesMat = new THREE.LineBasicMaterial({
-      color: 0x34d399, // Green Verification
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending,
+    // Outer Gyroscope Ring: 24K Gold
+    const outerGimbalGeo = new THREE.TorusGeometry(1.85, 0.055, 16, 80);
+    const outerGimbalMat = new THREE.MeshStandardMaterial({
+      color: 0xfacc15, // Polished Gold
+      metalness: 0.96,
+      roughness: 0.12,
+      envMapIntensity: 2.8,
     });
-    const testEdges = new THREE.LineSegments(testEdgesGeo, testEdgesMat);
-    testGroup.add(testEdges);
+    const outerGimbalMesh = new THREE.Mesh(outerGimbalGeo, outerGimbalMat);
+    testGroup.add(outerGimbalMesh);
 
-    // Nested Icosahedron Verification Cage
-    const testIcoGeo = new THREE.IcosahedronGeometry(testSize * 0.45, 0);
-    const testIcoMat = new THREE.LineBasicMaterial({
-      color: 0xfacc15,
-      transparent: true,
-      opacity: 0.5,
-      blending: THREE.AdditiveBlending,
+    // Inner Gyroscope Ring: Dark Titanium Gunmetal
+    const innerGimbalGeo = new THREE.TorusGeometry(1.48, 0.045, 16, 80);
+    const innerGimbalMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8, // Precision Cyan Titanium
+      metalness: 0.98,
+      roughness: 0.1,
+      envMapIntensity: 2.5,
     });
-    const testIco = new THREE.LineSegments(new THREE.WireframeGeometry(testIcoGeo), testIcoMat);
-    testGroup.add(testIco);
+    const innerGimbalMesh = new THREE.Mesh(innerGimbalGeo, innerGimbalMat);
+    testGroup.add(innerGimbalMesh);
+
+    // Gyroscope Axis Cross-Pins
+    const pinGeo = new THREE.CylinderGeometry(0.04, 0.04, 3.8, 16);
+    const pinMat = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      metalness: 0.95,
+      roughness: 0.1,
+    });
+    const pinX = new THREE.Mesh(pinGeo, pinMat);
+    pinX.rotation.z = Math.PI / 2;
+    testGroup.add(pinX);
 
     // =========================================================================
-    // LAYER 5: DEPLOY — Central Electric Yellow Energy Core (#FACC15)
+    // LAYER 5: DEPLOY — Nuclear Plasma Energy Singularity
     // =========================================================================
     const deployGroup = new THREE.Group();
     cubeMasterGroup.add(deployGroup);
 
-    // Inner Luminous Core Sphere
-    const coreSphereGeo = new THREE.SphereGeometry(0.85, 32, 32);
-    const coreSphereMat = new THREE.MeshBasicMaterial({
+    // Radiant Hot White Core Sphere
+    const coreWhiteGeo = new THREE.SphereGeometry(0.52, 32, 32);
+    const coreWhiteMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+    });
+    const coreWhite = new THREE.Mesh(coreWhiteGeo, coreWhiteMat);
+    deployGroup.add(coreWhite);
+
+    // Pulsating Golden Plasma Corona Sphere
+    const coreCoronaGeo = new THREE.SphereGeometry(0.82, 32, 32);
+    const coreCoronaMat = new THREE.MeshBasicMaterial({
+      color: 0xfacc15,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+    });
+    const coreCorona = new THREE.Mesh(coreCoronaGeo, coreCoronaMat);
+    deployGroup.add(coreCorona);
+
+    // Orbiting Golden Spark Motes
+    const sparkCount = 48;
+    const sparkPositions = new Float32Array(sparkCount * 3);
+    for (let i = 0; i < sparkCount; i++) {
+      const phi = Math.acos(-1 + (2 * i) / sparkCount);
+      const theta = Math.sqrt(sparkCount * Math.PI) * phi;
+      const r = 1.05 + Math.random() * 0.35;
+      sparkPositions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
+      sparkPositions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+      sparkPositions[i * 3 + 2] = r * Math.cos(phi);
+    }
+    const sparkGeo = new THREE.BufferGeometry();
+    sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPositions, 3));
+    const sparkMat = new THREE.PointsMaterial({
+      size: 0.3,
+      map: glowTexture,
       color: 0xfacc15,
       transparent: true,
       opacity: 0.95,
-    });
-    const coreSphere = new THREE.Mesh(coreSphereGeo, coreSphereMat);
-    deployGroup.add(coreSphere);
-
-    // Glowing Halo Flare Billboard Sprite
-    const haloSpriteMat = new THREE.SpriteMaterial({
-      map: glowTexture,
-      color: 0xfacc15,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-    });
-    const haloSprite = new THREE.Sprite(haloSpriteMat);
-    haloSprite.scale.set(3.5, 3.5, 3.5);
-    deployGroup.add(haloSprite);
-
-    // Micro Gyroscopic Orbital Ring around core
-    const coreRingGeo = new THREE.RingGeometry(1.25, 1.32, 48);
-    const coreRingMat = new THREE.MeshBasicMaterial({
-      color: 0xf8fafc,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.7,
-      blending: THREE.AdditiveBlending,
-    });
-    const coreRing1 = new THREE.Mesh(coreRingGeo, coreRingMat);
-    const coreRing2 = new THREE.Mesh(coreRingGeo, coreRingMat);
-    coreRing1.rotation.x = Math.PI / 3;
-    coreRing2.rotation.y = Math.PI / 4;
-    deployGroup.add(coreRing1);
-    deployGroup.add(coreRing2);
-
-    // =========================================================================
-    // AMBIENT CELESTIAL STARDUST (Minimal, subtle, deep navy background)
-    // =========================================================================
-    const stardustCount = 180;
-    const stardustPositions = new Float32Array(stardustCount * 3);
-    for (let i = 0; i < stardustCount; i++) {
-      stardustPositions[i * 3] = (Math.random() - 0.5) * 55;
-      stardustPositions[i * 3 + 1] = (Math.random() - 0.5) * 45;
-      stardustPositions[i * 3 + 2] = (Math.random() - 0.5) * 45;
-    }
-    const stardustGeo = new THREE.BufferGeometry();
-    stardustGeo.setAttribute("position", new THREE.BufferAttribute(stardustPositions, 3));
-    const stardustMat = new THREE.PointsMaterial({
-      size: 0.5,
-      map: glowTexture,
-      color: 0x94a3b8,
-      transparent: true,
-      opacity: 0.35,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-    const stardust = new THREE.Points(stardustGeo, stardustMat);
-    scene.add(stardust);
+    const sparks = new THREE.Points(sparkGeo, sparkMat);
+    deployGroup.add(sparks);
 
-    // 4. Interactive 360° Pointer & Touch Dragging with Damped Inertia
+    // Floating Atmospheric Ambient Dust Particles
+    const dustCount = 65;
+    const dustPositions = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 22;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 22;
+    }
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+    const dustMat = new THREE.PointsMaterial({
+      size: 0.22,
+      map: glowTexture,
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const dustParticles = new THREE.Points(dustGeo, dustMat);
+    scene.add(dustParticles);
+
+    // =========================================================================
+    // 5. Interactive Mouse & Touch Drag-To-Orbit Controls with Damping
+    // =========================================================================
     let isDragging = false;
-    let prevX = 0;
-    let prevY = 0;
-    let dragVelocityX = 0;
+    let prevMouseX = 0;
+    let prevMouseY = 0;
+    let targetRotationY = 0.5;
+    let targetRotationX = 0.25;
+    let currentRotationY = 0.5;
+    let currentRotationX = 0.25;
     let dragVelocityY = 0;
+    let dragVelocityX = 0;
 
-    let targetRotY = 0.45;
-    let targetRotX = 0.25;
-
-    let pointerXNormalized = 0;
-    let pointerYNormalized = 0;
-
-    const onPointerDown = (clientX: number, clientY: number) => {
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
       isDragging = true;
-      prevX = clientX;
-      prevY = clientY;
-      dragVelocityX = 0;
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+      prevMouseX = clientX;
+      prevMouseY = clientY;
       dragVelocityY = 0;
+      dragVelocityX = 0;
     };
 
-    const onPointerMove = (clientX: number, clientY: number) => {
-      const rect = container.getBoundingClientRect();
-      pointerXNormalized = (clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
-      pointerYNormalized = (clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-
+    const onPointerMove = (e: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
-      const dx = clientX - prevX;
-      const dy = clientY - prevY;
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+      const deltaX = clientX - prevMouseX;
+      const deltaY = clientY - prevMouseY;
+      prevMouseX = clientX;
+      prevMouseY = clientY;
 
-      dragVelocityX = dx * 0.0055;
-      dragVelocityY = dy * 0.0055;
-
-      targetRotY += dragVelocityX;
-      targetRotX += dragVelocityY;
-
-      prevX = clientX;
-      prevY = clientY;
+      dragVelocityY = deltaX * 0.0065;
+      dragVelocityX = deltaY * 0.0065;
+      targetRotationY += dragVelocityY;
+      targetRotationX += dragVelocityX;
+      targetRotationX = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, targetRotationX));
     };
 
     const onPointerUp = () => {
       isDragging = false;
     };
 
-    const handleMouseDown = (e: MouseEvent) => onPointerDown(e.clientX, e.clientY);
-    const handleMouseMove = (e: MouseEvent) => onPointerMove(e.clientX, e.clientY);
-    const handleMouseUp = () => onPointerUp();
+    canvas.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("mousemove", onPointerMove);
+    window.addEventListener("mouseup", onPointerUp);
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
-    const handleTouchEnd = () => onPointerUp();
+    canvas.addEventListener("touchstart", onPointerDown, { passive: true });
+    window.addEventListener("touchmove", onPointerMove, { passive: true });
+    window.addEventListener("touchend", onPointerUp);
 
-    canvas.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    canvas.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd);
-
-    // 5. Responsive Resize Observer
+    // =========================================================================
+    // 6. Responsive Window Resize Handler
+    // =========================================================================
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
-      const w = container.clientWidth || 1000;
-      const h = container.clientHeight || 640;
-      camera.aspect = w / h;
+      const width = container.clientWidth || 1000;
+      const height = container.clientHeight || 640;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false);
+      renderer.setSize(width, height, false);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
 
     const resizeObserver = new ResizeObserver(() => handleResize());
     resizeObserver.observe(container);
 
-    // 6. Visibility Observer (Zero GPU usage when scrolled out of view)
-    let isVisible = true;
-    const visibilityObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          isVisible = entry.isIntersecting;
-        });
-      },
-      { threshold: 0.1 }
-    );
-    visibilityObserver.observe(container);
-
-    // 7. Core Animation Frame Loop (Frame-rate independent delta time)
+    // =========================================================================
+    // 7. Master Render & Animation Loop (Clock Delta Framerate-Independent)
+    // =========================================================================
     const clock = new THREE.Clock();
-    let animId: number;
-    let lastTelemetryTime = 0;
-    let frameCount = 0;
-    let fpsStart = performance.now();
-    let currentFps = 60;
+    let animationFrameId: number;
+    let lastTelemetryUpdate = 0;
+
+    // Explode Layer Expansion Offsets
+    let currentExplodeFactor = 0;
 
     const animate = () => {
-      animId = requestAnimationFrame(animate);
-
-      if (!isVisible) return;
-
+      animationFrameId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
       const elapsedTime = clock.getElapsedTime();
-      const now = performance.now();
 
-      // FPS tracking
-      frameCount++;
-      if (now - fpsStart >= 1000) {
-        currentFps = Math.round((frameCount * 1000) / (now - fpsStart));
-        frameCount = 0;
-        fpsStart = now;
+      // 1. Continuous 360-degree rotation (18-24 second complete cycle)
+      const autoRotateSpeed = hoveredRef.current ? 0.08 : 0.28;
+      if (autoRotateRef.current && !isDragging && !prefersReducedMotion) {
+        targetRotationY += autoRotateSpeed * delta;
       }
 
-      // Handle Reset Orientation trigger
-      if (resetTriggerRef.current > 0) {
-        targetRotY = 0.45;
-        targetRotX = 0.25;
-        resetTriggerRef.current = 0;
-      }
+      // Physics damping interpolation
+      currentRotationY = THREE.MathUtils.lerp(currentRotationY, targetRotationY, 0.08);
+      currentRotationX = THREE.MathUtils.lerp(currentRotationX, targetRotationX, 0.08);
 
-      // Auto-rotation (18–24s per full 360° turn: ~0.26 - 0.35 rad/s)
-      const baseRotationSpeed = (Math.PI * 2) / 21; // ~21s per 360° loop
-      const hoverSpeedMultiplier = hoveredRef.current ? 0.45 : 1.0;
+      cubeMasterGroup.rotation.y = currentRotationY;
+      cubeMasterGroup.rotation.x = currentRotationX;
 
-      if (autoRotateRef.current && !isDragging) {
-        targetRotY += baseRotationSpeed * delta * hoverSpeedMultiplier;
-        targetRotX += Math.sin(elapsedTime * 0.4) * 0.0006;
-      } else if (!isDragging) {
-        // Friction damping
-        targetRotY += dragVelocityX;
-        targetRotX += dragVelocityY;
-        dragVelocityX *= 0.93;
-        dragVelocityY *= 0.93;
-      }
+      // Gentle floating levitation oscillation
+      const floatY = Math.sin(elapsedTime * 1.4) * 0.22;
+      cubeMasterGroup.position.y = floatY;
+      shadowMesh.position.y = -5.8;
+      const shadowScale = 1 - floatY * 0.15;
+      shadowMesh.scale.set(shadowScale, shadowScale, shadowScale);
 
-      // Damped smooth rotation of master assembly
-      cubeMasterGroup.rotation.y += (targetRotY - cubeMasterGroup.rotation.y) * 0.085;
-      cubeMasterGroup.rotation.x += (targetRotX - cubeMasterGroup.rotation.x) * 0.085;
+      // 2. Exploded View Layer Separation Animation
+      const targetExplode = explodedRef.current ? 1.0 : 0.0;
+      currentExplodeFactor = THREE.MathUtils.lerp(currentExplodeFactor, targetExplode, 0.08);
 
-      // Mouse Parallax on Camera
-      const parallaxFactor = prefersReducedMotion ? 0.0 : 0.035;
-      camera.position.x += (pointerXNormalized * 2.8 - camera.position.x) * parallaxFactor;
-      camera.position.y += (1.2 - pointerYNormalized * 1.8 - camera.position.y) * parallaxFactor;
-      camera.lookAt(0, 0, 0);
+      // Separate layers along spatial axes when exploded
+      ideaGroup.position.x = -currentExplodeFactor * 5.2;
+      designGroup.position.y = currentExplodeFactor * 4.6;
+      codeGroup.position.z = currentExplodeFactor * 4.8;
+      testGroup.position.x = currentExplodeFactor * 5.0;
+      deployGroup.position.y = -currentExplodeFactor * 3.8;
 
-      // =======================================================================
-      // NESTED INDEPENDENT LAYER ROTATION & KINETIC DELTAS
-      // =======================================================================
-      // 1. IDEA Outer Cube: Slow clockwise Y-rotation
-      ideaGroup.rotation.y += 0.0018 * hoverSpeedMultiplier;
-      ideaGroup.rotation.x = Math.sin(elapsedTime * 0.35) * 0.04;
+      // 3. Layer-Specific Internal Differential Rotations
+      // Outer Idea Glass: slow clockwise rotation
+      ideaGroup.rotation.y = Math.sin(elapsedTime * 0.25) * 0.1;
 
-      // 2. DESIGN Layer 2: Slightly slower counterclockwise rotation
-      designGroup.rotation.y -= 0.0028 * hoverSpeedMultiplier;
-      designGroup.rotation.z = Math.cos(elapsedTime * 0.4) * 0.03;
+      // Design Octahedron: architectural counter-rotation
+      designOcta.rotation.x = elapsedTime * 0.35;
+      designOcta.rotation.y = elapsedTime * 0.5;
 
-      // 3. CODE Layer 3: Independent 3-axis subtle precession
-      codeGroup.rotation.y += 0.0035 * hoverSpeedMultiplier;
-      codeGroup.rotation.x -= 0.0022 * hoverSpeedMultiplier;
+      // Code Motherboard: subtle data pulsation
+      codeBoard1.rotation.y = Math.sin(elapsedTime * 0.6) * 0.15;
+      codePoints.rotation.y = elapsedTime * 0.4;
 
-      // 4. TEST Layer 4: Minimal precision alignment
-      testGroup.rotation.y -= 0.0015 * hoverSpeedMultiplier;
-      testGroup.rotation.z += 0.0018 * hoverSpeedMultiplier;
+      // Test Gyroscope Gimbal: dual-axis continuous mechanical rotation
+      outerGimbalMesh.rotation.x = elapsedTime * 0.85;
+      innerGimbalMesh.rotation.z = elapsedTime * 1.15;
 
-      // 5. DEPLOY Central Core: High-velocity independent kinetic rotation & pulsation
-      const corePulse = 1.0 + Math.sin(elapsedTime * 3.2) * 0.09;
-      coreSphere.scale.set(corePulse, corePulse, corePulse);
-      haloSprite.scale.set(3.5 * corePulse, 3.5 * corePulse, 3.5 * corePulse);
-      coreRing1.rotation.z += 0.015;
-      coreRing2.rotation.z -= 0.018;
-      deployGroup.rotation.y += 0.012;
+      // Deploy Singularity Core: dynamic energy breathing pulse
+      const corePulse = 1 + Math.sin(elapsedTime * 3.2) * 0.12;
+      coreCorona.scale.set(corePulse, corePulse, corePulse);
+      corePointLight.intensity = 3.2 + Math.sin(elapsedTime * 4.0) * 0.6;
+      sparks.rotation.y = elapsedTime * 0.9;
+      sparks.rotation.z = elapsedTime * 0.6;
 
-      // Hover Edge Illumination & Visibility boost
-      const hoverTargetOpacity = hoveredRef.current ? 0.85 : 0.38;
-      ideaEdgesMat.opacity = THREE.MathUtils.lerp(ideaEdgesMat.opacity, hoverTargetOpacity, 0.08);
+      // Atmospheric dust drifting
+      dustParticles.rotation.y = elapsedTime * 0.03;
 
-      // =======================================================================
-      // SCROLL / EXPLODED ARCHITECTURAL LAYER SEPARATION
-      // =======================================================================
-      const isExplodeActive = explodedRef.current;
-      const targetIdeaScale = isExplodeActive ? 1.38 : 1.0;
-      const targetDesignScale = isExplodeActive ? 1.18 : 1.0;
-      const targetCodeScale = isExplodeActive ? 1.05 : 1.0;
-      const targetTestScale = isExplodeActive ? 0.95 : 1.0;
+      // 4. Hover Edge Illumination Transition
+      const targetEdgeOpacity = hoveredRef.current ? 0.8 : 0.45;
+      cornerMarkersMat.opacity = THREE.MathUtils.lerp(cornerMarkersMat.opacity, targetEdgeOpacity, 0.1);
 
-      ideaGroup.scale.lerp(new THREE.Vector3(targetIdeaScale, targetIdeaScale, targetIdeaScale), 0.06);
-      designGroup.scale.lerp(new THREE.Vector3(targetDesignScale, targetDesignScale, targetDesignScale), 0.06);
-      codeGroup.scale.lerp(new THREE.Vector3(targetCodeScale, targetCodeScale, targetCodeScale), 0.06);
-      testGroup.scale.lerp(new THREE.Vector3(targetTestScale, targetTestScale, targetTestScale), 0.06);
-
-      // =======================================================================
-      // STAGE FOCUS HIGHLIGHTING (When user clicks a specific stage pill)
-      // =======================================================================
-      const stage = activeStageRef.current;
-      if (stage) {
-        // Dim unselected layers, highlight target
-        ideaGlassMat.opacity = THREE.MathUtils.lerp(ideaGlassMat.opacity, stage === "idea" ? 0.85 : 0.15, 0.08);
-        designGlassMat.opacity = THREE.MathUtils.lerp(designGlassMat.opacity, stage === "design" ? 0.85 : 0.12, 0.08);
-        codeMat.opacity = THREE.MathUtils.lerp(codeMat.opacity, stage === "code" ? 0.85 : 0.1, 0.08);
-        testEdgesMat.opacity = THREE.MathUtils.lerp(testEdgesMat.opacity, stage === "test" ? 0.95 : 0.18, 0.08);
-        coreSphereMat.opacity = THREE.MathUtils.lerp(coreSphereMat.opacity, stage === "deploy" ? 1.0 : 0.3, 0.08);
-      } else {
-        // Balanced unified state
-        ideaGlassMat.opacity = THREE.MathUtils.lerp(ideaGlassMat.opacity, 0.65, 0.08);
-        designGlassMat.opacity = THREE.MathUtils.lerp(designGlassMat.opacity, 0.45, 0.08);
-        codeMat.opacity = THREE.MathUtils.lerp(codeMat.opacity, 0.4, 0.08);
-        testEdgesMat.opacity = THREE.MathUtils.lerp(testEdgesMat.opacity, 0.6, 0.08);
-        coreSphereMat.opacity = THREE.MathUtils.lerp(coreSphereMat.opacity, 0.95, 0.08);
-      }
-
-      // Update Telemetry HUD state (throttled to 10 FPS for clean UI performance)
-      if (now - lastTelemetryTime > 100) {
-        const radToDeg = 180 / Math.PI;
+      // 5. Telemetry update throttle (every 100ms)
+      if (elapsedTime - lastTelemetryUpdate > 0.1) {
+        lastTelemetryUpdate = elapsedTime;
+        const normalizedY = ((currentRotationY * (180 / Math.PI)) % 360).toFixed(1);
+        const normalizedX = (currentRotationX * (180 / Math.PI)).toFixed(1);
         setTelemetry({
-          ry: ((cubeMasterGroup.rotation.y * radToDeg) % 360).toFixed(1),
-          rx: ((cubeMasterGroup.rotation.x * radToDeg) % 360).toFixed(1),
-          fps: currentFps,
+          ry: normalizedY,
+          rx: normalizedX,
+          fps: Math.round(1 / Math.max(0.001, delta)),
         });
-        lastTelemetryTime = now;
       }
 
       renderer.render(scene, camera);
@@ -692,108 +838,134 @@ export default function InfiniteCodeCubeSection() {
 
     animate();
 
-    // 8. Unmount & Resource Cleanup
+    // =========================================================================
+    // 8. Cleanup & Resource Disposal
+    // =========================================================================
     return () => {
-      cancelAnimationFrame(animId);
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      canvas.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-
+      cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
-      visibilityObserver.disconnect();
 
+      canvas.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("mousemove", onPointerMove);
+      window.removeEventListener("mouseup", onPointerUp);
+
+      canvas.removeEventListener("touchstart", onPointerDown);
+      window.removeEventListener("touchmove", onPointerMove);
+      window.removeEventListener("touchend", onPointerUp);
+
+      // Dispose Three.js objects
       ideaBoxGeo.dispose();
       ideaGlassMat.dispose();
-      ideaEdgesGeo.dispose();
-      ideaEdgesMat.dispose();
+      cornerBracketGeo.dispose();
+      cornerBracketMat.dispose();
       cornerMarkersGeo.dispose();
       cornerMarkersMat.dispose();
 
       designBoxGeo.dispose();
       designGlassMat.dispose();
+      rawDesignBox.dispose();
       designWireGeo.dispose();
       designWireMat.dispose();
       designOctaGeo.dispose();
       designOctaMat.dispose();
 
-      codeBoxGeo.dispose();
-      codeMat.dispose();
-      codeEdgesGeo.dispose();
-      codeEdgesMat.dispose();
+      codeBoardGeo.dispose();
+      codeBoardMat.dispose();
+      cpuGeo.dispose();
+      cpuMat.dispose();
       codePointsGeo.dispose();
       codePointsMat.dispose();
 
-      testBoxGeo.dispose();
-      testEdgesGeo.dispose();
-      testEdgesMat.dispose();
-      testIcoGeo.dispose();
-      testIcoMat.dispose();
+      outerGimbalGeo.dispose();
+      outerGimbalMat.dispose();
+      innerGimbalGeo.dispose();
+      innerGimbalMat.dispose();
+      pinGeo.dispose();
+      pinMat.dispose();
 
-      coreSphereGeo.dispose();
-      coreSphereMat.dispose();
-      haloSpriteMat.dispose();
-      coreRingGeo.dispose();
-      coreRingMat.dispose();
-      stardustGeo.dispose();
-      stardustMat.dispose();
+      coreWhiteGeo.dispose();
+      coreWhiteMat.dispose();
+      coreCoronaGeo.dispose();
+      coreCoronaMat.dispose();
+      sparkGeo.dispose();
+      sparkMat.dispose();
+
+      dustGeo.dispose();
+      dustMat.dispose();
+
+      shadowGeo.dispose();
+      shadowMat.dispose();
+      floorRingGeo.dispose();
+      floorRingMat.dispose();
+
+      shadowTexture.dispose();
       glowTexture.dispose();
+      circuitTexture.dispose();
+      studioEnvTexture.dispose();
+
       renderer.dispose();
     };
   }, []);
 
+  // Handle stage filtering highlight
+  const currentStageData = useMemo(() => {
+    return STAGES.find((s) => s.id === activeStage);
+  }, [activeStage]);
+
   const handleReset = () => {
-    resetTriggerRef.current = 1;
     setActiveStage(null);
     setIsExploded(false);
+    setIsAutoRotating(true);
+    resetTriggerRef.current += 1;
   };
-
-  const currentStageData = useMemo(() => {
-    if (!activeStage) return null;
-    return STAGES.find((s) => s.id === activeStage) || null;
-  }, [activeStage]);
 
   return (
     <section
-      className="infinite-code-cube-section relative py-20 sm:py-28 overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-[#080808] text-[#f5f4f0] overflow-hidden border-t border-white/10"
       id="system-dynamics"
-      aria-label="The Infinite Code Cube — 3D Architecture Simulation"
+      aria-label="The Infinite Code Cube 3D Experience"
     >
       <div className="container relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 border-b border-white/10">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#FACC15] animate-pulse shadow-[0_0_10px_#FACC15]" />
-              <span className="font-mono text-xs text-[#FACC15] font-bold uppercase tracking-widest">
-                04 // THE INFINITE CODE CUBE · ARCHITECTURAL MATRIX
-              </span>
-            </div>
-            <h2 className="font-unbounded font-black text-2xl sm:text-4xl text-white tracking-tight">
-              From Idea to Design<span className="text-[#FACC15]">,</span> From Code to Reality<span className="text-[#FACC15]">.</span>
-            </h2>
-            <p className="font-mono text-xs sm:text-sm text-gray-400 mt-1 max-w-xl">
-              An interactive 3D manifestation of the engineering lifecycle: five nested geometric
-              layers rotating continuously in 360°, modeling architectural clarity and production stability.
-            </p>
+        {/* Section Top Header Badge */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono font-medium">
+            <Boxes size={13} className="text-[#FACC15]" />
+            <span className="text-[#FACC15] font-bold">04 // INTERACTIVE 3D ARCHITECTURE</span>
+            <span className="text-gray-500">·</span>
+            <span className="text-gray-300">SYSTEM DYNAMICS</span>
           </div>
 
-          {/* Quick HUD Telemetry Badges */}
-          <div className="flex items-center gap-3 font-mono text-[11px] text-gray-400">
-            <span className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-1.5">
-              <Boxes size={13} className="text-[#FACC15]" />
-              <span>5 NESTED STAGES</span>
+          <div className="flex items-center gap-3 text-xs font-mono text-gray-400">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Three.js WebGL Core Active</span>
             </span>
-            <span className="px-3 py-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{telemetry.fps} FPS · WEBGL</span>
-            </span>
+            <span className="text-gray-600">|</span>
+            <span>60 FPS Physically Based</span>
           </div>
         </div>
 
-        {/* 3D Canvas Stage Card */}
+        {/* Section Heading Row */}
+        <div className="mt-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <h2 className="font-unbounded text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              THE INFINITE <span className="text-[#FACC15]">CODE CUBE</span>.
+            </h2>
+            <p className="mt-3 text-gray-400 font-sans text-sm sm:text-base leading-relaxed">
+              From Idea to Design, From Code to Reality. A floating transparent glass monolith
+              housing five nested architectural development layers, rotating in continuous 360°
+              orbit with physically based studio lighting and refraction.
+            </p>
+          </div>
+
+          {/* Quick Subtitle Pill */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/10 text-xs font-mono text-gray-300">
+            <Sparkles size={14} className="text-[#FACC15]" />
+            <span>Interactive 3D Stage Explorer</span>
+          </div>
+        </div>
+
+        {/* 3D WebGL Canvas Stage Frame */}
         <div
           ref={containerRef}
           onMouseEnter={() => setIsHovered(true)}
