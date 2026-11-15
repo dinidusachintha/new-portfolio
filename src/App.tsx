@@ -777,7 +777,7 @@ export default function App() {
             <button
               ref={mobileMenuTriggerRef}
               type="button"
-              className="circle-button mobile-menu-toggle min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-95"
+              className="circle-button mobile-menu-toggle min-w-[44px] min-h-[44px] md:hidden flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-95"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-sidebar"
