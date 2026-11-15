@@ -91,15 +91,15 @@ export default function ProjectGrid({
       const w = containerRef.current?.offsetWidth || window.innerWidth;
       if (w < 480) {
         setStageDimensions({
-          rx: Math.min(110, w * 0.28),
-          rz: 195,
-          cardW: Math.min(328, w - 20),
+          rx: Math.min(105, w * 0.26),
+          rz: 185,
+          cardW: Math.min(324, w - 24),
         });
       } else if (w < 640) {
         setStageDimensions({
-          rx: Math.min(160, w * 0.35),
-          rz: 230,
-          cardW: Math.min(348, w - 28),
+          rx: Math.min(155, w * 0.34),
+          rz: 225,
+          cardW: Math.min(346, w - 28),
         });
       } else if (w < 1024) {
         setStageDimensions({
@@ -275,10 +275,10 @@ export default function ProjectGrid({
       {/* ===================================================================== */}
       {/* UNIFIED DARK OBSIDIAN COMMAND BAR: DOMAIN FILTERS + VIEW MODES        */}
       {/* ===================================================================== */}
-      <div className="project-command-bar flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4 p-2.5 sm:p-3.5 rounded-2xl sm:rounded-full mb-6 sm:mb-8">
+      <div className="project-command-bar flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 sm:gap-4 p-2 sm:p-3.5 rounded-2xl sm:rounded-full mb-5 sm:mb-8">
         {/* Left: Domain Filter Pills */}
         <div
-          className="flex items-center gap-1.5 overflow-x-auto pb-0.5 lg:pb-0 no-scrollbar"
+          className="flex items-center gap-1.5 overflow-x-auto pb-0.5 lg:pb-0 no-scrollbar snap-x snap-mandatory"
           role="tablist"
           aria-label="Filter projects by architectural domain"
         >
@@ -295,7 +295,7 @@ export default function ProjectGrid({
                 role="tab"
                 aria-selected={active}
                 onClick={() => setSelectedDomain(f.value)}
-                className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full font-unbounded text-[10px] sm:text-[11px] tracking-wide transition-all cursor-pointer whitespace-nowrap ${
+                className={`snap-start inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-full font-unbounded text-[9.5px] sm:text-[11px] tracking-wide transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   active
                     ? "bg-gradient-to-r from-[#9867ff] to-[#6366f1] text-white font-bold shadow-[0_0_20px_rgba(152,103,255,0.45)] border border-violet-400/50"
                     : "text-slate-300 hover:text-white hover:bg-white/[0.06] border border-transparent font-medium"
@@ -303,7 +303,7 @@ export default function ProjectGrid({
               >
                 <span>{f.label}</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono ${
+                  className={`px-1.5 py-0.5 rounded-full text-[8.5px] sm:text-[9px] font-mono ${
                     active
                       ? "bg-black/30 text-violet-100"
                       : "bg-white/[0.07] text-slate-400"
@@ -317,47 +317,47 @@ export default function ProjectGrid({
         </div>
 
         {/* Right: 3-Mode View Switcher */}
-        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 rounded-xl sm:rounded-full bg-black/50 border border-white/10 font-unbounded text-[10px] sm:text-[11px] w-full lg:w-auto">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 rounded-xl sm:rounded-full bg-black/55 border border-white/10 font-unbounded text-[9px] min-[375px]:text-[9.5px] sm:text-[11px] w-full lg:w-auto">
           <button
             type="button"
             onClick={() => setViewMode("carousel")}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "carousel"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
             }`}
             title="Interactive 3D Rotating Glass Deck"
           >
-            <Orbit size={13} className="shrink-0" />
-            <span className="truncate">3D Carousel</span>
+            <Orbit size={12} className="shrink-0 hidden min-[360px]:inline-block sm:w-[13px] sm:h-[13px]" />
+            <span>3D Carousel</span>
           </button>
 
           <button
             type="button"
             onClick={() => setViewMode("stack")}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "stack"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
             }`}
             title="Scroll-Driven Stacking Multi-Device Case Studies"
           >
-            <Layers size={13} className="shrink-0" />
-            <span className="truncate">Stacked</span>
+            <Layers size={12} className="shrink-0 hidden min-[360px]:inline-block sm:w-[13px] sm:h-[13px]" />
+            <span>Stacked</span>
           </button>
 
           <button
             type="button"
             onClick={() => setViewMode("grid")}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "grid"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
             }`}
             title="Responsive 3-Column Editorial Glass Grid"
           >
-            <LayoutGrid size={13} className="shrink-0" />
-            <span className="truncate">Glass Grid</span>
+            <LayoutGrid size={12} className="shrink-0 hidden min-[360px]:inline-block sm:w-[13px] sm:h-[13px]" />
+            <span>Glass Grid</span>
           </button>
         </div>
       </div>
@@ -367,7 +367,7 @@ export default function ProjectGrid({
       {/* ===================================================================== */}
       {viewMode === "carousel" && (
         <div
-          className="glass-project-stage relative w-full h-[650px] sm:h-[720px] lg:h-[770px] rounded-[1.75rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
+          className="glass-project-stage relative w-full h-[670px] sm:h-[740px] lg:h-[780px] rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -401,51 +401,53 @@ export default function ProjectGrid({
           <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-violet-500/15 blur-[90px] pointer-events-none" />
           <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-cyan-500/12 blur-[95px] pointer-events-none" />
 
-          {/* Top-Right Rotation Controls Only (Clean, Minimalist) */}
-          <div className="relative z-30 flex items-center justify-end gap-2 px-4 sm:px-8 pt-4 sm:pt-6 pointer-events-auto">
-            <button
-              type="button"
-              onClick={stepPrev}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] hover:bg-violet-500/25 border border-white/15 hover:border-violet-400/50 flex items-center justify-center text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-              title="Previous System Card"
-              aria-label="Previous system card"
-            >
-              <ChevronLeft size={16} />
-            </button>
+          {/* Top Rotation Controls Bar (Centered Pill on Mobile, Top-Right on Desktop) */}
+          <div className="relative z-30 flex items-center justify-center sm:justify-end px-4 sm:px-8 pt-3.5 sm:pt-5 pb-1 pointer-events-auto">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 p-1 rounded-full bg-black/50 backdrop-blur-md border border-white/12 shadow-lg">
+              <button
+                type="button"
+                onClick={stepPrev}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] hover:bg-violet-500/25 border border-white/10 hover:border-violet-400/50 flex items-center justify-center text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
+                title="Previous System Card"
+                aria-label="Previous system card"
+              >
+                <ChevronLeft size={15} />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.06] hover:bg-violet-500/20 border border-white/15 hover:border-violet-400/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95 font-unbounded"
-              title={isPlaying ? "Pause Rotation" : "Resume Smooth Rotation"}
-            >
-              {isPlaying ? (
-                <Pause size={12} className="text-violet-400" />
-              ) : (
-                <Play
-                  size={12}
-                  className="text-violet-400 fill-current ml-0.5"
-                />
-              )}
-              <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-wider">
-                {isPlaying ? "PAUSE ORBIT" : "AUTO ORBIT"}
-              </span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 h-8 sm:h-9 rounded-full bg-white/[0.06] hover:bg-violet-500/20 border border-white/10 hover:border-violet-400/50 text-white transition-all cursor-pointer hover:scale-105 active:scale-95 font-unbounded"
+                title={isPlaying ? "Pause Rotation" : "Resume Smooth Rotation"}
+              >
+                {isPlaying ? (
+                  <Pause size={11} className="text-violet-400 shrink-0" />
+                ) : (
+                  <Play
+                    size={11}
+                    className="text-violet-400 fill-current ml-0.5 shrink-0"
+                  />
+                )}
+                <span className="text-[9px] sm:text-[10.5px] font-bold tracking-wider whitespace-nowrap">
+                  {isPlaying ? "PAUSE ORBIT" : "AUTO ORBIT"}
+                </span>
+              </button>
 
-            <button
-              type="button"
-              onClick={stepNext}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] hover:bg-violet-500/25 border border-white/15 hover:border-violet-400/50 flex items-center justify-center text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-              title="Next System Card"
-              aria-label="Next system card"
-            >
-              <ChevronRight size={16} />
-            </button>
+              <button
+                type="button"
+                onClick={stepNext}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] hover:bg-violet-500/25 border border-white/10 hover:border-violet-400/50 flex items-center justify-center text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
+                title="Next System Card"
+                aria-label="Next system card"
+              >
+                <ChevronRight size={15} />
+              </button>
+            </div>
           </div>
 
           {/* 3D Perspective Stage */}
           <div
-            className="relative w-full flex-1 flex items-center justify-center pointer-events-none"
+            className="relative w-full flex-1 flex items-center justify-center pointer-events-none my-1 sm:my-2"
             style={{ perspective: "1350px" }}
           >
             {filteredProjects.map((project, index) => {
@@ -502,8 +504,8 @@ export default function ProjectGrid({
           </div>
 
           {/* Bottom Centered Progress Indicator Pills */}
-          <div className="relative z-30 flex items-center justify-center px-4 pb-4 sm:pb-6 pointer-events-auto">
-            <div className="flex items-center gap-2 bg-black/55 backdrop-blur-md px-4 py-2 rounded-full border border-white/15">
+          <div className="relative z-30 flex items-center justify-center px-4 pt-1 pb-3 sm:pb-5 pointer-events-auto">
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-black/60 backdrop-blur-md px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/15 shadow-lg">
               {filteredProjects.map((proj, idx) => (
                 <button
                   key={proj.id}
@@ -511,8 +513,8 @@ export default function ProjectGrid({
                   onClick={() => rotateTo(idx)}
                   className={`transition-all duration-300 rounded-full cursor-pointer ${
                     activeIndex === idx
-                      ? "w-8 h-2.5 bg-[#9867ff] shadow-[0_0_14px_rgba(152,103,255,0.9)]"
-                      : "w-2.5 h-2.5 bg-white/25 hover:bg-white/60"
+                      ? "w-6 sm:w-8 h-2 sm:h-2.5 bg-[#9867ff] shadow-[0_0_14px_rgba(152,103,255,0.9)]"
+                      : "w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/25 hover:bg-white/60"
                   }`}
                   title={`${proj.number} — ${proj.title}`}
                   aria-label={`Rotate to ${proj.title}`}
@@ -616,9 +618,9 @@ function GlassCardItem({
       />
 
       {/* Top Index & Live Status Corner Pills */}
-      <div className="relative z-10 flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+      <div className="relative z-10 flex items-center justify-between gap-2 mb-1 sm:mb-2">
         <span
-          className="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-unbounded font-bold uppercase border"
+          className="px-2 sm:px-2.5 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-unbounded font-bold uppercase border truncate max-w-[60%]"
           style={{
             background: project.tagBg,
             color: project.tagColor,
@@ -629,12 +631,12 @@ function GlassCardItem({
         </span>
 
         {project.status === "COMING SOON" ? (
-          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[9px] sm:text-[9.5px] font-mono font-bold text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)]">
+          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[8.5px] sm:text-[9.5px] font-mono font-bold text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)] shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>COMING SOON</span>
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] sm:text-[9.5px] font-mono font-bold text-violet-200">
+          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[8.5px] sm:text-[9.5px] font-mono font-bold text-violet-200 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>{project.year}</span>
           </span>
@@ -642,25 +644,25 @@ function GlassCardItem({
       </div>
 
       {/* 1. TOP HEADER WITH UNBOUNDED FONT */}
-      <div className="relative z-10 space-y-0.5 sm:space-y-1 mb-2 sm:mb-3">
-        <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[9.5px] sm:text-xs font-semibold tracking-wider uppercase">
-          <Sparkles size={11} className="text-violet-400 shrink-0" />
+      <div className="relative z-10 space-y-0.5 sm:space-y-1 mb-1.5 sm:mb-3">
+        <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[9px] sm:text-xs font-semibold tracking-wider uppercase">
+          <Sparkles size={10} className="text-violet-400 shrink-0 sm:w-[11px] sm:h-[11px]" />
           <span className="truncate">{project.role} · {project.year}</span>
         </div>
 
         {/* Project Title in Unbounded Font */}
-        <h3 className="text-base sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug font-unbounded truncate">
+        <h3 className="text-[15px] sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug font-unbounded truncate">
           {project.title}
         </h3>
 
         {/* Subtitle / Latency & Category Badge */}
-        <div className="text-[9px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5 truncate">
+        <div className="text-[8.5px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5 truncate">
           {project.subtitle ? project.subtitle : `${project.metrics[1]?.value || "<50MS TTFB"} · ${categoryTag}`}
         </div>
       </div>
 
       {/* 2. FROSTED SCREENSHOT PREVIEW FRAME */}
-      <div className="relative z-10 w-full aspect-[16/8.8] sm:aspect-[16/9] rounded-lg sm:rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-inner mb-2 sm:mb-3.5 group/img">
+      <div className="relative z-10 w-full aspect-[16/8.2] sm:aspect-[16/9] rounded-lg sm:rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-inner mb-1.5 sm:mb-3.5 group/img">
         {!imgLoaded && <div className="skeleton absolute inset-0" />}
         <img
           src={project.screenshot}
@@ -673,14 +675,14 @@ function GlassCardItem({
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070810]/85 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute bottom-1.5 sm:bottom-2 left-2 sm:left-2.5 right-2 sm:right-2.5 flex items-center justify-between text-[8.5px] sm:text-[10px] font-mono text-slate-200">
+        <div className="absolute bottom-1.5 sm:bottom-2 left-2 sm:left-2.5 right-2 sm:right-2.5 flex items-center justify-between text-[8px] sm:text-[10px] font-mono text-slate-200">
           <span className="px-1.5 sm:px-2 py-0.5 rounded bg-black/75 border border-white/15 text-cyan-300 truncate max-w-[65%]">
             {project.status === "COMING SOON"
               ? "schoolride-lk.dev [COMING SOON]"
               : project.demoUrl.replace(/^https?:\/\//, "")}
           </span>
           {project.status === "COMING SOON" ? (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-600/80 border border-emerald-400/50 text-white font-bold text-[8.5px] sm:text-[9.5px] tracking-wider shadow-[0_0_10px_rgba(34,197,94,0.4)]">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-600/80 border border-emerald-400/50 text-white font-bold text-[8px] sm:text-[9.5px] tracking-wider shadow-[0_0_10px_rgba(34,197,94,0.4)]">
               COMING SOON
             </span>
           ) : (
@@ -692,14 +694,14 @@ function GlassCardItem({
       </div>
 
       {/* 3. STRUCTURED METADATA WITH HAIRLINE DIVIDERS */}
-      <div className="relative z-10 space-y-1 sm:space-y-1.5 mb-2.5 sm:mb-3.5">
+      <div className="relative z-10 space-y-0.5 sm:space-y-1.5 mb-2 sm:mb-3.5">
         {/* Row 1: SYSTEM ARCHITECTURE */}
         <div className="py-0.5 sm:py-1 border-t border-white/10">
-          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             SYSTEM ARCHITECTURE
           </div>
           <p
-            className="text-[10px] sm:text-xs line-clamp-2 leading-relaxed px-1 font-normal"
+            className="text-[9.5px] sm:text-xs line-clamp-2 leading-snug sm:leading-relaxed px-1 font-normal"
             style={{ color: "#e2e8f0" }}
           >
             {project.shortDescription || project.description}
@@ -709,10 +711,10 @@ function GlassCardItem({
         {/* Row 2: CORE FEATURES (if provided) */}
         {project.coreFeatures && (
           <div className="py-0.5 sm:py-1 border-t border-white/10">
-            <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+            <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
               CORE FEATURES
             </div>
-            <div className="text-[9.5px] sm:text-[11px] font-mono text-emerald-300 font-semibold tracking-wide truncate px-1">
+            <div className="text-[9px] sm:text-[11px] font-mono text-emerald-300 font-semibold tracking-wide truncate px-1">
               {project.coreFeatures}
             </div>
           </div>
@@ -720,20 +722,20 @@ function GlassCardItem({
 
         {/* Row 3: PRIMARY ARSENAL */}
         <div className="py-0.5 sm:py-1 border-t border-white/10">
-          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             PRIMARY ARSENAL
           </div>
-          <div className="text-[9.5px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
+          <div className="text-[9px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
             {project.technologies.slice(0, 6).join(" · ")}
           </div>
         </div>
 
         {/* Row 4: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
         <div className="py-0.5 sm:py-1 border-t border-b border-white/10">
-          <div className="text-[8px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
+          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
             {project.capabilitiesLabel || "PRODUCTION IMPACT"}
           </div>
-          <div className="text-[9.5px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
+          <div className="text-[9px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
             {project.capabilitiesText ||
               project.metrics
                 .map((m) => `${m.value} ${m.label.split(" ")[0]}`)
@@ -743,7 +745,7 @@ function GlassCardItem({
       </div>
 
       {/* 4. TWO 3D GLASS PILL ACTION BUTTONS (MATCHING IMAGE 2) */}
-      <div className="relative z-10 space-y-2">
+      <div className="relative z-10 space-y-1.5 sm:space-y-2">
         {/* Top Button: White 3D Elevated Glass Pill with Dark Text & Arrow ↗ (Image 2 style) */}
         {project.status === "COMING SOON" ? (
           <button
@@ -752,10 +754,10 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenDemo();
             }}
-            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
           >
             <span>EXPLORE PROJECT</span>
-            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
+            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
           </button>
         ) : project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
           <a
@@ -763,10 +765,10 @@ function GlassCardItem({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
           >
             <span>EXPLORE LIVE SYSTEM</span>
-            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
+            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
           </a>
         ) : (
           <button
@@ -775,10 +777,10 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenDemo();
             }}
-            className="glass-pill-white-3d w-full min-h-[44px] py-2.5 px-4 sm:px-5 rounded-full text-black font-unbounded font-bold text-[10.5px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
+            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
           >
             <span>EXPLORE LIVE SYSTEM</span>
-            <ArrowUpRight size={14} className="shrink-0 stroke-[2.5]" />
+            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
           </button>
         )}
 
@@ -789,9 +791,9 @@ function GlassCardItem({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="glass-pill-dark-3d w-full min-h-[44px] py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
+            className="glass-pill-dark-3d w-full min-h-[38px] sm:min-h-[44px] py-2 px-3 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[9px] min-[375px]:text-[9.5px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
           >
-            <Code2 size={13} className="shrink-0 text-violet-300" />
+            <Code2 size={12} className="shrink-0 text-violet-300 sm:w-[13px] sm:h-[13px]" />
             <span>VIEW ARCHITECTURE & CODE</span>
           </a>
         ) : (
@@ -801,9 +803,9 @@ function GlassCardItem({
               e.stopPropagation();
               onOpenArch();
             }}
-            className="glass-pill-dark-3d w-full min-h-[44px] py-2 px-4 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
+            className="glass-pill-dark-3d w-full min-h-[38px] sm:min-h-[44px] py-2 px-3 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[9px] min-[375px]:text-[9.5px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
           >
-            <Code2 size={13} className="shrink-0 text-violet-300" />
+            <Code2 size={12} className="shrink-0 text-violet-300 sm:w-[13px] sm:h-[13px]" />
             <span>VIEW ARCHITECTURE & CODE</span>
           </button>
         )}

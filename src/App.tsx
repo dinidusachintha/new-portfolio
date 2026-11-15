@@ -323,33 +323,33 @@ function HaveASystemSection() {
       </p>
 
       {/* Action Buttons matching Image 3 */}
-      <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-6 sm:mb-8">
         <a
           href={`mailto:${profile.email}?subject=Project%20Architecture%20Inquiry`}
-          className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold text-sm transition-all shadow-lg shadow-blue-500/25 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 cursor-pointer whitespace-nowrap"
         >
           <span>start a project</span>
-          <Mail size={16} />
+          <Mail size={15} className="sm:w-4 sm:h-4" />
         </a>
 
         {profile.cv && (
           <a
             href={asset(profile.cv)}
             download
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white font-mono text-sm border border-white/20 transition-all cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white font-mono text-xs sm:text-sm border border-white/20 transition-all cursor-pointer whitespace-nowrap"
           >
             <span>download cv</span>
-            <ArrowUpRight size={15} />
+            <ArrowUpRight size={14} className="sm:w-[15px] sm:h-[15px]" />
           </a>
         )}
 
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-white/[0.02] hover:bg-white/[0.06] text-gray-400 hover:text-white font-mono text-xs border border-white/10 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 rounded-full bg-white/[0.02] hover:bg-white/[0.06] text-gray-400 hover:text-white font-mono text-[11px] sm:text-xs border border-white/10 transition-all cursor-pointer max-w-full truncate"
           title="Click to copy email address"
         >
-          <span>{copied ? "Email Copied!" : profile.email}</span>
+          <span className="truncate">{copied ? "Email Copied!" : profile.email}</span>
         </button>
       </div>
 
@@ -726,14 +726,14 @@ export default function App() {
 
       {/* Header */}
       <header className={`header ${scrolled ? "scrolled" : ""}`}>
-        <div className="container flex items-center justify-between gap-5">
+        <div className="container flex items-center justify-between gap-2 sm:gap-5">
           <a
             href="#/"
             onClick={(e) => {
               e.preventDefault();
               navigateTo("home");
             }}
-            className="brand flex items-center"
+            className="brand flex items-center min-w-0 shrink"
             aria-label="Dinidu Sachintha, back to home"
           >
             <BrandMark />
@@ -761,7 +761,7 @@ export default function App() {
           </nav>
 
           {/* Header Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Clean Highlighted Blog Button without star icon */}
             <button
               type="button"
@@ -908,7 +908,7 @@ export default function App() {
       </main>
 
       {/* Simple Footer matching Image 3 with reduced compact spacing */}
-      <footer className="footer-simple container border-t border-white/10 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-gray-400">
+      <footer className="footer-simple container border-t border-white/10 pt-4 pb-20 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-mono text-xs text-gray-400">
         <div className="flex items-center gap-3">
           <span>© {new Date().getFullYear()} DINIDU SACHINTHA</span>
         </div>
