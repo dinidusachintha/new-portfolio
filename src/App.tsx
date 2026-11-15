@@ -22,6 +22,7 @@ import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
+const Interactive3DSection = lazy(() => import("./components/Interactive3DSection"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
 const ProjectGrid = lazy(() => import("./components/ProjectGrid"));
@@ -57,6 +58,7 @@ const navLinks = [
   { name: "About", id: "about" },
   { name: "Experience", id: "experience" },
   { name: "Systems", id: "work" },
+  { name: "3D Lab", id: "system-dynamics" },
   { name: "Terminal", id: "terminal" },
   { name: "Arsenal", id: "stack" },
   { name: "Contact", id: "contact" },
@@ -896,6 +898,11 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* 3D Lab // Real-Time Interactive Three.js Kinetic Simulation */}
+            <Suspense fallback={<div className="container py-20"><div className="skeleton h-[580px] w-full rounded-3xl" /></div>}>
+              <Interactive3DSection />
+            </Suspense>
 
             {/* 04 / Interactive Developer Console */}
             <Suspense fallback={<div className="container py-16"><div className="skeleton h-96 w-full rounded-3xl" /></div>}>
