@@ -15,7 +15,6 @@ import { asset, profile } from "./data/portfolio";
 import type { Project } from "./data/portfolio";
 import Hero from "./components/Hero";
 import AboutSection from "./components/AboutSection";
-import LeisureSection from "./components/leisure/LeisureSection";
 import ExperienceTimeline from "./components/ExperienceTimeline";
 import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
@@ -834,9 +833,6 @@ export default function App() {
 
             {/* 01 / About Section */}
             <AboutSection />
-
-            {/* BEYOND THE CODE — Leisure & Lifestyle Section (Campione Scroll Experience) */}
-            <LeisureSection />
 
             {/* 02 / Experience Section */}
             <ExperienceTimeline />
