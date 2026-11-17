@@ -45,7 +45,7 @@ export default function HeroThreeBackground() {
     const initialHeight = container.clientHeight || 650;
 
     const camera = new THREE.PerspectiveCamera(
-      50,
+      48,
       initialWidth / initialHeight,
       0.1,
       1000
@@ -63,18 +63,25 @@ export default function HeroThreeBackground() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(initialWidth, initialHeight, false);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.2;
 
-    // 3. Central Architectural Holographic Gyroscope Orbital Rings
+    // 3. Right-Aligned Master 3D Group
+    const isMobile = window.innerWidth < 768;
+    const heroRightGroup = new THREE.Group();
+    heroRightGroup.position.x = isMobile ? 2.5 : 11.5;
+    heroRightGroup.position.y = 0;
+    scene.add(heroRightGroup);
+
+    // 4. Central Architectural Holographic Gyroscope Orbital Rings (Right Side)
     const gyroGroup = new THREE.Group();
-    scene.add(gyroGroup);
+    heroRightGroup.add(gyroGroup);
 
     // Inner Ring: Electric Violet (#9867ff)
-    const ring1Geo = new THREE.TorusGeometry(12.5, 0.05, 16, 100);
+    const ring1Geo = new THREE.TorusGeometry(9.5, 0.045, 16, 90);
     const ring1Mat = new THREE.MeshBasicMaterial({
       color: 0x9867ff,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.32,
       blending: THREE.AdditiveBlending,
     });
     const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
@@ -82,11 +89,11 @@ export default function HeroThreeBackground() {
     gyroGroup.add(ring1);
 
     // Middle Ring: Blueprint Cyan (#38bdf8)
-    const ring2Geo = new THREE.TorusGeometry(16.0, 0.045, 16, 120);
+    const ring2Geo = new THREE.TorusGeometry(12.5, 0.04, 16, 110);
     const ring2Mat = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
       transparent: true,
-      opacity: 0.22,
+      opacity: 0.25,
       blending: THREE.AdditiveBlending,
     });
     const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
@@ -94,28 +101,26 @@ export default function HeroThreeBackground() {
     ring2.rotation.x = -Math.PI / 6;
     gyroGroup.add(ring2);
 
-    // Outer Geodesic Ring: Subtle Deep Indigo / White
-    const ring3Geo = new THREE.TorusGeometry(20.0, 0.04, 16, 140);
+    // Outer Geodesic Ring: Subtle Lavender / White
+    const ring3Geo = new THREE.TorusGeometry(15.5, 0.035, 16, 130);
     const ring3Mat = new THREE.MeshBasicMaterial({
       color: 0xc084fc,
       transparent: true,
-      opacity: 0.16,
+      opacity: 0.18,
       blending: THREE.AdditiveBlending,
     });
     const ring3 = new THREE.Mesh(ring3Geo, ring3Mat);
     ring3.rotation.z = Math.PI / 3;
     gyroGroup.add(ring3);
 
-    // 4. Interactive 3D Neural Constellation Network (Nodes + Dynamic Laser Filaments)
-    const isMobile = window.innerWidth < 768;
-    const nodeCount = isMobile ? 65 : 110;
-    const maxDistance = isMobile ? 12.0 : 13.5;
+    // 5. Interactive 3D Neural Constellation Network (Right Side Cluster)
+    const nodeCount = isMobile ? 60 : 105;
+    const maxDistance = isMobile ? 10.5 : 12.0;
     const maxDistanceSq = maxDistance * maxDistance;
 
-    // Spatial boundaries
-    const boundsX = isMobile ? 32 : 46;
-    const boundsY = isMobile ? 22 : 28;
-    const boundsZ = 20;
+    const boundsX = isMobile ? 26 : 36;
+    const boundsY = isMobile ? 22 : 26;
+    const boundsZ = 18;
 
     interface NodeData {
       x: number;
@@ -124,9 +129,6 @@ export default function HeroThreeBackground() {
       vx: number;
       vy: number;
       vz: number;
-      origX: number;
-      origY: number;
-      origZ: number;
     }
 
     const nodes: NodeData[] = [];
@@ -146,9 +148,6 @@ export default function HeroThreeBackground() {
         x,
         y,
         z,
-        origX: x,
-        origY: y,
-        origZ: z,
         vx: (Math.random() - 0.5) * 0.02,
         vy: (Math.random() - 0.5) * 0.02,
         vz: (Math.random() - 0.5) * 0.015,
@@ -158,7 +157,6 @@ export default function HeroThreeBackground() {
       nodePositions[i * 3 + 1] = y;
       nodePositions[i * 3 + 2] = z;
 
-      // Color variation between violet, cyan, and soft white
       const rand = Math.random();
       const nodeCol =
         rand < 0.45 ? colorViolet : rand < 0.85 ? colorCyan : colorWhite;
@@ -180,15 +178,15 @@ export default function HeroThreeBackground() {
       map: nodeGlowTexture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.88,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
-    scene.add(nodesMesh);
+    heroRightGroup.add(nodesMesh);
 
-    // Dynamic Line Filaments (Max connections = nodeCount * (nodeCount - 1) / 2)
-    const maxLineSegments = Math.min(nodeCount * 8, 480);
+    // Dynamic Line Filaments
+    const maxLineSegments = Math.min(nodeCount * 7, 420);
     const linePositions = new Float32Array(maxLineSegments * 2 * 3);
     const lineColors = new Float32Array(maxLineSegments * 2 * 3);
 
@@ -209,25 +207,25 @@ export default function HeroThreeBackground() {
     const linesMat = new THREE.LineBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.6,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const linesMesh = new THREE.LineSegments(linesGeo, linesMat);
-    scene.add(linesMesh);
+    heroRightGroup.add(linesMesh);
 
-    // 5. Floating Ambient Micro-Luminous Stardust Field
-    const dustCount = isMobile ? 70 : 130;
+    // 6. Floating Ambient Stardust (Right-weighted)
+    const dustCount = isMobile ? 60 : 110;
     const dustPositions = new Float32Array(dustCount * 3);
     const dustVelocities = new Float32Array(dustCount * 3);
 
     for (let i = 0; i < dustCount; i++) {
-      dustPositions[i * 3] = (Math.random() - 0.5) * (boundsX + 10);
+      dustPositions[i * 3] = (Math.random() - 0.5) * (boundsX + 12);
       dustPositions[i * 3 + 1] = (Math.random() - 0.5) * (boundsY + 10);
-      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * (boundsZ + 15);
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * (boundsZ + 12);
 
       dustVelocities[i * 3] = (Math.random() - 0.5) * 0.008;
-      dustVelocities[i * 3 + 1] = 0.012 + Math.random() * 0.018; // gentle upwards drift
+      dustVelocities[i * 3 + 1] = 0.012 + Math.random() * 0.018;
       dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.008;
     }
 
@@ -241,14 +239,14 @@ export default function HeroThreeBackground() {
       map: nodeGlowTexture,
       color: 0x93c5fd,
       transparent: true,
-      opacity: 0.42,
+      opacity: 0.45,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const dustMesh = new THREE.Points(dustGeo, dustMat);
-    scene.add(dustMesh);
+    heroRightGroup.add(dustMesh);
 
-    // 6. Smooth Mouse & Touch Parallax / Fluid Gravity Tracking
+    // 7. Smooth Mouse Parallax & Gravity Tracking
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
@@ -259,7 +257,6 @@ export default function HeroThreeBackground() {
       const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       const rect = container.getBoundingClientRect();
 
-      // Normalize coordinates to -1 to +1 range
       const nx = ((clientX - rect.left) / rect.width) * 2 - 1;
       const ny = -(((clientY - rect.top) / rect.height) * 2 - 1);
 
@@ -270,7 +267,7 @@ export default function HeroThreeBackground() {
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
 
-    // 7. Responsive Window Resize Handler
+    // 8. Responsive Resize Handler with Dynamic Right-Side Alignment
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const width = container.clientWidth || window.innerWidth;
@@ -279,12 +276,15 @@ export default function HeroThreeBackground() {
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const mobile = window.innerWidth < 768;
+      heroRightGroup.position.x = mobile ? 2.5 : 11.5;
     };
 
     const resizeObserver = new ResizeObserver(() => handleResize());
     resizeObserver.observe(container);
 
-    // 8. Visibility Observer: Pause rendering when off-screen to conserve GPU
+    // 9. Visibility Observer to Pause Rendering When Offscreen
     let isVisible = true;
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
@@ -296,7 +296,7 @@ export default function HeroThreeBackground() {
     );
     visibilityObserver.observe(container);
 
-    // 9. Master Animation Loop (Delta-Time Independent)
+    // 10. Master Animation Loop
     const clock = new THREE.Clock();
     let animationFrameId: number;
 
@@ -307,15 +307,15 @@ export default function HeroThreeBackground() {
 
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth mouse interpolation with damping
+      // Smooth mouse damping
       currentMouseX = THREE.MathUtils.lerp(currentMouseX, targetMouseX, 0.065);
       currentMouseY = THREE.MathUtils.lerp(currentMouseY, targetMouseY, 0.065);
 
-      // Camera 3D Parallax Tilt
+      // Camera Parallax
       if (!prefersReducedMotion) {
-        camera.position.x = currentMouseX * 4.2;
-        camera.position.y = currentMouseY * 3.2;
-        camera.lookAt(currentMouseX * 1.5, currentMouseY * 1.2, 0);
+        camera.position.x = currentMouseX * 3.5;
+        camera.position.y = currentMouseY * 2.5;
+        camera.lookAt(currentMouseX * 1.2, currentMouseY * 1.0, 0);
       }
 
       // Orbital Gyroscope Rotation
@@ -325,9 +325,11 @@ export default function HeroThreeBackground() {
       ring2.rotation.x = elapsedTime * 0.11;
       ring3.rotation.y = elapsedTime * 0.05;
 
-      // Projected mouse coordinates in 3D world space
-      const mouseWorldX = currentMouseX * (boundsX * 0.45);
-      const mouseWorldY = currentMouseY * (boundsY * 0.45);
+      // Local mouse position relative to the right-aligned group
+      const mouseWorldX = currentMouseX * 22;
+      const mouseWorldY = currentMouseY * 14;
+      const localMouseX = mouseWorldX - heroRightGroup.position.x;
+      const localMouseY = mouseWorldY;
 
       // Update Node positions & calculate dynamic network filaments
       const posAttr = nodesGeo.attributes.position as THREE.BufferAttribute;
@@ -350,12 +352,12 @@ export default function HeroThreeBackground() {
 
         // Interactive elastic cursor displacement
         if (!prefersReducedMotion) {
-          const dx = node.x - mouseWorldX;
-          const dy = node.y - mouseWorldY;
+          const dx = node.x - localMouseX;
+          const dy = node.y - localMouseY;
           const distMouse = Math.sqrt(dx * dx + dy * dy);
 
-          if (distMouse < 14.0) {
-            const force = (1 - distMouse / 14.0) * 0.08;
+          if (distMouse < 13.0) {
+            const force = (1 - distMouse / 13.0) * 0.08;
             node.x += dx * force;
             node.y += dy * force;
           }
@@ -365,7 +367,7 @@ export default function HeroThreeBackground() {
         nodePosArray[i * 3 + 1] = node.y;
         nodePosArray[i * 3 + 2] = node.z;
 
-        // Connect nearby nodes with glowing laser filaments
+        // Connect nearby nodes with glowing filaments
         for (let j = i + 1; j < nodeCount; j++) {
           if (lineVertexIndex / 6 >= maxLineSegments) break;
 
@@ -431,7 +433,7 @@ export default function HeroThreeBackground() {
 
     animate();
 
-    // 10. Complete Resource Disposal on Unmount
+    // 11. Resource Disposal
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handlePointerMove);
@@ -470,12 +472,12 @@ export default function HeroThreeBackground() {
         className="w-full h-full block pointer-events-none"
       />
 
-      {/* Cinematic Vignette Overlay: Keeps text and video portrait 100% crisp and readable */}
+      {/* Asymmetric Vignette Gradient: Solid clean dark on the left for crisp typography, glowing on the right */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.94) 100%)",
+            "linear-gradient(to right, rgba(8, 8, 12, 0.94) 0%, rgba(8, 8, 12, 0.72) 32%, rgba(8, 8, 12, 0.18) 65%, rgba(8, 8, 12, 0.45) 100%)",
         }}
       />
     </div>
