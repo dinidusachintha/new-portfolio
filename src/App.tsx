@@ -6,10 +6,8 @@ import {
   ArrowUpRight,
   ChevronUp,
   Mail,
-  Menu,
   Pause,
   Play,
-  X,
 } from "lucide-react";
 import { asset, profile } from "./data/portfolio";
 import type { Project } from "./data/portfolio";
@@ -20,6 +18,7 @@ import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
+import Navbar from "./components/Navbar";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -68,42 +67,6 @@ const techTickerSequence = [
   { text: "DISTRIBUTED SYSTEMS", symbol: "✿", type: "flower" },
   { text: "AI VIDEO PIPELINES", symbol: "✦", type: "star" },
 ];
-
-function LogoSharpFilter() {
-  return (
-    <svg className="sr-only" aria-hidden="true" width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }}>
-      <defs>
-        <filter id="ds-logo-sharp" x="-10%" y="-10%" width="120%" height="120%">
-          <feConvolveMatrix
-            order="3"
-            preserveAlpha="true"
-            kernelMatrix="0 -0.5 0 -0.5 3.0 -0.5 0 -0.5 0"
-          />
-        </filter>
-      </defs>
-    </svg>
-  );
-}
-
-function BrandMark({ className = "" }: { className?: string }) {
-  return (
-    <div
-      className={`brand-mark-glass flex items-center justify-center relative p-1.5 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/40 hover:bg-white/[0.08] ${className}`}
-    >
-      <LogoSharpFilter />
-      <img
-        src={asset("assets/images/ds-logo.png")}
-        alt="DS Monogram"
-        className="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-300 hover:scale-105"
-        style={{
-          filter: "url(#ds-logo-sharp) contrast(1.25) brightness(1.06) drop-shadow(0 2px 5px rgba(0,0,0,0.45))",
-          imageRendering: "-webkit-optimize-contrast",
-        }}
-        loading="eager"
-      />
-    </div>
-  );
-}
 
 function CornerMusicButton() {
   const audio = useRef<HTMLAudioElement>(null);
@@ -441,30 +404,62 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
-  const navigateTo = (page: "home" | "blog", targetSection?: string) => {
-    setCurrentPage(page);
-    setMenuOpen(false);
-    if (page === "blog") {
-      window.location.hash = "#/blog";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      if (targetSection) {
-        window.location.hash = `#${targetSection}`;
-        setTimeout(() => {
-          const el = document.getElementById(targetSection);
-          if (el) {
-            if (lenis.current) {
-              lenis.current.scrollTo(el, { offset: -86 });
-            } else {
-              const top = el.getBoundingClientRect().top + window.pageYOffset - 86;
-              window.scrollTo({ top, behavior: "smooth" });
-            }
-          }
-        }, 60);
+  const scrollToSection = (targetSection?: string) => {
+    if (!targetSection) {
+      if (lenis.current) {
+        lenis.current.scrollTo(0, { duration: 0.9 });
       } else {
-        window.location.hash = "#/";
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+      return;
+    }
+
+    const el = document.getElementById(targetSection);
+    if (!el) return;
+
+    const offset = window.innerWidth < 768 ? 68 : 84;
+    if (lenis.current) {
+      lenis.current.scrollTo(el, { offset: -offset, duration: 1.0 });
+    } else {
+      const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
+  const navigateTo = (page: "home" | "blog", targetSection?: string) => {
+    setMenuOpen(false);
+
+    if (page === "blog") {
+      setCurrentPage("blog");
+      window.location.hash = "#/blog";
+      if (lenis.current) {
+        lenis.current.scrollTo(0, { duration: 0.8 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+
+    // Navigating to Home
+    if (currentPage !== "home") {
+      setCurrentPage("home");
+      window.location.hash = targetSection ? `#${targetSection}` : "#/";
+      // Wait for Home DOM elements to mount before scrolling
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          scrollToSection(targetSection);
+        }, 120);
+      });
+      return;
+    }
+
+    // Already on Home
+    if (targetSection) {
+      window.location.hash = `#${targetSection}`;
+      scrollToSection(targetSection);
+    } else {
+      window.location.hash = "#/";
+      scrollToSection();
     }
   };
 
@@ -548,6 +543,7 @@ export default function App() {
       duration: 1.15,
       smoothWheel: true,
     });
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis.current;
 
     let frame = 0;
     const updateScrollMetrics = () => {
@@ -628,16 +624,47 @@ export default function App() {
     const mainEl = document.getElementById("main") || document.body;
     mutationObserver.observe(mainEl, { childList: true, subtree: true });
 
-    const sectionObserver = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        }),
-      { rootMargin: "-20% 0px -55% 0px" },
-    );
-    document
-      .querySelectorAll("section[id]")
-      .forEach((el) => sectionObserver.observe(el));
+    // Deterministic, flicker-free active section scroll spy for primary nav links
+    const navSectionIds = navLinks.map((l) => l.id);
+    const updateActiveNavSection = () => {
+      if (currentPage !== "home") {
+        setActiveSection("");
+        return;
+      }
+      const scrollY = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (windowHeight + scrollY >= documentHeight - 90) {
+        setActiveSection("contact");
+        return;
+      }
+
+      if (scrollY < 180) {
+        setActiveSection("");
+        return;
+      }
+
+      const headerOffset = 130;
+      let matched = "";
+      for (const id of navSectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.offsetTop - headerOffset;
+        const height = el.offsetHeight;
+        if (scrollY >= top && scrollY < top + height) {
+          matched = id;
+          break;
+        }
+      }
+
+      if (matched) {
+        setActiveSection(matched);
+      }
+    };
+
+    window.addEventListener("scroll", updateActiveNavSection, { passive: true });
+    updateActiveNavSection();
 
     const workObserver = new IntersectionObserver(
       (entries) => {
@@ -653,7 +680,7 @@ export default function App() {
     return () => {
       revealObserver.disconnect();
       mutationObserver.disconnect();
-      sectionObserver.disconnect();
+      window.removeEventListener("scroll", updateActiveNavSection);
       workObserver.disconnect();
     };
   }, [workReady, currentPage]);
@@ -728,78 +755,17 @@ export default function App() {
       {/* Top Scroll Progress Indicator */}
       <div className="scroll-progress" aria-hidden="true" />
 
-      {/* Header */}
-      <header className={`header ${scrolled ? "scrolled" : ""}`}>
-        <div className="container flex items-center justify-between gap-2 sm:gap-5">
-          <a
-            href="#/"
-            onClick={(e) => {
-              e.preventDefault();
-              navigateTo("home");
-            }}
-            className="brand flex items-center gap-2.5 min-w-0 shrink cursor-pointer group"
-            aria-label="Dinidu Sachintha, back to home"
-          >
-            <BrandMark />
-            <div className="flex flex-col leading-none">
-              <span className="font-unbounded font-black text-sm sm:text-base tracking-tight text-white whitespace-nowrap group-hover:text-violet-300 transition-colors">
-                Dinidu<span className="text-violet-400">.</span>
-              </span>
-              <span className="font-mono text-[8px] sm:text-[9px] text-gray-400 tracking-wider uppercase hidden min-[360px]:block mt-0.5">
-                ARCHITECT
-              </span>
-            </div>
-          </a>
-
-          {/* Desktop Navigation */}
-          <nav
-            className="desktop-nav hidden items-center gap-6 md:flex"
-            aria-label="Main navigation"
-          >
-            {navLinks.map((l) => (
-              <a
-                href={`#${l.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigateTo("home", l.id);
-                }}
-                className={currentPage === "home" && activeSection === l.id ? "active" : ""}
-                key={l.id}
-                aria-current={activeSection === l.id ? "location" : undefined}
-              >
-                {l.name}
-              </a>
-            ))}
-          </nav>
-
-          {/* Header Actions */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Clean Highlighted Blog Button without star icon */}
-            <button
-              type="button"
-              onClick={() => navigateTo(currentPage === "blog" ? "home" : "blog")}
-              className={`nav-blog-btn-animated shrink-0 ${currentPage === "blog" ? "is-active" : ""}`}
-              aria-label="Read personal engineering blog"
-              title="Explore Engineering Blog & Articles"
-            >
-              <span>{currentPage === "blog" ? "PORTFOLIO" : "BLOG"}</span>
-              <span className="blog-new-pill">NEW</span>
-            </button>
-
-            <button
-              ref={mobileMenuTriggerRef}
-              type="button"
-              className="mobile-menu-toggle md:hidden cursor-pointer transition-all duration-200 active:scale-95"
-              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-sidebar"
-              onClick={() => setMenuOpen((prev) => !prev)}
-            >
-              {menuOpen ? <X size={20} className="text-white" /> : <Menu size={20} className="text-white" />}
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* Recreated High-Performance Navbar */}
+      <Navbar
+        scrolled={scrolled}
+        navLinks={navLinks}
+        activeSection={activeSection}
+        currentPage={currentPage}
+        onNavigate={navigateTo}
+        menuOpen={menuOpen}
+        onToggleMenu={() => setMenuOpen((prev) => !prev)}
+        mobileMenuTriggerRef={mobileMenuTriggerRef}
+      />
 
       {/* Premium Mobile Slide-In Sidebar Navigation */}
       <MobileSidebar

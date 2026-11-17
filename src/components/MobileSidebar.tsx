@@ -10,11 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
-
-export interface NavLinkItem {
-  name: string;
-  id: string;
-}
+import type { NavLinkItem } from "./Navbar";
 
 interface MobileSidebarProps {
   isOpen: boolean;
@@ -38,32 +34,26 @@ export default function MobileSidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  // 1. Prevent background scrolling while open
+  // 1. Safe scroll lock without destroying scroll position or breaking Lenis
   useEffect(() => {
     if (isOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-      document.body.style.overflow = "hidden";
-      document.body.classList.add("mobile-sidebar-open");
+      document.documentElement.classList.add("overflow-hidden");
+      document.body.classList.add("overflow-hidden");
 
-      // Auto focus close button for accessibility
-      setTimeout(() => {
+      // Pause Lenis smooth scrolling while drawer is open
+      const lenisInstance = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+      lenisInstance?.stop?.();
+
+      // Focus close button for accessibility
+      const timer = setTimeout(() => {
         closeBtnRef.current?.focus();
       }, 50);
 
       return () => {
-        const top = document.body.style.top;
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.width = "";
-        document.body.style.overflow = "";
-        document.body.classList.remove("mobile-sidebar-open");
-        if (top) {
-          window.scrollTo(0, parseInt(top || "0", 10) * -1);
-        }
-        // Restore focus to trigger
+        clearTimeout(timer);
+        document.documentElement.classList.remove("overflow-hidden");
+        document.body.classList.remove("overflow-hidden");
+        lenisInstance?.start?.();
         triggerRef?.current?.focus();
       };
     }
@@ -103,7 +93,7 @@ export default function MobileSidebar({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // 3. Close automatically on desktop resize (>= 768px)
+  // 3. Auto-close when resized to desktop (>= 768px)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isOpen) {
@@ -117,58 +107,59 @@ export default function MobileSidebar({
   const handleLinkClick = (e: React.MouseEvent, targetId?: string) => {
     e.preventDefault();
     onClose();
-    // Allow sidebar exit transition before scrolling
-    setTimeout(() => {
-      onNavigate("home", targetId);
-    }, 150);
+    // Navigate immediately without fragile timeouts
+    onNavigate("home", targetId);
   };
 
   const handleBlogClick = () => {
     onClose();
-    setTimeout(() => {
-      onNavigate(currentPage === "blog" ? "home" : "blog");
-    }, 150);
+    onNavigate(currentPage === "blog" ? "home" : "blog");
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] md:hidden" aria-modal="true" role="dialog" aria-label="Mobile Navigation">
-          {/* Dark Backdrop Overlay */}
+        <div
+          className="fixed inset-0 z-[100] md:hidden"
+          aria-modal="true"
+          role="dialog"
+          aria-label="Mobile Navigation"
+        >
+          {/* Dark Glass Backdrop Overlay */}
           <motion.div
-            className="fixed inset-0 bg-black/65 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.22 }}
             onClick={onClose}
             aria-hidden="true"
           />
 
-          {/* Slide-in Sidebar Panel */}
+          {/* Slide-In Navigation Drawer */}
           <motion.div
             ref={sidebarRef}
-            className="fixed top-0 right-0 bottom-0 w-[85vw] max-w-[340px] h-full h-[100dvh] bg-[#0B0914] border-l border-violet-500/25 shadow-[-16px_0_48px_rgba(0,0,0,0.92)] flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
+            className="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] h-full h-[100dvh] bg-[#090812] border-l border-white/15 shadow-[-20px_0_60px_rgba(0,0,0,0.95)] flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
             style={{
               paddingTop: "max(1rem, env(safe-area-inset-top))",
-              paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
+              paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
             }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{
               type: "spring",
-              damping: 28,
-              stiffness: 280,
+              damping: 30,
+              stiffness: 300,
             }}
           >
-            {/* Ambient Purple Glow Flare Inside Sidebar */}
+            {/* Ambient Background Glow Flares */}
             <div
               className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-violet-600/20 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
             <div
-              className="absolute bottom-10 left-0 w-44 h-44 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none"
+              className="absolute bottom-10 left-0 w-48 h-48 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
 
@@ -193,7 +184,7 @@ export default function MobileSidebar({
                 </div>
               </div>
 
-              {/* Navigation Tag & Close Button */}
+              {/* Close Button */}
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] font-mono font-bold text-violet-300 uppercase tracking-widest">
                   <Code2 size={10} />
@@ -203,7 +194,7 @@ export default function MobileSidebar({
                   ref={closeBtnRef}
                   type="button"
                   onClick={onClose}
-                  className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:scale-95 border border-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.14] active:scale-95 border border-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
                   aria-label="Close navigation"
                 >
                   <X size={18} />
@@ -221,7 +212,10 @@ export default function MobileSidebar({
                   className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-violet-950/60 via-purple-900/30 to-black/70 border border-violet-500/40 hover:border-violet-400/80 active:scale-[0.99] transition-all flex items-center justify-between shadow-lg group cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <Sparkles size={13} className="text-violet-400 group-hover:rotate-12 transition-transform" />
+                    <Sparkles
+                      size={13}
+                      className="text-violet-400 group-hover:rotate-12 transition-transform"
+                    />
                     <span className="font-unbounded font-bold text-xs text-white tracking-wide">
                       {currentPage === "blog" ? "RETURN TO PORTFOLIO" : "EXPLORE BLOG ARTICLES"}
                     </span>
@@ -233,7 +227,7 @@ export default function MobileSidebar({
               </div>
 
               {/* Main Section Nav Links */}
-              <nav className="space-y-1" aria-label="Sidebar sections">
+              <nav className="space-y-1.5" aria-label="Sidebar sections">
                 {navLinks.map((link, idx) => {
                   const isActive = currentPage === "home" && activeSection === link.id;
                   const itemNumber = `0${idx + 1}`;
@@ -253,7 +247,9 @@ export default function MobileSidebar({
                       <div className="flex items-center gap-3">
                         <span
                           className={`font-mono text-[10.5px] tracking-wider transition-colors ${
-                            isActive ? "text-violet-300 font-bold" : "text-gray-500 group-hover:text-violet-400"
+                            isActive
+                              ? "text-violet-300 font-bold"
+                              : "text-gray-500 group-hover:text-violet-400"
                           }`}
                         >
                           {itemNumber}
@@ -340,4 +336,3 @@ export default function MobileSidebar({
     </AnimatePresence>
   );
 }
-
