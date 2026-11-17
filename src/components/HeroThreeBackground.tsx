@@ -534,12 +534,12 @@ export default function HeroThreeBackground() {
         className="w-full h-full block pointer-events-none"
       />
 
-      {/* Balanced Vignette: Enhances contrast on the right side behind the portrait while leaving the left web and orbital curves luminous */}
+      {/* Balanced Vignette: Crisp transparency along the left border and luminous contrast */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, rgba(8, 8, 12, 0.25) 0%, rgba(8, 8, 12, 0.05) 30%, rgba(8, 8, 12, 0.65) 65%, rgba(8, 8, 12, 0.95) 100%)",
+            "linear-gradient(to right, rgba(8, 8, 12, 0.05) 0%, rgba(8, 8, 12, 0.0) 18%, rgba(8, 8, 12, 0.6) 60%, rgba(8, 8, 12, 0.95) 100%)",
         }}
       />
     </div>
