@@ -94,26 +94,26 @@ export default function HeroThreeBackground() {
     scene.add(orbitalGroup);
 
     // Primary Great Orbital Ellipse: Tilted up and to the right
-    const orbit1Geo = createOrbitalEllipse(21.5, 11.5);
+    const orbit1Geo = createOrbitalEllipse(20.5, 11.0);
     const orbit1Mat = new THREE.LineBasicMaterial({
       color: 0x9867ff, // Electric Violet
       transparent: true,
-      opacity: 0.38,
+      opacity: 0.28,
       blending: THREE.AdditiveBlending,
     });
     const orbit1 = new THREE.Line(orbit1Geo, orbit1Mat);
-    orbit1.position.set(-3.0, 1.0, -4.5);
+    orbit1.position.set(-2.0, 1.0, -4.5);
     orbit1.rotation.z = 0.44;
     orbit1.rotation.x = 0.35;
     orbit1.rotation.y = 0.15;
     orbitalGroup.add(orbit1);
 
     // Secondary Crossing Orbital Ellipse: Counter-tilted
-    const orbit2Geo = createOrbitalEllipse(18.0, 14.0);
+    const orbit2Geo = createOrbitalEllipse(17.0, 13.0);
     const orbit2Mat = new THREE.LineBasicMaterial({
       color: 0xc084fc, // Lavender Purple
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.22,
       blending: THREE.AdditiveBlending,
     });
     const orbit2 = new THREE.Line(orbit2Geo, orbit2Mat);
@@ -124,25 +124,25 @@ export default function HeroThreeBackground() {
     orbitalGroup.add(orbit2);
 
     // Tertiary Outer Sweeping Arc
-    const orbit3Geo = createOrbitalEllipse(24.0, 9.0);
+    const orbit3Geo = createOrbitalEllipse(23.0, 8.5);
     const orbit3Mat = new THREE.LineBasicMaterial({
       color: 0x38bdf8, // Blueprint Cyan
       transparent: true,
-      opacity: 0.22,
+      opacity: 0.16,
       blending: THREE.AdditiveBlending,
     });
     const orbit3 = new THREE.Line(orbit3Geo, orbit3Mat);
-    orbit3.position.set(-6.5, -2.5, -6.5);
+    orbit3.position.set(-5.5, -2.5, -6.5);
     orbit3.rotation.z = 0.22;
     orbit3.rotation.x = 0.55;
     orbitalGroup.add(orbit3);
 
     // =========================================================================
-    // 4. Left-Edge Crystalline Neural Web / Constellation (Matching Reference Image)
+    // 4. Left-Border Crystalline Neural Web (Reduced tightly to border like reference)
     // =========================================================================
     const isMobile = window.innerWidth < 768;
-    const nodeCount = isMobile ? 65 : 115;
-    const maxDistance = isMobile ? 7.8 : 8.8;
+    const nodeCount = isMobile ? 60 : 105;
+    const maxDistance = isMobile ? 4.8 : 5.8;
     const maxDistanceSq = maxDistance * maxDistance;
 
     interface WebNode {
@@ -173,18 +173,18 @@ export default function HeroThreeBackground() {
       let y: number;
       let z: number;
 
-      // 80% of nodes in primary left-edge crystalline cluster; 20% in lower-left grounding cluster
-      if (i < Math.floor(nodeCount * 0.8)) {
-        // Denser at left edge (power distribution), spreading toward center
-        const t = Math.pow(Math.random(), 1.4);
-        x = isMobile ? -18 + t * 15 : -30 + t * 24;
-        y = (Math.random() - 0.5) * (isMobile ? 26 : 34);
-        z = (Math.random() - 0.5) * 14;
+      // 82% of nodes tightly confined to the left-most vertical border strip
+      if (i < Math.floor(nodeCount * 0.82)) {
+        // Tightly hugs the left border: x ranges from -31 to -21.5 on desktop, -19 to -12 on mobile
+        const t = Math.pow(Math.random(), 1.7);
+        x = isMobile ? -19 + t * 7.5 : -31 + t * 9.5;
+        y = (Math.random() - 0.5) * (isMobile ? 24 : 32);
+        z = (Math.random() - 0.5) * 8;
       } else {
-        // Lower grounding cluster
-        x = (isMobile ? -14 : -24) + Math.random() * 18;
-        y = (isMobile ? -12 : -16) + Math.random() * 8;
-        z = (Math.random() - 0.5) * 10;
+        // Subtle grounding corner cluster right along the bottom border
+        x = (isMobile ? -17 : -29) + Math.random() * (isMobile ? 8 : 12);
+        y = (isMobile ? -13 : -16.5) + Math.random() * 3.5;
+        z = (Math.random() - 0.5) * 6;
       }
 
       nodes.push({
@@ -196,9 +196,9 @@ export default function HeroThreeBackground() {
         origZ: z,
         baseX: x,
         baseY: y,
-        vx: (Math.random() - 0.5) * 0.012,
-        vy: (Math.random() - 0.5) * 0.012,
-        vz: (Math.random() - 0.5) * 0.008,
+        vx: (Math.random() - 0.5) * 0.01,
+        vy: (Math.random() - 0.5) * 0.01,
+        vz: (Math.random() - 0.5) * 0.006,
         phase: Math.random() * Math.PI * 2,
       });
 
@@ -206,17 +206,17 @@ export default function HeroThreeBackground() {
       nodePositions[i * 3 + 1] = y;
       nodePositions[i * 3 + 2] = z;
 
-      // Left-most nodes are brighter Cyan/White; Inner nodes transition to Electric Violet
-      const normalizedX = (x + 30) / 24;
+      // Outer left-border nodes glow in electric cyan / white; inner nodes transition to violet
+      const normalizedX = (x + 31) / 9.5;
       const rand = Math.random();
       let nodeCol: THREE.Color;
 
-      if (normalizedX < 0.35) {
-        nodeCol = rand < 0.7 ? colorCyan : colorWhite;
-      } else if (normalizedX < 0.7) {
-        nodeCol = rand < 0.5 ? colorCyan : colorViolet;
+      if (normalizedX < 0.4) {
+        nodeCol = rand < 0.75 ? colorCyan : colorWhite;
+      } else if (normalizedX < 0.75) {
+        nodeCol = rand < 0.6 ? colorCyan : colorViolet;
       } else {
-        nodeCol = rand < 0.65 ? colorViolet : colorCyan;
+        nodeCol = rand < 0.7 ? colorViolet : colorCyan;
       }
 
       nodeColors[i * 3] = nodeCol.r;
@@ -415,8 +415,8 @@ export default function HeroThreeBackground() {
           const dy = targetY - mouseWorldY;
           const distMouse = Math.sqrt(dx * dx + dy * dy);
 
-          if (distMouse < 12.0) {
-            const force = (1 - distMouse / 12.0) * 0.12;
+          if (distMouse < 8.5) {
+            const force = (1 - distMouse / 8.5) * 0.1;
             targetX += dx * force;
             targetY += dy * force;
           }
