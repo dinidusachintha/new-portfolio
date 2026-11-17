@@ -318,7 +318,7 @@ export default function SectionThreeBackground({
       }
 
       // Compute exact visible dimensions at z = 0
-      const { halfW, halfH, visibleWidth, visibleHeight } = computeFrustum();
+      const { halfW, halfH, visibleWidth } = computeFrustum();
 
       // Define the framing strip width (strictly 18% to 24% of the visible container width)
       const stripWidth = Math.min(visibleWidth * 0.22, isMobile ? 8.5 : 12.0);
