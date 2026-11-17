@@ -19,6 +19,7 @@ import VideoBanner from "./components/VideoBanner";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
+import SectionThreeBackground from "./components/SectionThreeBackground";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -264,14 +265,18 @@ function HaveASystemSection() {
 
   return (
     <div className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
+      {/* Subtle Right-Border 3D Crystalline Web */}
+      <SectionThreeBackground side="right" palette="violet-purple" density="compact" />
+
       <div className="floral-ambient-watermark" aria-hidden="true">
         <FloralLotusOrnament className="w-64 h-64 text-violet-400/10" />
       </div>
 
-      <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
-        <FloralLotusOrnament className="w-3.5 h-3.5 text-violet-400" />
-        <span>07 // INITIATE COLLABORATION</span>
-      </span>
+      <div className="relative z-10">
+        <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
+          <FloralLotusOrnament className="w-3.5 h-3.5 text-violet-400" />
+          <span>07 // INITIATE COLLABORATION</span>
+        </span>
 
       <FlyingHeading
         line1="HAVE A SYSTEM TO BUILD OR ARCHITECT?"
@@ -361,6 +366,7 @@ function HaveASystemSection() {
         )}
       </div>
     </div>
+  </div>
   );
 }
 
