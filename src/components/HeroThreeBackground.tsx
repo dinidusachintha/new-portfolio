@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * Generates an in-memory high-res radial glow texture for Three.js point particles.
- * Eliminates square sprite artifacts and produces deep neon luminescence.
+ * Creates an in-memory high-resolution radial glow texture for point nodes.
+ * Eliminates square artifacts and delivers smooth neon luminescence.
  */
-function createGlowSpriteTexture(): THREE.CanvasTexture {
+function createNodeGlowTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 64;
   canvas.height = 64;
@@ -13,9 +13,9 @@ function createGlowSpriteTexture(): THREE.CanvasTexture {
   if (ctx) {
     const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
     gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
-    gradient.addColorStop(0.2, "rgba(216, 180, 254, 0.9)"); // soft violet-300
-    gradient.addColorStop(0.5, "rgba(152, 103, 255, 0.45)"); // electric violet
-    gradient.addColorStop(0.75, "rgba(56, 189, 248, 0.15)"); // cyan aura
+    gradient.addColorStop(0.2, "rgba(216, 180, 254, 0.95)"); // Soft violet-300
+    gradient.addColorStop(0.5, "rgba(152, 103, 255, 0.5)"); // Electric violet
+    gradient.addColorStop(0.8, "rgba(56, 189, 248, 0.18)"); // Cyan aura
     gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);
@@ -34,27 +34,26 @@ export default function HeroThreeBackground() {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    // Respect reduced motion preference
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // 1. Scene & Camera setup
+    // 1. Scene & Perspective Camera
     const scene = new THREE.Scene();
 
     const initialWidth = container.clientWidth || window.innerWidth;
     const initialHeight = container.clientHeight || 650;
 
     const camera = new THREE.PerspectiveCamera(
-      55,
+      50,
       initialWidth / initialHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 16, 42);
-    camera.lookAt(0, -2, -5);
+    camera.position.set(0, 0, 36);
+    camera.lookAt(0, 0, 0);
 
-    // 2. High-performance WebGL Renderer
+    // 2. High-Performance WebGL Renderer
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
@@ -66,176 +65,212 @@ export default function HeroThreeBackground() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
 
-    // 3. Grid Dimensions
+    // 3. Central Architectural Holographic Gyroscope Orbital Rings
+    const gyroGroup = new THREE.Group();
+    scene.add(gyroGroup);
+
+    // Inner Ring: Electric Violet (#9867ff)
+    const ring1Geo = new THREE.TorusGeometry(12.5, 0.05, 16, 100);
+    const ring1Mat = new THREE.MeshBasicMaterial({
+      color: 0x9867ff,
+      transparent: true,
+      opacity: 0.28,
+      blending: THREE.AdditiveBlending,
+    });
+    const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+    ring1.rotation.x = Math.PI / 4;
+    gyroGroup.add(ring1);
+
+    // Middle Ring: Blueprint Cyan (#38bdf8)
+    const ring2Geo = new THREE.TorusGeometry(16.0, 0.045, 16, 120);
+    const ring2Mat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.22,
+      blending: THREE.AdditiveBlending,
+    });
+    const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+    ring2.rotation.y = -Math.PI / 5;
+    ring2.rotation.x = -Math.PI / 6;
+    gyroGroup.add(ring2);
+
+    // Outer Geodesic Ring: Subtle Deep Indigo / White
+    const ring3Geo = new THREE.TorusGeometry(20.0, 0.04, 16, 140);
+    const ring3Mat = new THREE.MeshBasicMaterial({
+      color: 0xc084fc,
+      transparent: true,
+      opacity: 0.16,
+      blending: THREE.AdditiveBlending,
+    });
+    const ring3 = new THREE.Mesh(ring3Geo, ring3Mat);
+    ring3.rotation.z = Math.PI / 3;
+    gyroGroup.add(ring3);
+
+    // 4. Interactive 3D Neural Constellation Network (Nodes + Dynamic Laser Filaments)
     const isMobile = window.innerWidth < 768;
-    const COLS = isMobile ? 42 : 58;
-    const ROWS = isMobile ? 36 : 46;
-    const SPACING_X = isMobile ? 3.0 : 2.5;
-    const SPACING_Z = isMobile ? 3.0 : 2.5;
-    const totalPoints = COLS * ROWS;
+    const nodeCount = isMobile ? 65 : 110;
+    const maxDistance = isMobile ? 12.0 : 13.5;
+    const maxDistanceSq = maxDistance * maxDistance;
 
-    // 4. Geometry & Vertex Buffers for Topographical Quantum Wave
-    const positions = new Float32Array(totalPoints * 3);
-    const colors = new Float32Array(totalPoints * 3);
+    // Spatial boundaries
+    const boundsX = isMobile ? 32 : 46;
+    const boundsY = isMobile ? 22 : 28;
+    const boundsZ = 20;
 
-    // Color palettes: Electric Violet (#9867ff) to Neon Cyan (#38bdf8) to Deep Indigo (#4f46e5)
+    interface NodeData {
+      x: number;
+      y: number;
+      z: number;
+      vx: number;
+      vy: number;
+      vz: number;
+      origX: number;
+      origY: number;
+      origZ: number;
+    }
+
+    const nodes: NodeData[] = [];
+    const nodePositions = new Float32Array(nodeCount * 3);
+    const nodeColors = new Float32Array(nodeCount * 3);
+
     const colorViolet = new THREE.Color("#9867ff");
     const colorCyan = new THREE.Color("#38bdf8");
-    const colorIndigo = new THREE.Color("#4f46e5");
-    const tempColor = new THREE.Color();
+    const colorWhite = new THREE.Color("#f8fafc");
 
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const idx = r * COLS + c;
-        const x = (c - COLS / 2) * SPACING_X;
-        const z = (r - ROWS / 2) * SPACING_Z - 5;
-        const y = 0;
+    for (let i = 0; i < nodeCount; i++) {
+      const x = (Math.random() - 0.5) * boundsX;
+      const y = (Math.random() - 0.5) * boundsY;
+      const z = (Math.random() - 0.5) * boundsZ;
 
-        positions[idx * 3] = x;
-        positions[idx * 3 + 1] = y;
-        positions[idx * 3 + 2] = z;
+      nodes.push({
+        x,
+        y,
+        z,
+        origX: x,
+        origY: y,
+        origZ: z,
+        vx: (Math.random() - 0.5) * 0.02,
+        vy: (Math.random() - 0.5) * 0.02,
+        vz: (Math.random() - 0.5) * 0.015,
+      });
 
-        // Gradient based on distance from center and depth
-        const normX = Math.abs(c - COLS / 2) / (COLS / 2);
-        const normZ = r / ROWS;
+      nodePositions[i * 3] = x;
+      nodePositions[i * 3 + 1] = y;
+      nodePositions[i * 3 + 2] = z;
 
-        if (normX < 0.45) {
-          tempColor.copy(colorViolet).lerp(colorCyan, normX * 1.5);
-        } else {
-          tempColor.copy(colorCyan).lerp(colorIndigo, (normX - 0.45) * 1.8);
-        }
-        // Darken back row slightly for atmospheric depth cue
-        tempColor.multiplyScalar(0.7 + (1 - normZ) * 0.4);
-
-        colors[idx * 3] = tempColor.r;
-        colors[idx * 3 + 1] = tempColor.g;
-        colors[idx * 3 + 2] = tempColor.b;
-      }
+      // Color variation between violet, cyan, and soft white
+      const rand = Math.random();
+      const nodeCol =
+        rand < 0.45 ? colorViolet : rand < 0.85 ? colorCyan : colorWhite;
+      nodeColors[i * 3] = nodeCol.r;
+      nodeColors[i * 3 + 1] = nodeCol.g;
+      nodeColors[i * 3 + 2] = nodeCol.b;
     }
 
-    const waveGeometry = new THREE.BufferGeometry();
-    const posAttribute = new THREE.BufferAttribute(positions, 3);
-    posAttribute.setUsage(THREE.DynamicDrawUsage);
-    waveGeometry.setAttribute("position", posAttribute);
-    waveGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    const nodeGlowTexture = createNodeGlowTexture();
+    const nodesGeo = new THREE.BufferGeometry();
+    nodesGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(nodePositions, 3)
+    );
+    nodesGeo.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
 
-    // Shared particle glow sprite
-    const glowTexture = createGlowSpriteTexture();
-
-    const pointsMaterial = new THREE.PointsMaterial({
-      size: isMobile ? 1.6 : 2.2,
-      map: glowTexture,
+    const nodesMat = new THREE.PointsMaterial({
+      size: isMobile ? 1.0 : 1.25,
+      map: nodeGlowTexture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.82,
+      opacity: 0.88,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
+    const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
+    scene.add(nodesMesh);
 
-    const wavePoints = new THREE.Points(waveGeometry, pointsMaterial);
-    scene.add(wavePoints);
+    // Dynamic Line Filaments (Max connections = nodeCount * (nodeCount - 1) / 2)
+    const maxLineSegments = Math.min(nodeCount * 8, 480);
+    const linePositions = new Float32Array(maxLineSegments * 2 * 3);
+    const lineColors = new Float32Array(maxLineSegments * 2 * 3);
 
-    // 5. Constellation / Architectural Mesh Lattice Lines
-    // We connect adjacent nodes horizontally and vertically using shared position buffer
-    const lineIndices: number[] = [];
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const idx = r * COLS + c;
-        // Horizontal segment
-        if (c < COLS - 1) {
-          lineIndices.push(idx, idx + 1);
-        }
-        // Vertical segment
-        if (r < ROWS - 1) {
-          lineIndices.push(idx, idx + COLS);
-        }
-      }
-    }
-
-    const linesGeometry = new THREE.BufferGeometry();
-    linesGeometry.setAttribute("position", posAttribute);
-    linesGeometry.setIndex(lineIndices);
-
-    const linesMaterial = new THREE.LineBasicMaterial({
-      color: 0x7c3aed,
-      transparent: true,
-      opacity: isMobile ? 0.12 : 0.16,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-
-    const waveLines = new THREE.LineSegments(linesGeometry, linesMaterial);
-    scene.add(waveLines);
-
-    // 6. Floating Ambient Celestial Stardust
-    const starCount = isMobile ? 140 : 260;
-    const starPositions = new Float32Array(starCount * 3);
-    const starVelocities = new Float32Array(starCount * 3);
-
-    for (let i = 0; i < starCount; i++) {
-      starPositions[i * 3] = (Math.random() - 0.5) * 110;
-      starPositions[i * 3 + 1] = (Math.random() - 0.2) * 45;
-      starPositions[i * 3 + 2] = (Math.random() - 0.5) * 75;
-
-      starVelocities[i * 3] = (Math.random() - 0.5) * 0.015;
-      starVelocities[i * 3 + 1] = Math.random() * 0.02 + 0.005;
-      starVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.015;
-    }
-
-    const starsGeometry = new THREE.BufferGeometry();
-    starsGeometry.setAttribute(
+    const linesGeo = new THREE.BufferGeometry();
+    linesGeo.setAttribute(
       "position",
-      new THREE.BufferAttribute(starPositions, 3)
+      new THREE.BufferAttribute(linePositions, 3).setUsage(
+        THREE.DynamicDrawUsage
+      )
+    );
+    linesGeo.setAttribute(
+      "color",
+      new THREE.BufferAttribute(lineColors, 3).setUsage(
+        THREE.DynamicDrawUsage
+      )
     );
 
-    const starsMaterial = new THREE.PointsMaterial({
-      size: 1.25,
-      map: glowTexture,
-      color: 0x38bdf8,
+    const linesMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
       transparent: true,
       opacity: 0.55,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
+    const linesMesh = new THREE.LineSegments(linesGeo, linesMat);
+    scene.add(linesMesh);
 
-    const starParticles = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(starParticles);
+    // 5. Floating Ambient Micro-Luminous Stardust Field
+    const dustCount = isMobile ? 70 : 130;
+    const dustPositions = new Float32Array(dustCount * 3);
+    const dustVelocities = new Float32Array(dustCount * 3);
 
-    // 7. Interactive Cursor State & Physics with Smooth Lerping
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * (boundsX + 10);
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * (boundsY + 10);
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * (boundsZ + 15);
+
+      dustVelocities[i * 3] = (Math.random() - 0.5) * 0.008;
+      dustVelocities[i * 3 + 1] = 0.012 + Math.random() * 0.018; // gentle upwards drift
+      dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.008;
+    }
+
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(dustPositions, 3)
+    );
+    const dustMat = new THREE.PointsMaterial({
+      size: 0.35,
+      map: nodeGlowTexture,
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.42,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const dustMesh = new THREE.Points(dustGeo, dustMat);
+    scene.add(dustMesh);
+
+    // 6. Smooth Mouse & Touch Parallax / Fluid Gravity Tracking
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
     let currentMouseY = 0;
-    let lastMouseMoveTime = performance.now();
 
     const handlePointerMove = (e: MouseEvent | TouchEvent) => {
-      let clientX = 0;
-      let clientY = 0;
-
-      if ("touches" in e) {
-        if (e.touches.length > 0) {
-          clientX = e.touches[0].clientX;
-          clientY = e.touches[0].clientY;
-        }
-      } else {
-        clientX = e.clientX;
-        clientY = e.clientY;
-      }
-
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       const rect = container.getBoundingClientRect();
-      // Calculate cursor position normalized to [-1, 1]
-      const relX = clientX - (rect.left + rect.width / 2);
-      const relY = clientY - (rect.top + rect.height / 2);
 
-      targetMouseX = Math.max(-1.5, Math.min(1.5, relX / (rect.width / 2)));
-      targetMouseY = Math.max(-1.5, Math.min(1.5, relY / (rect.height / 2)));
-      lastMouseMoveTime = performance.now();
+      // Normalize coordinates to -1 to +1 range
+      const nx = ((clientX - rect.left) / rect.width) * 2 - 1;
+      const ny = -(((clientY - rect.top) / rect.height) * 2 - 1);
+
+      targetMouseX = Math.max(-1.2, Math.min(1.2, nx));
+      targetMouseY = Math.max(-1.2, Math.min(1.2, ny));
     };
 
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
 
-    // 8. Responsive Resize Handler
+    // 7. Responsive Window Resize Handler
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const width = container.clientWidth || window.innerWidth;
@@ -246,12 +281,10 @@ export default function HeroThreeBackground() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
 
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
+    const resizeObserver = new ResizeObserver(() => handleResize());
     resizeObserver.observe(container);
 
-    // 9. Intersection Observer (Freeze loop when scrolled out of view to save 100% GPU)
+    // 8. Visibility Observer: Pause rendering when off-screen to conserve GPU
     let isVisible = true;
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
@@ -263,7 +296,7 @@ export default function HeroThreeBackground() {
     );
     visibilityObserver.observe(container);
 
-    // 10. Animation Loop
+    // 9. Master Animation Loop (Delta-Time Independent)
     const clock = new THREE.Clock();
     let animationFrameId: number;
 
@@ -273,91 +306,132 @@ export default function HeroThreeBackground() {
       if (!isVisible) return;
 
       const elapsedTime = clock.getElapsedTime();
-      const now = performance.now();
 
-      // If user hasn't moved cursor for 2.5s, create an elegant subtle autonomous drifting motion
-      if (now - lastMouseMoveTime > 2500) {
-        const autoTime = elapsedTime * 0.45;
-        targetMouseX = Math.sin(autoTime) * 0.4;
-        targetMouseY = Math.cos(autoTime * 0.8) * 0.3;
+      // Smooth mouse interpolation with damping
+      currentMouseX = THREE.MathUtils.lerp(currentMouseX, targetMouseX, 0.065);
+      currentMouseY = THREE.MathUtils.lerp(currentMouseY, targetMouseY, 0.065);
+
+      // Camera 3D Parallax Tilt
+      if (!prefersReducedMotion) {
+        camera.position.x = currentMouseX * 4.2;
+        camera.position.y = currentMouseY * 3.2;
+        camera.lookAt(currentMouseX * 1.5, currentMouseY * 1.2, 0);
       }
 
-      // Smooth lerp towards cursor coordinates (silky fluid inertia)
-      const lerpFactor = prefersReducedMotion ? 0.02 : 0.045;
-      currentMouseX += (targetMouseX - currentMouseX) * lerpFactor;
-      currentMouseY += (targetMouseY - currentMouseY) * lerpFactor;
+      // Orbital Gyroscope Rotation
+      ring1.rotation.z = elapsedTime * 0.12;
+      ring1.rotation.y = elapsedTime * 0.08;
+      ring2.rotation.z = -elapsedTime * 0.09;
+      ring2.rotation.x = elapsedTime * 0.11;
+      ring3.rotation.y = elapsedTime * 0.05;
 
-      // Camera Parallax & Subtle Tilt
-      camera.position.x = currentMouseX * 13;
-      camera.position.y = 16 - currentMouseY * 8.5;
-      camera.position.z = 42 + (currentMouseY > 0 ? currentMouseY * 4 : 0);
-      camera.lookAt(0, -2, -5);
-      camera.rotation.z = -currentMouseX * 0.035;
+      // Projected mouse coordinates in 3D world space
+      const mouseWorldX = currentMouseX * (boundsX * 0.45);
+      const mouseWorldY = currentMouseY * (boundsY * 0.45);
 
-      // Wave & Ripple Physics Calculation
-      const timeScale = prefersReducedMotion ? 0.3 : 0.85;
-      const t = elapsedTime * timeScale;
-      const posArr = posAttribute.array as Float32Array;
+      // Update Node positions & calculate dynamic network filaments
+      const posAttr = nodesGeo.attributes.position as THREE.BufferAttribute;
+      const nodePosArray = posAttr.array as Float32Array;
 
-      // Virtual cursor coordinates projected on the 3D grid plane
-      const cursorX = currentMouseX * 42;
-      const cursorZ = currentMouseY * 30 - 5;
+      let lineVertexIndex = 0;
 
-      for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-          const idx = r * COLS + c;
-          const px = posArr[idx * 3];
-          const pz = posArr[idx * 3 + 2];
+      for (let i = 0; i < nodeCount; i++) {
+        const node = nodes[i];
 
-          // 1. Dual harmonic harmonic traveling waves
-          const wave1 =
-            Math.sin(px * 0.08 + t * 1.25) * Math.cos(pz * 0.08 + t * 0.95) * 3.2;
-          const wave2 =
-            Math.sin((px + pz) * 0.055 + t * 0.75) * 1.9;
-          const baseWave = wave1 + wave2;
+        // Intrinsic floating drift
+        node.x += node.vx;
+        node.y += node.vy;
+        node.z += node.vz;
 
-          // 2. Interactive fluid cursor displacement with Gaussian falloff
-          const dx = px - cursorX;
-          const dz = pz - cursorZ;
-          const distSq = dx * dx + dz * dz;
-          const dist = Math.sqrt(distSq);
+        // Bounce gently off bounding volume
+        if (node.x < -boundsX / 2 || node.x > boundsX / 2) node.vx *= -1;
+        if (node.y < -boundsY / 2 || node.y > boundsY / 2) node.vy *= -1;
+        if (node.z < -boundsZ / 2 || node.z > boundsZ / 2) node.vz *= -1;
 
-          let ripple = 0;
-          if (!prefersReducedMotion && dist < 35) {
-            const rippleFalloff = Math.exp(-dist * 0.095);
-            const rippleWave = Math.sin(dist * 0.42 - t * 3.8);
-            ripple = rippleFalloff * rippleWave * 5.2;
+        // Interactive elastic cursor displacement
+        if (!prefersReducedMotion) {
+          const dx = node.x - mouseWorldX;
+          const dy = node.y - mouseWorldY;
+          const distMouse = Math.sqrt(dx * dx + dy * dy);
+
+          if (distMouse < 14.0) {
+            const force = (1 - distMouse / 14.0) * 0.08;
+            node.x += dx * force;
+            node.y += dy * force;
           }
+        }
 
-          posArr[idx * 3 + 1] = baseWave + ripple;
+        nodePosArray[i * 3] = node.x;
+        nodePosArray[i * 3 + 1] = node.y;
+        nodePosArray[i * 3 + 2] = node.z;
+
+        // Connect nearby nodes with glowing laser filaments
+        for (let j = i + 1; j < nodeCount; j++) {
+          if (lineVertexIndex / 6 >= maxLineSegments) break;
+
+          const other = nodes[j];
+          const distSq =
+            (node.x - other.x) * (node.x - other.x) +
+            (node.y - other.y) * (node.y - other.y) +
+            (node.z - other.z) * (node.z - other.z);
+
+          if (distSq < maxDistanceSq) {
+            const alpha = 1 - distSq / maxDistanceSq;
+
+            // Start vertex
+            linePositions[lineVertexIndex] = node.x;
+            linePositions[lineVertexIndex + 1] = node.y;
+            linePositions[lineVertexIndex + 2] = node.z;
+
+            lineColors[lineVertexIndex] = colorViolet.r * alpha;
+            lineColors[lineVertexIndex + 1] = colorViolet.g * alpha;
+            lineColors[lineVertexIndex + 2] = colorViolet.b * alpha;
+
+            // End vertex
+            linePositions[lineVertexIndex + 3] = other.x;
+            linePositions[lineVertexIndex + 4] = other.y;
+            linePositions[lineVertexIndex + 5] = other.z;
+
+            lineColors[lineVertexIndex + 3] = colorCyan.r * alpha;
+            lineColors[lineVertexIndex + 4] = colorCyan.g * alpha;
+            lineColors[lineVertexIndex + 5] = colorCyan.b * alpha;
+
+            lineVertexIndex += 6;
+          }
         }
       }
-      posAttribute.needsUpdate = true;
 
-      // Update Floating Celestial Stardust
-      const starPosArr = starsGeometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < starCount; i++) {
-        starPosArr[i * 3 + 1] += starVelocities[i * 3 + 1];
-        starPosArr[i * 3] += starVelocities[i * 3];
-        starPosArr[i * 3 + 2] += starVelocities[i * 3 + 2];
+      posAttr.needsUpdate = true;
+
+      // Update lines buffer geometry
+      const linesPosAttr = linesGeo.attributes.position as THREE.BufferAttribute;
+      const linesColAttr = linesGeo.attributes.color as THREE.BufferAttribute;
+
+      linesPosAttr.needsUpdate = true;
+      linesColAttr.needsUpdate = true;
+      linesGeo.setDrawRange(0, lineVertexIndex / 3);
+
+      // Update Floating Dust
+      const dustPosArray = dustGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < dustCount; i++) {
+        dustPosArray[i * 3] += dustVelocities[i * 3];
+        dustPosArray[i * 3 + 1] += dustVelocities[i * 3 + 1];
+        dustPosArray[i * 3 + 2] += dustVelocities[i * 3 + 2];
 
         // Wrap around vertically
-        if (starPosArr[i * 3 + 1] > 35) {
-          starPosArr[i * 3 + 1] = -10;
-          starPosArr[i * 3] = (Math.random() - 0.5) * 110;
+        if (dustPosArray[i * 3 + 1] > boundsY / 2) {
+          dustPosArray[i * 3 + 1] = -boundsY / 2;
+          dustPosArray[i * 3] = (Math.random() - 0.5) * boundsX;
         }
       }
-      starsGeometry.attributes.position.needsUpdate = true;
-
-      // Rotate stardust field subtly
-      starParticles.rotation.y = elapsedTime * 0.02 + currentMouseX * 0.04;
+      dustGeo.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // 11. Complete Cleanup on Unmount
+    // 10. Complete Resource Disposal on Unmount
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handlePointerMove);
@@ -365,13 +439,21 @@ export default function HeroThreeBackground() {
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
 
-      waveGeometry.dispose();
-      linesGeometry.dispose();
-      starsGeometry.dispose();
-      pointsMaterial.dispose();
-      linesMaterial.dispose();
-      starsMaterial.dispose();
-      glowTexture.dispose();
+      ring1Geo.dispose();
+      ring1Mat.dispose();
+      ring2Geo.dispose();
+      ring2Mat.dispose();
+      ring3Geo.dispose();
+      ring3Mat.dispose();
+
+      nodesGeo.dispose();
+      nodesMat.dispose();
+      linesGeo.dispose();
+      linesMat.dispose();
+      dustGeo.dispose();
+      dustMat.dispose();
+
+      nodeGlowTexture.dispose();
       renderer.dispose();
     };
   }, []);
@@ -388,12 +470,12 @@ export default function HeroThreeBackground() {
         className="w-full h-full block pointer-events-none"
       />
 
-      {/* Cinematic Vignette Overlay: Keeps text and video portrait perfectly crisp and readable */}
+      {/* Cinematic Vignette Overlay: Keeps text and video portrait 100% crisp and readable */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.94) 100%)",
+            "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.94) 100%)",
         }}
       />
     </div>
