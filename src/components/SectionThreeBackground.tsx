@@ -16,23 +16,25 @@ interface SectionThreeBackgroundProps {
 }
 
 /**
- * Creates an in-memory high-resolution radial glow texture for point nodes.
- * Eliminates square artifacts and delivers smooth neon luminescence.
+ * Generates an in-memory high-definition radial glow texture for vertices.
+ * Delivers clean, round, luminous laser pinpoints with soft chromatic aura.
  */
-function createNodeGlowTexture(colorStop: string): THREE.CanvasTexture {
+function createNodeGlowTexture(primaryColorRgb: string, secondaryColorRgb: string): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = 128;
+  canvas.height = 128;
   const ctx = canvas.getContext("2d");
   if (ctx) {
-    const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
-    gradient.addColorStop(0.2, colorStop);
-    gradient.addColorStop(0.6, "rgba(152, 103, 255, 0.4)");
-    gradient.addColorStop(0.85, "rgba(192, 132, 252, 0.15)");
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gradient.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+    gradient.addColorStop(0.12, "rgba(255, 255, 255, 0.95)");
+    gradient.addColorStop(0.28, primaryColorRgb);
+    gradient.addColorStop(0.58, secondaryColorRgb);
+    gradient.addColorStop(0.82, "rgba(168, 85, 247, 0.12)");
     gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 64, 64);
+    ctx.fillRect(0, 0, 128, 128);
   }
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
@@ -57,18 +59,13 @@ export default function SectionThreeBackground({
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // 1. Scene & Perspective Camera
+    // 1. Scene & Perspective Camera Setup
     const scene = new THREE.Scene();
 
-    const initialWidth = container.clientWidth || window.innerWidth;
-    const initialHeight = container.clientHeight || 500;
+    let width = container.clientWidth || window.innerWidth;
+    let height = container.clientHeight || 550;
 
-    const camera = new THREE.PerspectiveCamera(
-      46,
-      initialWidth / initialHeight,
-      0.1,
-      1000
-    );
+    const camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 1000);
     camera.position.set(0, 0, 32);
     camera.lookAt(0, 0, 0);
 
@@ -80,123 +77,113 @@ export default function SectionThreeBackground({
       powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
-    renderer.setSize(initialWidth, initialHeight, false);
+    renderer.setSize(width, height, false);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.25;
 
-    // Palette Configuration
+    // 3. Color Palette Configuration
     let primaryColorHex: number;
     let secondaryColorHex: number;
-    let glowStop: string;
+    let primaryRgbStr: string;
+    let secondaryRgbStr: string;
 
     switch (palette) {
       case "violet-purple":
         primaryColorHex = 0xa855f7; // Electric Violet
         secondaryColorHex = 0xc084fc; // Soft Lavender
-        glowStop = "rgba(168, 85, 247, 0.95)";
+        primaryRgbStr = "rgba(168, 85, 247, 0.95)";
+        secondaryRgbStr = "rgba(192, 132, 252, 0.4)";
         break;
       case "cyan-blue":
-        primaryColorHex = 0x38bdf8; // Cyan
-        secondaryColorHex = 0x3b82f6; // Blue
-        glowStop = "rgba(56, 189, 248, 0.95)";
+        primaryColorHex = 0x38bdf8; // Blueprint Cyan
+        secondaryColorHex = 0x3b82f6; // High-Voltage Blue
+        primaryRgbStr = "rgba(56, 189, 248, 0.95)";
+        secondaryRgbStr = "rgba(59, 130, 246, 0.4)";
         break;
       case "emerald-cyan":
-        primaryColorHex = 0x34d399; // Emerald
-        secondaryColorHex = 0x38bdf8; // Cyan
-        glowStop = "rgba(52, 211, 153, 0.95)";
+        primaryColorHex = 0x34d399; // Mint Emerald
+        secondaryColorHex = 0x38bdf8; // Blueprint Cyan
+        primaryRgbStr = "rgba(52, 211, 153, 0.95)";
+        secondaryRgbStr = "rgba(56, 189, 248, 0.4)";
         break;
       case "cyan-violet":
       default:
-        primaryColorHex = 0x38bdf8; // Cyan
-        secondaryColorHex = 0x9867ff; // Violet
-        glowStop = "rgba(56, 189, 248, 0.95)";
+        primaryColorHex = 0x38bdf8; // Blueprint Cyan
+        secondaryColorHex = 0x9867ff; // Electric Violet
+        primaryRgbStr = "rgba(56, 189, 248, 0.95)";
+        secondaryRgbStr = "rgba(152, 103, 255, 0.4)";
         break;
     }
 
     const colorPrimary = new THREE.Color(primaryColorHex);
     const colorSecondary = new THREE.Color(secondaryColorHex);
-    const colorWhite = new THREE.Color("#f8fafc");
+    const colorWhite = new THREE.Color(0xf8fafc);
 
-    // 3. Node Configuration
+    // 4. Parametric Node Geometry
+    // Using normalized (u, v) parametric space ensures the lattice is 100% immune to
+    // layout shifts, height changes, and responsive breakpoints.
     const isMobile = window.innerWidth < 768;
     const nodeCount =
       density === "compact"
         ? isMobile
           ? 28
-          : 45
+          : 44
         : isMobile
-        ? 38
-        : 68;
+        ? 36
+        : 64;
 
-    const maxDistance = isMobile ? 4.4 : 5.4;
-    const maxDistanceSq = maxDistance * maxDistance;
-
-    interface SectionWebNode {
-      x: number;
-      y: number;
-      z: number;
-      origX: number;
-      origY: number;
-      origZ: number;
-      baseX: number;
-      baseY: number;
+    interface ParametricNode {
+      u: number; // 0 (outermost border edge) to 1 (inward boundary of the strip)
+      v: number; // -1 (top border) to +1 (bottom border)
+      z: number; // depth variation
       phase: number;
+      speed: number;
+      isNexus: boolean; // 18% of nodes are prominent bright anchor vertices
+      currentX: number;
+      currentY: number;
+      currentZ: number;
     }
 
-    const nodes: SectionWebNode[] = [];
+    const nodes: ParametricNode[] = [];
     const nodePositions = new Float32Array(nodeCount * 3);
     const nodeColors = new Float32Array(nodeCount * 3);
 
     for (let i = 0; i < nodeCount; i++) {
-      const t = Math.pow(Math.random(), 1.6);
-      let x: number;
-
-      // Position tightly along the designated border side
-      if (side === "left") {
-        x = isMobile ? -17 + t * 6.5 : -28 + t * 9.0;
-      } else {
-        x = isMobile ? 17 - t * 6.5 : 28 - t * 9.0;
-      }
-
-      const y = (Math.random() - 0.5) * (isMobile ? 22 : 30);
-      const z = (Math.random() - 0.5) * 6.5;
+      // Non-linear bias: more nodes hug the absolute outer edge for a sharp border definition
+      const u = Math.pow(Math.random(), 1.55);
+      // Vertical spread from -0.92 to +0.92 of the visible frame
+      const v = (Math.random() - 0.5) * 1.84;
+      const z = (Math.random() - 0.5) * 4.5;
+      const isNexus = Math.random() < 0.18;
 
       nodes.push({
-        x,
-        y,
+        u,
+        v,
         z,
-        origX: x,
-        origY: y,
-        origZ: z,
-        baseX: x,
-        baseY: y,
         phase: Math.random() * Math.PI * 2,
+        speed: 0.7 + Math.random() * 0.5,
+        isNexus,
+        currentX: 0,
+        currentY: 0,
+        currentZ: z,
       });
 
-      nodePositions[i * 3] = x;
-      nodePositions[i * 3 + 1] = y;
-      nodePositions[i * 3 + 2] = z;
-
-      // Subtle gradient color mapping based on proximity to the border edge
-      const edgeDistanceRatio =
-        side === "left" ? (x + 28) / 9.0 : (28 - x) / 9.0;
-      const rand = Math.random();
-      let nodeCol: THREE.Color;
-
-      if (edgeDistanceRatio < 0.35) {
-        nodeCol = rand < 0.7 ? colorPrimary : colorWhite;
-      } else if (edgeDistanceRatio < 0.7) {
-        nodeCol = rand < 0.6 ? colorPrimary : colorSecondary;
+      // Color mapping: Nexus nodes are bright white/primary, border nodes primary, inner nodes secondary
+      let col: THREE.Color;
+      if (isNexus) {
+        col = colorWhite;
+      } else if (u < 0.45) {
+        col = Math.random() < 0.7 ? colorPrimary : colorWhite;
       } else {
-        nodeCol = rand < 0.7 ? colorSecondary : colorPrimary;
+        col = Math.random() < 0.65 ? colorSecondary : colorPrimary;
       }
 
-      nodeColors[i * 3] = nodeCol.r;
-      nodeColors[i * 3 + 1] = nodeCol.g;
-      nodeColors[i * 3 + 2] = nodeCol.b;
+      nodeColors[i * 3] = col.r;
+      nodeColors[i * 3 + 1] = col.g;
+      nodeColors[i * 3 + 2] = col.b;
     }
 
-    const nodeTexture = createNodeGlowTexture(glowStop);
+    const nodeTexture = createNodeGlowTexture(primaryRgbStr, secondaryRgbStr);
     const nodesGeo = new THREE.BufferGeometry();
     nodesGeo.setAttribute(
       "position",
@@ -205,47 +192,43 @@ export default function SectionThreeBackground({
     nodesGeo.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
 
     const nodesMat = new THREE.PointsMaterial({
-      size: isMobile ? 1.05 : 1.3,
+      size: isMobile ? 1.15 : 1.45,
       map: nodeTexture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.95,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
     scene.add(nodesMesh);
 
-    // 4. Dynamic Laser Line Segments
-    const maxLineSegments = Math.min(nodeCount * 7, 350);
+    // 5. Dynamic Laser Filament Line Segments
+    const maxLineSegments = Math.min(nodeCount * 8, 380);
     const linePositions = new Float32Array(maxLineSegments * 2 * 3);
     const lineColors = new Float32Array(maxLineSegments * 2 * 3);
 
     const linesGeo = new THREE.BufferGeometry();
     linesGeo.setAttribute(
       "position",
-      new THREE.BufferAttribute(linePositions, 3).setUsage(
-        THREE.DynamicDrawUsage
-      )
+      new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage)
     );
     linesGeo.setAttribute(
       "color",
-      new THREE.BufferAttribute(lineColors, 3).setUsage(
-        THREE.DynamicDrawUsage
-      )
+      new THREE.BufferAttribute(lineColors, 3).setUsage(THREE.DynamicDrawUsage)
     );
 
     const linesMat = new THREE.LineBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.62,
+      opacity: 0.65,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const linesMesh = new THREE.LineSegments(linesGeo, linesMat);
     scene.add(linesMesh);
 
-    // 5. Interactive Cursor Tracking (Relative to this Section Container)
+    // 6. Interactive Cursor Tracking (Damped Elastic Physics)
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
@@ -256,28 +239,41 @@ export default function SectionThreeBackground({
       const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       const rect = container.getBoundingClientRect();
 
-      // Only respond when hovering within or nearby this section
+      // Only calculate when hovering within the neighborhood of this section
       if (
-        clientY >= rect.top - 150 &&
-        clientY <= rect.bottom + 150 &&
+        clientY >= rect.top - 120 &&
+        clientY <= rect.bottom + 120 &&
         clientX >= rect.left &&
         clientX <= rect.right
       ) {
         const nx = ((clientX - rect.left) / rect.width) * 2 - 1;
         const ny = -(((clientY - rect.top) / rect.height) * 2 - 1);
-        targetMouseX = Math.max(-1.2, Math.min(1.2, nx));
-        targetMouseY = Math.max(-1.2, Math.min(1.2, ny));
+        targetMouseX = Math.max(-1.1, Math.min(1.1, nx));
+        targetMouseY = Math.max(-1.1, Math.min(1.1, ny));
       }
     };
 
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
 
-    // 6. Responsive Resize Handler
+    // 7. Dynamic Camera Frustum Computation Helper
+    const computeFrustum = () => {
+      const vFOV = (camera.fov * Math.PI) / 180;
+      const visibleHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
+      const visibleWidth = visibleHeight * camera.aspect;
+      return {
+        halfW: visibleWidth / 2,
+        halfH: visibleHeight / 2,
+        visibleWidth,
+        visibleHeight,
+      };
+    };
+
+    // 8. Responsive Resize Observer
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
-      const width = container.clientWidth || window.innerWidth;
-      const height = container.clientHeight || 500;
+      width = container.clientWidth || window.innerWidth;
+      height = container.clientHeight || 550;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
@@ -287,7 +283,7 @@ export default function SectionThreeBackground({
     const resizeObserver = new ResizeObserver(() => handleResize());
     resizeObserver.observe(container);
 
-    // 7. Visibility Observer: Pause rendering when out of viewport for maximum performance
+    // 9. Visibility Observer: 100% pause rendering when offscreen
     let isVisible = false;
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
@@ -295,11 +291,11 @@ export default function SectionThreeBackground({
           isVisible = entry.isIntersecting;
         });
       },
-      { threshold: 0.02, rootMargin: "60px 0px 60px 0px" }
+      { threshold: 0.02, rootMargin: "80px 0px 80px 0px" }
     );
     visibilityObserver.observe(container);
 
-    // 8. Master Animation Loop (Delta-Time Independent)
+    // 10. Master Animation Loop (Delta-Time Independent & Mathematically Bound)
     const clock = new THREE.Clock();
     let animationFrameId: number;
 
@@ -310,34 +306,58 @@ export default function SectionThreeBackground({
 
       const elapsedTime = clock.getElapsedTime();
 
-      // Damped mouse interpolation
-      currentMouseX = THREE.MathUtils.lerp(currentMouseX, targetMouseX, 0.06);
-      currentMouseY = THREE.MathUtils.lerp(currentMouseY, targetMouseY, 0.06);
+      // Smooth mouse damping
+      currentMouseX = THREE.MathUtils.lerp(currentMouseX, targetMouseX, 0.055);
+      currentMouseY = THREE.MathUtils.lerp(currentMouseY, targetMouseY, 0.055);
 
-      // Subtle 3D Parallax Tilt
+      // Subtle 3D camera parallax tilt
       if (!prefersReducedMotion) {
-        camera.position.x = currentMouseX * 1.8;
-        camera.position.y = currentMouseY * 1.4;
-        camera.lookAt(currentMouseX * 0.8, currentMouseY * 0.6, 0);
+        camera.position.x = currentMouseX * 1.6;
+        camera.position.y = currentMouseY * 1.2;
+        camera.lookAt(currentMouseX * 0.7, currentMouseY * 0.5, 0);
       }
 
-      const mouseWorldX = currentMouseX * 22;
-      const mouseWorldY = currentMouseY * 14;
+      // Compute exact visible dimensions at z = 0
+      const { halfW, halfH, visibleWidth, visibleHeight } = computeFrustum();
+
+      // Define the framing strip width (strictly 18% to 24% of the visible container width)
+      const stripWidth = Math.min(visibleWidth * 0.22, isMobile ? 8.5 : 12.0);
+      const maxDistance = Math.min(stripWidth * 0.85, isMobile ? 3.8 : 4.8);
+      const maxDistanceSq = maxDistance * maxDistance;
+
+      const mouseWorldX = currentMouseX * halfW;
+      const mouseWorldY = currentMouseY * halfH;
 
       const posAttr = nodesGeo.attributes.position as THREE.BufferAttribute;
       const nodePosArray = posAttr.array as Float32Array;
 
       let lineVertexIndex = 0;
 
+      // Update every node dynamically according to the visible boundaries
       for (let i = 0; i < nodeCount; i++) {
         const node = nodes[i];
 
-        // Harmonious breathing floating animation
-        const breatheX = Math.sin(elapsedTime * 0.75 + node.phase) * 0.16;
-        const breatheY = Math.cos(elapsedTime * 0.85 + node.phase) * 0.2;
+        // Base coordinate strictly mapped to the designated border
+        let baseX: number;
+        if (side === "left") {
+          // Anchored exactly at the left border edge (-halfW) extending inward by stripWidth
+          baseX = -halfW + node.u * stripWidth;
+        } else {
+          // Anchored exactly at the right border edge (+halfW) extending inward by stripWidth
+          baseX = halfW - node.u * stripWidth;
+        }
 
-        let targetX = node.baseX + breatheX;
-        let targetY = node.baseY + breatheY;
+        const baseY = node.v * (halfH * 0.94);
+
+        // Gentle organic breathing wave
+        const breatheX =
+          Math.sin(elapsedTime * node.speed + node.phase) * (isMobile ? 0.12 : 0.18);
+        const breatheY =
+          Math.cos(elapsedTime * (node.speed * 1.1) + node.phase) *
+          (isMobile ? 0.15 : 0.22);
+
+        let targetX = baseX + breatheX;
+        let targetY = baseY + breatheY;
 
         // Interactive elastic cursor displacement
         if (!prefersReducedMotion) {
@@ -345,18 +365,18 @@ export default function SectionThreeBackground({
           const dy = targetY - mouseWorldY;
           const distMouse = Math.sqrt(dx * dx + dy * dy);
 
-          if (distMouse < 7.5) {
-            const force = (1 - distMouse / 7.5) * 0.09;
+          if (distMouse < 7.0) {
+            const force = (1 - distMouse / 7.0) * 0.085;
             targetX += dx * force;
             targetY += dy * force;
           }
         }
 
-        node.x = THREE.MathUtils.lerp(node.x, targetX, 0.08);
-        node.y = THREE.MathUtils.lerp(node.y, targetY, 0.08);
+        node.currentX = THREE.MathUtils.lerp(node.currentX || targetX, targetX, 0.08);
+        node.currentY = THREE.MathUtils.lerp(node.currentY || targetY, targetY, 0.08);
 
-        nodePosArray[i * 3] = node.x;
-        nodePosArray[i * 3 + 1] = node.y;
+        nodePosArray[i * 3] = node.currentX;
+        nodePosArray[i * 3 + 1] = node.currentY;
         nodePosArray[i * 3 + 2] = node.z;
 
         // Connect nearby nodes with dynamic laser filaments
@@ -364,25 +384,24 @@ export default function SectionThreeBackground({
           if (lineVertexIndex / 6 >= maxLineSegments) break;
 
           const other = nodes[j];
-          const distSq =
-            (node.x - other.x) * (node.x - other.x) +
-            (node.y - other.y) * (node.y - other.y) +
-            (node.z - other.z) * (node.z - other.z);
+          const dx = node.currentX - other.currentX;
+          const dy = node.currentY - other.currentY;
+          const dz = node.z - other.z;
+          const distSq = dx * dx + dy * dy + dz * dz;
 
           if (distSq < maxDistanceSq) {
-            const alpha =
-              Math.pow(1 - distSq / maxDistanceSq, 1.3) * 0.72;
+            const alpha = Math.pow(1 - distSq / maxDistanceSq, 1.35) * 0.72;
 
-            linePositions[lineVertexIndex] = node.x;
-            linePositions[lineVertexIndex + 1] = node.y;
+            linePositions[lineVertexIndex] = node.currentX;
+            linePositions[lineVertexIndex + 1] = node.currentY;
             linePositions[lineVertexIndex + 2] = node.z;
 
             lineColors[lineVertexIndex] = colorPrimary.r * alpha;
             lineColors[lineVertexIndex + 1] = colorPrimary.g * alpha;
             lineColors[lineVertexIndex + 2] = colorPrimary.b * alpha;
 
-            linePositions[lineVertexIndex + 3] = other.x;
-            linePositions[lineVertexIndex + 4] = other.y;
+            linePositions[lineVertexIndex + 3] = other.currentX;
+            linePositions[lineVertexIndex + 4] = other.currentY;
             linePositions[lineVertexIndex + 5] = other.z;
 
             lineColors[lineVertexIndex + 3] = colorSecondary.r * alpha;
@@ -408,7 +427,7 @@ export default function SectionThreeBackground({
 
     animate();
 
-    // 9. Cleanup Resources
+    // 11. Complete Resource Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handlePointerMove);
@@ -425,11 +444,15 @@ export default function SectionThreeBackground({
     };
   }, [side, palette, density]);
 
-  // Subtle directional fade vignette so the side with the animation is clear and the opposite side blends away
+  // Directional gradient vignette:
+  // - The outer 14% is 100% transparent and luminous where the 3D crystal web lives
+  // - Between 16% and 36%, it gently falls off into deep obsidian
+  // - Across the rest of the container (from 38% to 100%), it is completely dark,
+  //   guaranteeing all text, cards, and interactive elements sit on a pure, clean background
   const vignetteBackground =
     side === "left"
-      ? "linear-gradient(to right, rgba(8, 8, 12, 0.0) 0%, rgba(8, 8, 12, 0.2) 20%, rgba(8, 8, 12, 0.75) 55%, rgba(8, 8, 12, 0.96) 100%)"
-      : "linear-gradient(to left, rgba(8, 8, 12, 0.0) 0%, rgba(8, 8, 12, 0.2) 20%, rgba(8, 8, 12, 0.75) 55%, rgba(8, 8, 12, 0.96) 100%)";
+      ? "linear-gradient(to right, rgba(8, 8, 12, 0.0) 0%, rgba(8, 8, 12, 0.02) 14%, rgba(8, 8, 12, 0.45) 24%, rgba(8, 8, 12, 0.88) 36%, rgba(8, 8, 12, 0.98) 48%, rgba(8, 8, 12, 1) 100%)"
+      : "linear-gradient(to left, rgba(8, 8, 12, 0.0) 0%, rgba(8, 8, 12, 0.02) 14%, rgba(8, 8, 12, 0.45) 24%, rgba(8, 8, 12, 0.88) 36%, rgba(8, 8, 12, 0.98) 48%, rgba(8, 8, 12, 1) 100%)";
 
   return (
     <div
