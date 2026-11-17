@@ -173,18 +173,26 @@ export default function HeroThreeBackground() {
       let y: number;
       let z: number;
 
-      // 82% of nodes tightly confined to the left-most vertical border strip
-      if (i < Math.floor(nodeCount * 0.82)) {
+      // Distribution matching reference image:
+      // ~78% tightly hugs the left-most vertical border strip
+      // ~14% forms the bottom-center geometric web (visible below collaborate button & portrait base)
+      // ~8% grounds the bottom-left corner
+      if (i < Math.floor(nodeCount * 0.78)) {
         // Tightly hugs the left border: x ranges from -31 to -21.5 on desktop, -19 to -12 on mobile
         const t = Math.pow(Math.random(), 1.7);
         x = isMobile ? -19 + t * 7.5 : -31 + t * 9.5;
         y = (Math.random() - 0.5) * (isMobile ? 24 : 32);
         z = (Math.random() - 0.5) * 8;
+      } else if (i < Math.floor(nodeCount * 0.92)) {
+        // Bottom-center wireframe cluster (visible between collaborate button and portrait bottom)
+        x = (isMobile ? -5 : -7) + Math.random() * (isMobile ? 10 : 15);
+        y = (isMobile ? -13.5 : -16.5) + Math.random() * 3.8;
+        z = (Math.random() - 0.5) * 5;
       } else {
-        // Subtle grounding corner cluster right along the bottom border
-        x = (isMobile ? -17 : -29) + Math.random() * (isMobile ? 8 : 12);
-        y = (isMobile ? -13 : -16.5) + Math.random() * 3.5;
-        z = (Math.random() - 0.5) * 6;
+        // Grounding corner cluster right along the bottom-left border
+        x = (isMobile ? -18 : -30) + Math.random() * (isMobile ? 7 : 10);
+        y = (isMobile ? -14 : -17.5) + Math.random() * 3.2;
+        z = (Math.random() - 0.5) * 5;
       }
 
       nodes.push({
