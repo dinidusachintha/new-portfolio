@@ -65,16 +65,16 @@ export default function HeroThreeBackground() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
 
-    // 3. Right-Aligned Master 3D Group
+    // 3. Left-Aligned Master 3D Group
     const isMobile = window.innerWidth < 768;
-    const heroRightGroup = new THREE.Group();
-    heroRightGroup.position.x = isMobile ? 2.5 : 11.5;
-    heroRightGroup.position.y = 0;
-    scene.add(heroRightGroup);
+    const heroLeftGroup = new THREE.Group();
+    heroLeftGroup.position.x = isMobile ? -2.5 : -11.5;
+    heroLeftGroup.position.y = 0;
+    scene.add(heroLeftGroup);
 
-    // 4. Central Architectural Holographic Gyroscope Orbital Rings (Right Side)
+    // 4. Central Architectural Holographic Gyroscope Orbital Rings (Left Side)
     const gyroGroup = new THREE.Group();
-    heroRightGroup.add(gyroGroup);
+    heroLeftGroup.add(gyroGroup);
 
     // Inner Ring: Electric Violet (#9867ff)
     const ring1Geo = new THREE.TorusGeometry(9.5, 0.045, 16, 90);
@@ -183,7 +183,7 @@ export default function HeroThreeBackground() {
       depthWrite: false,
     });
     const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
-    heroRightGroup.add(nodesMesh);
+    heroLeftGroup.add(nodesMesh);
 
     // Dynamic Line Filaments
     const maxLineSegments = Math.min(nodeCount * 7, 420);
@@ -212,9 +212,9 @@ export default function HeroThreeBackground() {
       depthWrite: false,
     });
     const linesMesh = new THREE.LineSegments(linesGeo, linesMat);
-    heroRightGroup.add(linesMesh);
+    heroLeftGroup.add(linesMesh);
 
-    // 6. Floating Ambient Stardust (Right-weighted)
+    // 6. Floating Ambient Stardust (Left-weighted)
     const dustCount = isMobile ? 60 : 110;
     const dustPositions = new Float32Array(dustCount * 3);
     const dustVelocities = new Float32Array(dustCount * 3);
@@ -244,7 +244,7 @@ export default function HeroThreeBackground() {
       depthWrite: false,
     });
     const dustMesh = new THREE.Points(dustGeo, dustMat);
-    heroRightGroup.add(dustMesh);
+    heroLeftGroup.add(dustMesh);
 
     // 7. Smooth Mouse Parallax & Gravity Tracking
     let targetMouseX = 0;
@@ -267,7 +267,7 @@ export default function HeroThreeBackground() {
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
 
-    // 8. Responsive Resize Handler with Dynamic Right-Side Alignment
+    // 8. Responsive Resize Handler with Dynamic Left-Side Alignment
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const width = container.clientWidth || window.innerWidth;
@@ -278,7 +278,7 @@ export default function HeroThreeBackground() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
       const mobile = window.innerWidth < 768;
-      heroRightGroup.position.x = mobile ? 2.5 : 11.5;
+      heroLeftGroup.position.x = mobile ? -2.5 : -11.5;
     };
 
     const resizeObserver = new ResizeObserver(() => handleResize());
@@ -325,10 +325,10 @@ export default function HeroThreeBackground() {
       ring2.rotation.x = elapsedTime * 0.11;
       ring3.rotation.y = elapsedTime * 0.05;
 
-      // Local mouse position relative to the right-aligned group
+      // Local mouse position relative to the left-aligned group
       const mouseWorldX = currentMouseX * 22;
       const mouseWorldY = currentMouseY * 14;
-      const localMouseX = mouseWorldX - heroRightGroup.position.x;
+      const localMouseX = mouseWorldX - heroLeftGroup.position.x;
       const localMouseY = mouseWorldY;
 
       // Update Node positions & calculate dynamic network filaments
@@ -472,12 +472,12 @@ export default function HeroThreeBackground() {
         className="w-full h-full block pointer-events-none"
       />
 
-      {/* Asymmetric Vignette Gradient: Solid clean dark on the left for crisp typography, glowing on the right */}
+      {/* Asymmetric Vignette Gradient: Glowing on the left, clean solid dark on the right */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, rgba(8, 8, 12, 0.94) 0%, rgba(8, 8, 12, 0.72) 32%, rgba(8, 8, 12, 0.18) 65%, rgba(8, 8, 12, 0.45) 100%)",
+            "linear-gradient(to right, rgba(8, 8, 12, 0.42) 0%, rgba(8, 8, 12, 0.16) 32%, rgba(8, 8, 12, 0.72) 68%, rgba(8, 8, 12, 0.94) 100%)",
         }}
       />
     </div>
