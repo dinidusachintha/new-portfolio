@@ -252,20 +252,20 @@ export default function HeroThreeBackground() {
     scene.add(linesMesh);
 
     // =========================================================================
-    // 5. Ambient Stardust Field (Scattered in Depth)
+    // 4. Ambient Stardust Field (Confined to Left Border Area)
     // =========================================================================
-    const dustCount = isMobile ? 50 : 85;
+    const dustCount = isMobile ? 35 : 55;
     const dustPositions = new Float32Array(dustCount * 3);
     const dustVelocities = new Float32Array(dustCount * 3);
 
     for (let i = 0; i < dustCount; i++) {
-      dustPositions[i * 3] = (Math.random() - 0.5) * (isMobile ? 40 : 60);
+      dustPositions[i * 3] = (isMobile ? -19 : -31) + Math.random() * (isMobile ? 8.5 : 11);
       dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 32;
-      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 20 - 5;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 16 - 2;
 
-      dustVelocities[i * 3] = (Math.random() - 0.5) * 0.006;
-      dustVelocities[i * 3 + 1] = 0.008 + Math.random() * 0.014;
-      dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.006;
+      dustVelocities[i * 3] = (Math.random() - 0.5) * 0.004;
+      dustVelocities[i * 3 + 1] = 0.008 + Math.random() * 0.012;
+      dustVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.004;
     }
 
     const dustGeo = new THREE.BufferGeometry();
@@ -357,15 +357,6 @@ export default function HeroThreeBackground() {
         camera.position.y = currentMouseY * 2.0;
         camera.lookAt(currentMouseX * 1.0, currentMouseY * 0.8, 0);
       }
-
-      // Slow, majestic celestial orbital drift
-      orbit1.rotation.z = 0.44 + Math.sin(elapsedTime * 0.12) * 0.05;
-      orbit1.rotation.y = 0.15 + elapsedTime * 0.03;
-
-      orbit2.rotation.z = -0.52 + Math.cos(elapsedTime * 0.1) * 0.04;
-      orbit2.rotation.x = -0.22 + elapsedTime * 0.025;
-
-      orbit3.rotation.z = 0.22 + Math.sin(elapsedTime * 0.08) * 0.03;
 
       // Project virtual mouse coordinates in 3D world space
       const mouseWorldX = currentMouseX * 24;
@@ -460,10 +451,10 @@ export default function HeroThreeBackground() {
         dustPosArray[i * 3 + 1] += dustVelocities[i * 3 + 1];
         dustPosArray[i * 3 + 2] += dustVelocities[i * 3 + 2];
 
-        // Wrap around vertically
+        // Wrap around vertically within left border strip
         if (dustPosArray[i * 3 + 1] > 18) {
           dustPosArray[i * 3 + 1] = -18;
-          dustPosArray[i * 3] = (Math.random() - 0.5) * 55;
+          dustPosArray[i * 3] = (isMobile ? -19 : -31) + Math.random() * (isMobile ? 8.5 : 11);
         }
       }
       dustGeo.attributes.position.needsUpdate = true;
@@ -473,20 +464,13 @@ export default function HeroThreeBackground() {
 
     animate();
 
-    // 10. Complete Resource Disposal
+    // 9. Complete Resource Disposal
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handlePointerMove);
       window.removeEventListener("touchmove", handlePointerMove);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
-
-      orbit1Geo.dispose();
-      orbit1Mat.dispose();
-      orbit2Geo.dispose();
-      orbit2Mat.dispose();
-      orbit3Geo.dispose();
-      orbit3Mat.dispose();
 
       nodesGeo.dispose();
       nodesMat.dispose();
