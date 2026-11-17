@@ -25,28 +25,6 @@ function createNodeGlowTexture(): THREE.CanvasTexture {
   return texture;
 }
 
-/**
- * Helper to generate a smooth 3D elliptical trajectory curve.
- */
-function createOrbitalEllipse(
-  xRadius: number,
-  yRadius: number,
-  segments = 140
-): THREE.BufferGeometry {
-  const curve = new THREE.EllipseCurve(
-    0,
-    0,
-    xRadius,
-    yRadius,
-    0,
-    2 * Math.PI,
-    false,
-    0
-  );
-  const points = curve.getPoints(segments);
-  return new THREE.BufferGeometry().setFromPoints(points);
-}
-
 export default function HeroThreeBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -88,57 +66,7 @@ export default function HeroThreeBackground() {
     renderer.toneMappingExposure = 1.25;
 
     // =========================================================================
-    // 3. Sweeping Celestial Elliptical Orbital Curves (Matching Reference Image)
-    // =========================================================================
-    const orbitalGroup = new THREE.Group();
-    scene.add(orbitalGroup);
-
-    // Primary Great Orbital Ellipse: Tilted up and to the right
-    const orbit1Geo = createOrbitalEllipse(20.5, 11.0);
-    const orbit1Mat = new THREE.LineBasicMaterial({
-      color: 0x9867ff, // Electric Violet
-      transparent: true,
-      opacity: 0.28,
-      blending: THREE.AdditiveBlending,
-    });
-    const orbit1 = new THREE.Line(orbit1Geo, orbit1Mat);
-    orbit1.position.set(-2.0, 1.0, -4.5);
-    orbit1.rotation.z = 0.44;
-    orbit1.rotation.x = 0.35;
-    orbit1.rotation.y = 0.15;
-    orbitalGroup.add(orbit1);
-
-    // Secondary Crossing Orbital Ellipse: Counter-tilted
-    const orbit2Geo = createOrbitalEllipse(17.0, 13.0);
-    const orbit2Mat = new THREE.LineBasicMaterial({
-      color: 0xc084fc, // Lavender Purple
-      transparent: true,
-      opacity: 0.22,
-      blending: THREE.AdditiveBlending,
-    });
-    const orbit2 = new THREE.Line(orbit2Geo, orbit2Mat);
-    orbit2.position.set(-1.0, -0.5, -5.5);
-    orbit2.rotation.z = -0.52;
-    orbit2.rotation.y = 0.32;
-    orbit2.rotation.x = -0.22;
-    orbitalGroup.add(orbit2);
-
-    // Tertiary Outer Sweeping Arc
-    const orbit3Geo = createOrbitalEllipse(23.0, 8.5);
-    const orbit3Mat = new THREE.LineBasicMaterial({
-      color: 0x38bdf8, // Blueprint Cyan
-      transparent: true,
-      opacity: 0.16,
-      blending: THREE.AdditiveBlending,
-    });
-    const orbit3 = new THREE.Line(orbit3Geo, orbit3Mat);
-    orbit3.position.set(-5.5, -2.5, -6.5);
-    orbit3.rotation.z = 0.22;
-    orbit3.rotation.x = 0.55;
-    orbitalGroup.add(orbit3);
-
-    // =========================================================================
-    // 4. Left-Border Crystalline Neural Web (Reduced tightly to border like reference)
+    // 3. Left-Border Crystalline Neural Web (Strictly confined to left border)
     // =========================================================================
     const isMobile = window.innerWidth < 768;
     const nodeCount = isMobile ? 60 : 105;
@@ -169,31 +97,73 @@ export default function HeroThreeBackground() {
     const colorWhite = new THREE.Color("#f8fafc");
 
     for (let i = 0; i < nodeCount; i++) {
-      let x: number;
-      let y: number;
-      let z: number;
+      // 100% of nodes tightly confined to the left-most vertical border strip
+      const t = Math.pow(Math.random(), 1.7);
+      const x = isMobile ? -19 + t * 7.5 : -31 + t * 9.5;
+      const y = (Math.random() - 0.5) * (isMobile ? 24 : 32);
+      const z = (Math.random() - 0.5) * 8;
 
-      // Distribution matching reference image:
-      // ~78% tightly hugs the left-most vertical border strip
-      // ~14% forms the bottom-center geometric web (visible below collaborate button & portrait base)
-      // ~8% grounds the bottom-left corner
-      if (i < Math.floor(nodeCount * 0.78)) {
-        // Tightly hugs the left border: x ranges from -31 to -21.5 on desktop, -19 to -12 on mobile
-        const t = Math.pow(Math.random(), 1.7);
-        x = isMobile ? -19 + t * 7.5 : -31 + t * 9.5;
-        y = (Math.random() - 0.5) * (isMobile ? 24 : 32);
-        z = (Math.random() - 0.5) * 8;
-      } else if (i < Math.floor(nodeCount * 0.92)) {
-        // Bottom-center wireframe cluster (visible between collaborate button and portrait bottom)
-        x = (isMobile ? -5 : -7) + Math.random() * (isMobile ? 10 : 15);
-        y = (isMobile ? -13.5 : -16.5) + Math.random() * 3.8;
-        z = (Math.random() - 0.5) * 5;
+      nodes.push({
+        x,
+        y,
+        z,
+        origX: x,
+        origY: y,
+        origZ: z,
+        baseX: x,
+        baseY: y,
+        vx: (Math.random() - 0.5) * 0.01,
+        vy: (Math.random() - 0.5) * 0.01,
+        vz: (Math.random() - 0.5) * 0.006,
+        phase: Math.random() * Math.PI * 2,
+      });
+
+      nodePositions[i * 3] = x;
+      nodePositions[i * 3 + 1] = y;
+      nodePositions[i * 3 + 2] = z;
+
+      // Outer left-border nodes glow in electric cyan / white; inner nodes transition to violet
+      const normalizedX = (x + 31) / 9.5;
+      const rand = Math.random();
+      let nodeCol: THREE.Color;
+
+      if (normalizedX < 0.4) {
+        nodeCol = rand < 0.75 ? colorCyan : colorWhite;
+      } else if (normalizedX < 0.75) {
+        nodeCol = rand < 0.6 ? colorCyan : colorViolet;
       } else {
-        // Grounding corner cluster right along the bottom-left border
-        x = (isMobile ? -18 : -30) + Math.random() * (isMobile ? 7 : 10);
-        y = (isMobile ? -14 : -17.5) + Math.random() * 3.2;
-        z = (Math.random() - 0.5) * 5;
+        nodeCol = rand < 0.7 ? colorViolet : colorCyan;
       }
+
+      nodeColors[i * 3] = nodeCol.r;
+      nodeColors[i * 3 + 1] = nodeCol.g;
+      nodeColors[i * 3 + 2] = nodeCol.b;
+    }
+
+    const nodeTexture = createNodeGlowTexture();
+    const nodesGeo = new THREE.BufferGeometry();
+    nodesGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(nodePositions, 3)
+    );
+    nodesGeo.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
+
+    const nodesMat = new THREE.PointsMaterial({
+      size: isMobile ? 1.05 : 1.35,
+      map: nodeTexture,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
+    scene.add(nodesMesh);
+
+    // Dynamic Crystalline Triangular Line Segments
+    const maxLineSegments = Math.min(nodeCount * 8, 480);
+    const linePositions = new Float32Array(maxLineSegments * 2 * 3);
+    const lineColors = new Float32Array(maxLineSegments * 2 * 3);
 
       nodes.push({
         x,
