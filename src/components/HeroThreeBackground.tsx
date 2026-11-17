@@ -165,68 +165,6 @@ export default function HeroThreeBackground() {
     const linePositions = new Float32Array(maxLineSegments * 2 * 3);
     const lineColors = new Float32Array(maxLineSegments * 2 * 3);
 
-      nodes.push({
-        x,
-        y,
-        z,
-        origX: x,
-        origY: y,
-        origZ: z,
-        baseX: x,
-        baseY: y,
-        vx: (Math.random() - 0.5) * 0.01,
-        vy: (Math.random() - 0.5) * 0.01,
-        vz: (Math.random() - 0.5) * 0.006,
-        phase: Math.random() * Math.PI * 2,
-      });
-
-      nodePositions[i * 3] = x;
-      nodePositions[i * 3 + 1] = y;
-      nodePositions[i * 3 + 2] = z;
-
-      // Outer left-border nodes glow in electric cyan / white; inner nodes transition to violet
-      const normalizedX = (x + 31) / 9.5;
-      const rand = Math.random();
-      let nodeCol: THREE.Color;
-
-      if (normalizedX < 0.4) {
-        nodeCol = rand < 0.75 ? colorCyan : colorWhite;
-      } else if (normalizedX < 0.75) {
-        nodeCol = rand < 0.6 ? colorCyan : colorViolet;
-      } else {
-        nodeCol = rand < 0.7 ? colorViolet : colorCyan;
-      }
-
-      nodeColors[i * 3] = nodeCol.r;
-      nodeColors[i * 3 + 1] = nodeCol.g;
-      nodeColors[i * 3 + 2] = nodeCol.b;
-    }
-
-    const nodeTexture = createNodeGlowTexture();
-    const nodesGeo = new THREE.BufferGeometry();
-    nodesGeo.setAttribute(
-      "position",
-      new THREE.BufferAttribute(nodePositions, 3)
-    );
-    nodesGeo.setAttribute("color", new THREE.BufferAttribute(nodeColors, 3));
-
-    const nodesMat = new THREE.PointsMaterial({
-      size: isMobile ? 1.05 : 1.35,
-      map: nodeTexture,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.95,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const nodesMesh = new THREE.Points(nodesGeo, nodesMat);
-    scene.add(nodesMesh);
-
-    // Dynamic Crystalline Triangular Line Segments
-    const maxLineSegments = Math.min(nodeCount * 8, 480);
-    const linePositions = new Float32Array(maxLineSegments * 2 * 3);
-    const lineColors = new Float32Array(maxLineSegments * 2 * 3);
-
     const linesGeo = new THREE.BufferGeometry();
     linesGeo.setAttribute(
       "position",
