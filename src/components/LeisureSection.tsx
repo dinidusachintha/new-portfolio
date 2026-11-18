@@ -59,7 +59,7 @@ export default function LeisureSection() {
           {/* Small Uppercase Cyber Label */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#081421] border border-[#00E5FF]/20 text-[#00E5FF] text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_#00E5FF] animate-pulse" />
-            / 05 — THE HUMAN SIDE
+            / 06 — THE HUMAN SIDE
           </div>
 
           {/* Main Heading: "Beyond the Code." with "Code." in Electric Cyan */}
