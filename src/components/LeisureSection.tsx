@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import LeisureCarousel from "./LeisureCarousel";
 import "../styles/leisure-section.css";
 
@@ -10,29 +11,29 @@ export default function LeisureSection() {
       <div className="leisure-bg-spotlight" aria-hidden="true" />
       <div className="leisure-bg-radial-glow" aria-hidden="true" />
 
-      {/* Thin Cyan Orbital Rings Beneath Center Card */}
+      {/* Dual Violet & Cyan Orbital Rings Beneath Center Card */}
       <div className="leisure-orbital-rings-wrap" aria-hidden="true">
         <svg className="leisure-orbital-svg" viewBox="0 0 1000 320" fill="none">
-          {/* Outer Elliptical Orbital Ring */}
+          {/* Outer Elliptical Orbital Ring (Violet dashed) */}
           <ellipse
             cx="500"
             cy="160"
             rx="460"
             ry="110"
-            stroke="rgba(0, 229, 255, 0.12)"
+            stroke="rgba(152, 103, 255, 0.16)"
             strokeWidth="1.2"
             strokeDasharray="6 8"
           />
-          {/* Middle Ring with Cyan Accent Nodes */}
+          {/* Middle Ring with Violet Accent Field */}
           <ellipse
             cx="500"
             cy="160"
             rx="340"
             ry="80"
-            stroke="rgba(0, 229, 255, 0.22)"
+            stroke="rgba(168, 85, 247, 0.28)"
             strokeWidth="1.5"
           />
-          {/* Inner Focused Core Ring */}
+          {/* Inner Focused Core Ring (Cyan) */}
           <ellipse
             cx="500"
             cy="160"
@@ -41,9 +42,9 @@ export default function LeisureSection() {
             stroke="rgba(0, 229, 255, 0.35)"
             strokeWidth="1.5"
           />
-          {/* Glowing Light Node on Ring */}
-          <circle cx="340" cy="115" r="3.5" fill="#00E5FF" filter="drop-shadow(0 0 6px #00E5FF)" />
-          <circle cx="660" cy="205" r="3" fill="#00E5FF" filter="drop-shadow(0 0 6px #00E5FF)" />
+          {/* Glowing Light Nodes on Rings */}
+          <circle cx="340" cy="115" r="3.5" fill="#c084fc" filter="drop-shadow(0 0 8px #a855f7)" />
+          <circle cx="660" cy="205" r="3" fill="#00E5FF" filter="drop-shadow(0 0 8px #00E5FF)" />
         </svg>
       </div>
 
@@ -56,15 +57,15 @@ export default function LeisureSection() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Small Uppercase Cyber Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#081421] border border-[#00E5FF]/20 text-[#00E5FF] text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_#00E5FF] animate-pulse" />
-            / 06 — THE HUMAN SIDE
+          {/* Section Eyebrow matching main portfolio theme */}
+          <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#120d1f]/90 border border-violet-500/30 text-violet-300 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-[0_0_20px_rgba(152,103,255,0.18)] backdrop-blur-md">
+            <Sparkles size={13} className="text-violet-400" />
+            <span>/ 06 — THE HUMAN SIDE</span>
           </div>
 
-          {/* Main Heading: "Beyond the Code." with "Code." in Electric Cyan */}
+          {/* Main Heading: "Beyond the Code." with dual Violet-Cyan Gradient */}
           <h2 id="leisure-heading" className="leisure-main-heading font-unbounded">
-            Beyond the <span className="leisure-cyan-highlight">Code.</span>
+            Beyond the <span className="leisure-gradient-highlight">Code.</span>
           </h2>
 
           {/* Subtitle */}

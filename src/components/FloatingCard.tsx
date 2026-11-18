@@ -60,7 +60,7 @@ export default function FloatingCard({
   const renderIcon = () => {
     const iconProps = {
       size: 18,
-      className: "text-[#00E5FF] transition-transform duration-300 group-hover:scale-110",
+      className: "text-[#c084fc] group-hover:text-[#00E5FF] transition-all duration-300 group-hover:scale-110",
     };
     switch (activity.iconName) {
       case "Gamepad":
