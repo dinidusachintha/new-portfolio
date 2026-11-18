@@ -1015,21 +1015,25 @@ dialog::backdrop {
   height: 120px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.04) 100%
+    rgba(28, 12, 48, 0.95) 0%,
+    rgba(8, 4, 16, 0.98) 50%,
+    rgba(46, 16, 76, 0.92) 100%
   ) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-block: 1px solid rgba(255, 255, 255, 0.28) !important;
+  background-image:
+    radial-gradient(ellipse 70% 120% at 50% 50%, rgba(168, 85, 247, 0.16) 0%, transparent 75%),
+    linear-gradient(135deg, rgba(28, 12, 48, 0.95) 0%, rgba(8, 4, 16, 0.98) 50%, rgba(46, 16, 76, 0.92) 100%) !important;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-block: 1px solid rgba(168, 85, 247, 0.3) !important;
   margin-top: 36px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.65),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
-    0 10px 32px -4px rgba(0, 0, 0, 0.55),
-    0 0 28px rgba(168, 85, 247, 0.25);
+    inset 0 1px 1px 0 rgba(216, 180, 254, 0.35),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.7),
+    0 12px 35px -5px rgba(0, 0, 0, 0.9),
+    0 0 35px rgba(168, 85, 247, 0.25);
   mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
   user-select: none;
@@ -1057,9 +1061,9 @@ dialog::backdrop {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.08) 15%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(255, 255, 255, 0.08) 85%,
+    rgba(192, 132, 252, 0.1) 18%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(168, 85, 247, 0.25) 82%,
     transparent 100%
   );
   transform: skewX(-25deg);
@@ -1079,12 +1083,12 @@ dialog::backdrop {
 
 .tech-marquee-edge-top {
   top: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(216, 180, 254, 0.75) 50%, transparent);
 }
 
 .tech-marquee-edge-bottom {
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5) 50%, transparent);
 }
 
 .tech-marquee-track {
@@ -1108,7 +1112,7 @@ dialog::backdrop {
   flex-shrink: 0;
 }
 
-/* Ultra-Premium 3D Icon Capsule Pedestal matching button liquid glass */
+/* Ultra-Premium 3D Icon Capsule Pedestal matching black & purple mix glass */
 .tech-marquee-pedestal {
   position: relative;
   width: 80px;
@@ -1119,31 +1123,39 @@ dialog::backdrop {
   border-radius: 9999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.04) 100%
+    rgba(168, 85, 247, 0.22) 0%,
+    rgba(12, 6, 22, 0.9) 50%,
+    rgba(88, 28, 135, 0.32) 100%
   );
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(192, 132, 252, 0.32);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.65),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
-    0 8px 24px rgba(0, 0, 0, 0.55),
-    0 0 20px rgba(168, 85, 247, 0.2);
+    inset 0 1px 2px 0 rgba(233, 213, 255, 0.5),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.7),
+    0 8px 25px rgba(0, 0, 0, 0.7),
+    0 0 22px rgba(168, 85, 247, 0.28);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.35s ease,
-              box-shadow 0.35s ease;
+              box-shadow 0.35s ease,
+              background 0.35s ease;
   cursor: pointer;
   overflow: hidden;
 }
 
 .tech-marquee-pedestal:hover {
-  transform: translateY(-3px) scale(1.05);
-  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-4px) scale(1.06);
+  border-color: rgba(216, 180, 254, 0.85);
+  background: linear-gradient(
+    135deg,
+    rgba(192, 132, 252, 0.35) 0%,
+    rgba(18, 8, 34, 0.92) 50%,
+    rgba(126, 34, 206, 0.45) 100%
+  );
   box-shadow:
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.85),
-    0 12px 32px rgba(0, 0, 0, 0.65),
-    0 0 30px rgba(168, 85, 247, 0.4);
+    inset 0 1px 3px 0 rgba(255, 255, 255, 0.75),
+    0 14px 38px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(168, 85, 247, 0.6);
 }
 
 @media (max-width: 768px) {
@@ -1157,8 +1169,8 @@ dialog::backdrop {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
-  opacity: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(192, 132, 252, 0.3) 0%, transparent 70%);
+  opacity: 0.6;
   pointer-events: none;
   transition: opacity 0.35s ease;
 }
