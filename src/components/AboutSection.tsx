@@ -10,13 +10,16 @@ import {
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import LightningBackground from "./LightningBackground";
 
 export default function AboutSection() {
   return (
     <section className="about-section about-section-light" id="about">
       <div className="container">
         {/* Glass Effect Black Card Floating on White Background */}
-        <div className="about-glass-black-card reveal">
+        <div className="about-glass-black-card reveal relative overflow-hidden">
+          {/* Smooth Right-Border Electric Plasma Tendrils */}
+          <LightningBackground side="right" palette="cyan-violet" className="rounded-[36px]" />
           <div className="about-black-glass-glow" aria-hidden="true" />
 
           <div className="section-top relative z-10">
