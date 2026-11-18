@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { profile, projects, stats } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
-import LightningBackground from "./LightningBackground";
 
 type HistoryItem = {
   command: string;
@@ -245,11 +244,8 @@ export default function InteractiveTerminal() {
   };
 
   return (
-    <section className="terminal-section container relative overflow-hidden" id="terminal">
-      {/* Smooth Right-Border Electric Plasma Filaments */}
-      <LightningBackground side="right" palette="emerald-cyan" className="rounded-3xl" />
-
-      <div className="section-top reveal relative z-10">
+    <section className="terminal-section container" id="terminal">
+      <div className="section-top reveal">
         <span className="eyebrow">
           <TerminalIcon size={12} className="inline mr-1 text-violet-400" />
           04 / INTERACTIVE DEVELOPER CONSOLE
@@ -257,7 +253,7 @@ export default function InteractiveTerminal() {
         <span className="small-index">EXECUTE SHELL COMMANDS</span>
       </div>
 
-      <div className="section-heading-row reveal relative z-10">
+      <div className="section-heading-row reveal">
         <FlyingHeading
           line1="Inside the engine."
           line2="Live interactive environment."
@@ -270,7 +266,7 @@ export default function InteractiveTerminal() {
         </p>
       </div>
 
-      <div className="terminal-window reveal-scale relative z-10">
+      <div className="terminal-window reveal-scale">
         {/* Terminal Title Bar */}
         <div className="terminal-titlebar">
           <div className="terminal-controls">

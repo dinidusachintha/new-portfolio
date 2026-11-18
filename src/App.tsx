@@ -19,7 +19,6 @@ import VideoBanner from "./components/VideoBanner";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
-import LightningBackground from "./components/LightningBackground";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));

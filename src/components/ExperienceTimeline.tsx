@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { asset, experience, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
-import LightningBackground from "./LightningBackground";
 
 export default function ExperienceTimeline() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -19,11 +18,8 @@ export default function ExperienceTimeline() {
   };
 
   return (
-    <section className="experience-section container relative overflow-hidden" id="experience">
-      {/* Smooth Left-Border Electric Plasma Filaments */}
-      <LightningBackground side="left" palette="violet-purple" className="rounded-3xl" />
-
-      <div className="section-top reveal relative z-10">
+    <section className="experience-section container" id="experience">
+      <div className="section-top reveal">
         <span className="eyebrow flex items-center gap-1.5 text-violet-400">
           <Briefcase size={13} />
           02 / TRAJECTORY & EXPERIENCE
@@ -31,7 +27,7 @@ export default function ExperienceTimeline() {
         <span className="small-index">TRACK RECORD & ACADEMICS</span>
       </div>
 
-      <div className="section-heading-row reveal relative z-10">
+      <div className="section-heading-row reveal">
         <FlyingHeading
           line1="Building credibility."
           line2="Engineering in the real world."
@@ -45,7 +41,7 @@ export default function ExperienceTimeline() {
       </div>
 
       {/* Interactive Smooth Dropdown Header Card */}
-      <div className="experience-dropdown-header-card mt-8 reveal relative z-10">
+      <div className="experience-dropdown-header-card mt-8 reveal">
         <button
           type="button"
           onClick={toggleDropdown}
