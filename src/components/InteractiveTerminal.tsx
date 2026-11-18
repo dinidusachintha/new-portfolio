@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { profile, projects, stats } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import LightningBackground from "./LightningBackground";
 
 type HistoryItem = {
   command: string;
