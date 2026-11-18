@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 
 const NAME_LETTERS = ["D", "I", "N", "I", "D", "U"];
 

@@ -677,43 +677,10 @@ export default function App() {
 
   return (
     <div className={`site-shell ${loaded ? "is-loaded" : ""}`}>
-      {/* Luxury Cinematic Site Preloader with Subtle Floral Emblem */}
-      <div
-        className={`site-preloader ${siteReady ? "is-complete" : ""}`}
-        aria-hidden={siteReady}
-      >
-        <div className="preloader-content text-center">
-          <div className="preloader-floral-halo mb-4 flex items-center justify-center relative" aria-hidden="true">
-            <div className="p-3 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.7)]">
-              <img
-                src={asset("assets/images/ds-logo.png")}
-                alt="DS Emblem"
-                className="w-14 h-14 object-contain animate-pulse"
-                style={{
-                  filter: "url(#ds-logo-sharp) contrast(1.25) brightness(1.06) drop-shadow(0 4px 10px rgba(0,0,0,0.5))",
-                  imageRendering: "-webkit-optimize-contrast",
-                }}
-              />
-            </div>
-          </div>
-          <div className="preloader-brand flex items-center justify-center gap-2 mb-4">
-            <span className="brand-dot-pulse" />
-            <span className="font-unbounded font-extrabold text-2xl sm:text-3xl tracking-tight text-white">
-              Dinidu<span className="text-violet-400">.</span>
-            </span>
-          </div>
-          <div className="preloader-bar-wrap mx-auto">
-            <div
-              className="preloader-bar-fill"
-              style={{ width: `${loadingProgress}%` }}
-            />
-          </div>
-          <div className="preloader-meta font-mono text-[10.5px] text-gray-400 flex items-center justify-between w-full max-w-[260px] mx-auto mt-3">
-            <span>INITIALIZING ARCHITECTURE</span>
-            <span className="text-violet-400 font-bold">{loadingProgress}%</span>
-          </div>
-        </div>
-      </div>
+      {/* Cinematic Futuristic Landing Intro Loader */}
+      {introActive && (
+        <IntroLoader onComplete={handleIntroComplete} />
+      )}
 
       <div className="ambient-spotlight" aria-hidden="true" />
       <a className="skip-link" href="#main">

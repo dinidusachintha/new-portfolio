@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
+import type React from "react";
 
 export interface SplitCurtainProps {
   topRef: React.RefObject<HTMLDivElement | null>;
