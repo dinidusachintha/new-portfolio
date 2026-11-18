@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { skillPillars, techMarquee } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import LightningBackground from "./LightningBackground";
 
 export default function TechStack() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -54,8 +55,11 @@ export default function TechStack() {
   const activePillar = skillPillars[currentSlide];
 
   return (
-    <section className="tech-stack-section tech-stack-dark" id="stack">
-      <div className="container">
+    <section className="tech-stack-section tech-stack-dark relative overflow-hidden" id="stack">
+      {/* Smooth Left-Border Electric Plasma Filaments */}
+      <LightningBackground side="left" palette="cyan-blue" />
+
+      <div className="container relative z-10">
         <div className="section-top reveal">
           <span className="eyebrow">
             <Code2 size={13} className="inline mr-1 text-violet-600" />
