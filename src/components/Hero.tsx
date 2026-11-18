@@ -70,9 +70,6 @@ export default function Hero() {
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
         <div className="hero-dymas-frame">
-          {/* Three.js Interactive Premium Background Animation */}
-          <HeroThreeBackground />
-
           {/* Top Bar: Minimalist System & Architecture Identifier */}
           <motion.div
             className="hero-dymas-topbar"
