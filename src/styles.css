@@ -8448,16 +8448,45 @@ body {
   color: #ffffff;
 }
 
-/* Main Slide Showcase Card: Frosted Glass Prism Card */
+/* Main Slide Showcase Card: Exact Previous Deep Dark Glass Card (Restored) */
 .tech-stack-section .slideshow-card,
 .tech-stack-dark .slideshow-card,
 .tech-stack-light .slideshow-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.012) 100%) !important;
+  background: linear-gradient(145deg, rgba(16, 18, 28, 0.96) 0%, rgba(8, 9, 15, 0.98) 100%) !important;
+  background-color: #0a0d18 !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 26px !important;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.18) !important;
+}
+
+.slideshow-card .pillar-title,
+.tech-stack-light .slideshow-card .pillar-title {
+  color: #ffffff !important;
+}
+
+.slideshow-card p,
+.tech-stack-light .slideshow-card p {
+  color: #cbd5e1 !important;
+}
+
+.slideshow-card .pillar-meta-box,
+.tech-stack-light .slideshow-card .pillar-meta-box {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.slideshow-card .skill-slide-row,
+.tech-stack-light .slideshow-card .skill-slide-row {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.slideshow-card .skill-slide-row:hover,
+.tech-stack-light .slideshow-card .skill-slide-row:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
 }
 
 /* Skill Card Rows inside Slide: High-End Frosted Glass */
