@@ -54,7 +54,7 @@ export default function TechStack() {
   const activePillar = skillPillars[currentSlide];
 
   return (
-    <section className="tech-stack-section tech-stack-light" id="stack">
+    <section className="tech-stack-section tech-stack-dark" id="stack">
       <div className="container">
         <div className="section-top reveal">
           <span className="eyebrow">
