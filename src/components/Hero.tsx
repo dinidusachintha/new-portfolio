@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import {
   ArrowUpRight,
@@ -49,6 +49,30 @@ const letterVariants: Variants = {
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [diniduChars, setDiniduChars] = useState<string[]>(() => "DINIDU".split(""));
+  const [sachinthaChars, setSachinthaChars] = useState<string[]>(() => "SACHINTHA".split(""));
+  const [isGlitching, setIsGlitching] = useState(false);
+
+  // Trigger high-speed RGB hacker scramble glitch
+  const triggerGlitch = () => {
+    if (isGlitching) return;
+    setIsGlitching(true);
+
+    const GLYPHS = "01X#_<>!?*/+~$%&";
+    let count = 0;
+    const interval = setInterval(() => {
+      count++;
+      setDiniduChars("DINIDU".split("").map((c) => (Math.random() < 0.4 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : c)));
+      setSachinthaChars("SACHINTHA".split("").map((c) => (Math.random() < 0.4 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : c)));
+
+      if (count >= 5) {
+        clearInterval(interval);
+        setDiniduChars("DINIDU".split(""));
+        setSachinthaChars("SACHINTHA".split(""));
+        setIsGlitching(false);
+      }
+    }, 65);
+  };
 
   useEffect(() => {
     const v = videoRef.current;
@@ -57,6 +81,15 @@ export default function Hero() {
     v.play().catch(() => {
       // Auto-play policy catch fallback
     });
+
+    // Periodic gentle micro-glitch trigger
+    const glitchTimer = setInterval(() => {
+      if (Math.random() > 0.4) {
+        triggerGlitch();
+      }
+    }, 6500);
+
+    return () => clearInterval(glitchTimer);
   }, []);
 
   return (
@@ -111,21 +144,25 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Giant Merged Headline Typography with Letter-by-Letter Flying Animation */}
+            {/* Giant Merged Headline Typography with RGB Chromatic Glitch Fonts */}
             <motion.div
-              className="hero-dymas-big-name"
+              className={`hero-dymas-big-name hero-rgb-glitch-wrap ${isGlitching ? "is-glitching" : ""}`}
               aria-label="Dinidu Sachintha"
               variants={nameContainerVariants}
               initial="hidden"
               animate="visible"
+              onMouseEnter={triggerGlitch}
+              onClick={triggerGlitch}
+              title="Hover to glitch"
             >
-              <span className="hero-name-outlined" aria-hidden="true">
-                {"DINIDU".split("").map((char, i) => (
+              <span className="hero-name-outlined hero-glitch-word" data-text="DINIDU" aria-hidden="true">
+                {diniduChars.map((char, i) => (
                   <motion.span
                     key={`d-${i}`}
                     custom={i}
                     variants={letterVariants}
-                    className="hero-char-letter"
+                    className="hero-char-letter hero-rgb-char"
+                    data-char={char}
                     style={{
                       animationDelay: `${i * 0.14}s`,
                     }}
@@ -134,13 +171,14 @@ export default function Hero() {
                   </motion.span>
                 ))}
               </span>
-              <span className="hero-name-solid" aria-hidden="true">
-                {"SACHINTHA".split("").map((char, i) => (
+              <span className="hero-name-solid hero-glitch-word" data-text="SACHINTHA" aria-hidden="true">
+                {sachinthaChars.map((char, i) => (
                   <motion.span
                     key={`s-${i}`}
                     custom={i + 6}
                     variants={letterVariants}
-                    className="hero-char-letter"
+                    className="hero-char-letter hero-rgb-char"
+                    data-char={char}
                     style={{
                       animationDelay: `${(i + 6) * 0.14}s`,
                     }}
@@ -154,7 +192,8 @@ export default function Hero() {
             {/* Bottom Left: Role Title, Tech Pill, and Action Button */}
             <div className="hero-dymas-bottom-left">
               <motion.h1
-                className="hero-dymas-role-title"
+                className="hero-dymas-role-title hero-role-glitch"
+                data-text="Software Engineer"
                 initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.75, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
