@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
-import HeroLightning from "./HeroLightning";
+import LightningBackground from "./LightningBackground";
 
 // Stagger container for the whole name
 const nameContainerVariants: Variants = {
@@ -71,8 +71,8 @@ export default function Hero() {
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
         <div className="hero-dymas-frame relative overflow-hidden">
-          {/* Futuristic High-Voltage Electric Lightning Effect */}
-          <HeroLightning />
+          {/* Smooth Electric Plasma & Lightning Effect */}
+          <LightningBackground side="left" palette="cyan-violet" className="rounded-[24px]" />
 
           {/* Top Bar: Minimalist System & Architecture Identifier */}
           <motion.div
