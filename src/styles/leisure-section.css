@@ -1,0 +1,544 @@
+/* ==========================================================================
+   BEYOND THE CODE — PREMIUM FLOATING 3D LEISURE SECTION
+   - Palette: #050B14 (Main), #081421 (Secondary), #0D1B2A (Card), #00E5FF (Cyan)
+   - Curved 3D Horizontal Carousel with 6 Activities
+   - Glassmorphism, 3D Mouse Tilt & Floating Elevation
+   ========================================================================== */
+
+.leisure-section {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  background-color: #050b14;
+  padding-block: 100px 90px;
+  overflow: hidden;
+  color: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  .leisure-section {
+    padding-block: 70px 60px;
+  }
+}
+
+/* Background Atmospheric Elements */
+.leisure-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0, 229, 255, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.6;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
+}
+
+.leisure-bg-spotlight {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.08) 0%, rgba(8, 20, 33, 0.03) 55%, transparent 75%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.leisure-bg-radial-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 250px;
+  background: linear-gradient(to top, rgba(5, 11, 20, 0.95), transparent);
+  pointer-events: none;
+}
+
+/* Orbital Rings Beneath Carousel */
+.leisure-orbital-rings-wrap {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1100px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.leisure-orbital-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Section Heading */
+.leisure-main-heading {
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #f8fafc;
+  margin-bottom: 16px;
+}
+
+.leisure-cyan-highlight {
+  color: #00e5ff;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.45);
+}
+
+.leisure-subtitle {
+  color: #94a3b8;
+  font-size: clamp(14px, 1.25vw, 16.5px);
+  line-height: 1.6;
+  max-width: 580px;
+  margin-inline: auto;
+}
+
+/* Carousel 3D Container */
+.leisure-carousel-container {
+  position: relative;
+  width: 100%;
+  outline: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.leisure-carousel-container:active {
+  cursor: grabbing;
+}
+
+.leisure-carousel-stage {
+  position: relative;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  margin-inline: auto;
+}
+
+@media (max-width: 768px) {
+  .leisure-carousel-stage {
+    height: 440px;
+    perspective: 800px;
+  }
+}
+
+.leisure-carousel-card-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -230px;
+  margin-left: -160px;
+  transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.65s ease;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 768px) {
+  .leisure-carousel-card-slot {
+    margin-top: -195px;
+    margin-left: -130px;
+  }
+}
+
+/* Floating Card Shell & Continuous Wave Animation */
+.leisure-floating-card-wrap {
+  display: block;
+  animation: leisureCardFloat 4.8s ease-in-out infinite;
+  transform-style: preserve-3d;
+  outline: none;
+}
+
+.leisure-floating-card-wrap:focus-visible .leisure-floating-card {
+  outline: 2px solid #00e5ff;
+  outline-offset: 4px;
+}
+
+@keyframes leisureCardFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Card Body */
+.leisure-floating-card {
+  position: relative;
+  width: 320px;
+  height: 460px;
+  border-radius: 24px;
+  background-color: #0d1b2a;
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8),
+              0 0 25px rgba(0, 229, 255, 0.08);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 768px) {
+  .leisure-floating-card {
+    width: 260px;
+    height: 390px;
+    border-radius: 20px;
+  }
+}
+
+/* Stronger border and soft cyan halo on center card */
+.leisure-floating-card.is-active-card {
+  border-color: rgba(0, 229, 255, 0.65);
+  box-shadow: 0 25px 55px -12px rgba(0, 0, 0, 0.9),
+              0 0 45px rgba(0, 229, 255, 0.24);
+}
+
+.leisure-floating-card:hover {
+  border-color: rgba(0, 229, 255, 0.85);
+  box-shadow: 0 28px 60px -10px rgba(0, 0, 0, 0.95),
+              0 0 50px rgba(0, 229, 255, 0.35);
+}
+
+/* Floor Shadow under each card */
+.leisure-card-shadow {
+  position: absolute;
+  bottom: -20px;
+  left: 10%;
+  right: 10%;
+  height: 30px;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.25) 0%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* Media Wrap & Overlay */
+.leisure-card-media-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.leisure-card-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.leisure-floating-card:hover .leisure-card-media {
+  transform: scale(1.08);
+}
+
+.leisure-card-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 11, 20, 0.35) 0%,
+    rgba(5, 11, 20, 0.15) 30%,
+    rgba(8, 20, 33, 0.65) 65%,
+    rgba(5, 11, 20, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+/* Top Bar inside Card */
+.leisure-card-top-bar {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+}
+
+.leisure-card-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: rgba(5, 11, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.leisure-card-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(8, 20, 33, 0.75);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  backdrop-filter: blur(8px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #00e5ff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.leisure-card-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background-color: #00e5ff;
+  box-shadow: 0 0 6px #00e5ff;
+}
+
+/* Glassmorphism Content Panel at bottom */
+.leisure-card-glass-panel {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(13, 27, 42, 0.85);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  z-index: 6;
+  transition: all 0.3s ease;
+}
+
+.leisure-floating-card:hover .leisure-card-glass-panel {
+  border-color: rgba(0, 229, 255, 0.4);
+  background: rgba(13, 27, 42, 0.92);
+}
+
+.leisure-card-content-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.leisure-card-icon-pedestal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  flex-shrink: 0;
+}
+
+.leisure-card-headings {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.leisure-card-category {
+  font-size: 9.5px;
+  color: #00e5ff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.leisure-card-title {
+  font-family: "Unbounded", "Manrope Variable", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.leisure-card-desc {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.leisure-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.leisure-card-action-text {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: #00e5ff;
+}
+
+.leisure-card-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: #00e5ff;
+  transition: all 0.25s ease;
+}
+
+.leisure-floating-card:hover .leisure-card-arrow-btn {
+  background: #00e5ff;
+  color: #050b14;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px #00e5ff;
+}
+
+.leisure-card-arrow-icon {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.leisure-floating-card:hover .leisure-card-arrow-icon {
+  transform: translate(2px, -2px);
+}
+
+/* Carousel Controls Bar */
+.leisure-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 36px;
+  position: relative;
+  z-index: 10;
+}
+
+.leisure-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 9999px;
+  background: rgba(8, 20, 33, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  color: #00e5ff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  outline: none;
+}
+
+.leisure-nav-btn:hover {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #00e5ff;
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(0, 229, 255, 0.25);
+}
+
+.leisure-nav-btn:active {
+  transform: scale(0.96);
+}
+
+.leisure-nav-btn:focus-visible {
+  outline: 2px solid #00e5ff;
+  outline-offset: 3px;
+}
+
+.leisure-nav-icon {
+  transition: transform 0.25s ease;
+}
+
+.leisure-nav-prev:hover .leisure-nav-icon {
+  transform: translateX(-2px);
+}
+
+.leisure-nav-next:hover .leisure-nav-icon {
+  transform: translateX(2px);
+}
+
+/* Circular Pagination Dots */
+.leisure-pagination-dots {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(8, 20, 33, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.leisure-dot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.leisure-dot-inner {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.leisure-dot-btn:hover .leisure-dot-inner {
+  background-color: rgba(0, 229, 255, 0.65);
+  transform: scale(1.3);
+}
+
+.leisure-dot-btn.is-active .leisure-dot-inner {
+  width: 18px;
+  background-color: #00e5ff;
+  box-shadow: 0 0 10px #00e5ff;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  .leisure-floating-card-wrap {
+    animation: none !important;
+  }
+  .leisure-carousel-card-slot {
+    transition: none !important;
+  }
+  .leisure-floating-card {
+    transition: none !important;
+  }
+  .leisure-card-media {
+    transition: none !important;
+  }
+}

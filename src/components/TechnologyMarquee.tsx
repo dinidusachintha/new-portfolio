@@ -3,8 +3,6 @@ import { asset } from "../data/portfolio";
 
 export interface TechnologyItem {
   id: string;
-  name: string;
-  shortLabel: string;
   imageWebp: string;
   imagePng: string;
   alt: string;
@@ -14,74 +12,58 @@ export interface TechnologyItem {
 const marqueeTechnologies: TechnologyItem[] = [
   {
     id: "react",
-    name: "React",
-    shortLabel: "UI Architecture",
     imageWebp: "/assets/images/3d/react-3d.webp",
     imagePng: "/assets/images/3d/react-3d.png",
-    alt: "3D React Logo with Orbital Rings",
+    alt: "3D React Logo",
     separatorType: "diamond",
   },
   {
     id: "typescript",
-    name: "TypeScript",
-    shortLabel: "Type Safety",
     imageWebp: "/assets/images/3d/typescript-3d.webp",
     imagePng: "/assets/images/3d/typescript-3d.png",
-    alt: "3D TypeScript Icon with Cyan Accents",
+    alt: "3D TypeScript Icon",
     separatorType: "hexagon",
   },
   {
     id: "nodejs",
-    name: "Node.js",
-    shortLabel: "Scalable Runtime",
     imageWebp: "/assets/images/3d/nodejs-3d.webp",
     imagePng: "/assets/images/3d/nodejs-3d.png",
-    alt: "3D Node.js Hexagonal Logo",
+    alt: "3D Node.js Logo",
     separatorType: "star",
   },
   {
     id: "cloud",
-    name: "Cloud Computing",
-    shortLabel: "Distributed Infra",
     imageWebp: "/assets/images/3d/cloud-3d.webp",
     imagePng: "/assets/images/3d/cloud-3d.png",
-    alt: "3D Volumetric Floating Cloud",
+    alt: "3D Cloud Computing",
     separatorType: "cube",
   },
   {
     id: "aiml",
-    name: "AI & Machine Learning",
-    shortLabel: "Neural Engines",
     imageWebp: "/assets/images/3d/ai-orb-3d.webp",
     imagePng: "/assets/images/3d/ai-orb-3d.png",
-    alt: "3D Futuristic AI Holographic Orb",
+    alt: "3D AI Orb",
     separatorType: "diamond",
   },
   {
     id: "mongodb",
-    name: "MongoDB",
-    shortLabel: "Data Systems",
     imageWebp: "/assets/images/3d/mongodb-3d.webp",
     imagePng: "/assets/images/3d/mongodb-3d.png",
-    alt: "3D Database Cylinder Stack",
+    alt: "3D Database Icon",
     separatorType: "hexagon",
   },
   {
     id: "webdev",
-    name: "Web Development",
-    shortLabel: "Fullstack Architecture",
     imageWebp: "/assets/images/3d/code-brackets-3d.webp",
     imagePng: "/assets/images/3d/code-brackets-3d.png",
-    alt: "3D Floating Code Brackets",
+    alt: "3D Code Brackets",
     separatorType: "star",
   },
   {
     id: "creative-eng",
-    name: "Creative Engineering",
-    shortLabel: "3D & Motion",
     imageWebp: "/assets/images/3d/chrome-torus-3d.webp",
     imagePng: "/assets/images/3d/chrome-torus-3d.png",
-    alt: "3D Abstract Chrome Torus Knot",
+    alt: "3D Chrome Torus",
     separatorType: "cube",
   },
 ];
@@ -136,7 +118,10 @@ export default function TechnologyMarquee({ className = "" }: TechnologyMarqueeP
       aria-label="3D Technology Showcase"
       tabIndex={0}
     >
-      {/* Decorative ambient borders */}
+      {/* Dynamic Glass Light Prism Shine Sweep Beam matching the hero collaboration button */}
+      <div className="tech-marquee-glass-shine" aria-hidden="true" />
+
+      {/* Decorative ambient borders matching liquid glass button border style */}
       <div className="tech-marquee-edge-line tech-marquee-edge-top" />
       <div className="tech-marquee-edge-line tech-marquee-edge-bottom" />
 
@@ -151,16 +136,20 @@ export default function TechnologyMarquee({ className = "" }: TechnologyMarqueeP
           >
             {marqueeTechnologies.map((item, idx) => {
               // Staggered floating wave animation delay
-              const floatDelay = `${(idx % 4) * 0.6}s`;
+              const floatDelay = `${(idx % 4) * 0.55}s`;
 
               return (
                 <React.Fragment key={`${copyIndex}-${item.id}`}>
+                  {/* Ultra-Premium Glass Pedestal matching button liquid glass aesthetic */}
                   <div
-                    className="tech-marquee-card group"
-                    role="group"
-                    aria-label={`${item.name} - ${item.shortLabel}`}
+                    className="tech-marquee-pedestal group"
+                    role="img"
+                    aria-label={item.alt}
                   >
-                    {/* 3D Image Container with subtle floating and gentle 3D tilt on hover */}
+                    {/* Inner Glass Prism Flare */}
+                    <div className="tech-marquee-pedestal-shine" aria-hidden="true" />
+
+                    {/* 3D Image Container with floating wave and perspective tilt on hover */}
                     <div
                       className="tech-marquee-img-wrap"
                       style={{ animationDelay: floatDelay }}
@@ -178,20 +167,9 @@ export default function TechnologyMarquee({ className = "" }: TechnologyMarqueeP
                         />
                       </picture>
                     </div>
-
-                    {/* Typography: White name with subtle electric cyan highlight badge */}
-                    <div className="tech-marquee-meta">
-                      <span className="tech-marquee-name font-mono">
-                        {item.name}
-                      </span>
-                      <span className="tech-marquee-badge">
-                        <span className="tech-marquee-dot" />
-                        {item.shortLabel}
-                      </span>
-                    </div>
                   </div>
 
-                  {/* Glowing Geometric Separator between items */}
+                  {/* Glowing Geometric Separator between icons */}
                   <GeometricSeparator type={item.separatorType} />
                 </React.Fragment>
               );

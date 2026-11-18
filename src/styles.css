@@ -1001,8 +1001,8 @@ dialog::backdrop {
 
 /* ==========================================================================
    FUTURISTIC 3D INFINITE TECHNOLOGY MARQUEE
-   - Dark Navy: #050B14
-   - Electric Cyan: #00E5FF
+   - Liquid Glass Button Background & Continuous Glass Light Shine Sweep
+   - No Letters / Text (Pure 3D Icons Only)
    - 35s Seamless Infinite Loop
    - 120px Desktop / 80px Mobile
    - Staggered 3D Floating Wave & Perspective Tilt
@@ -1013,14 +1013,23 @@ dialog::backdrop {
   max-width: 100vw;
   overflow: hidden;
   height: 120px;
-  background-color: #050B14;
-  background-image: radial-gradient(ellipse 70% 120% at 50% 50%, rgba(0, 229, 255, 0.045) 0%, transparent 75%);
-  border-block: 1px solid rgba(0, 229, 255, 0.16);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-block: 1px solid rgba(255, 255, 255, 0.28) !important;
   margin-top: 36px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  box-shadow: 0 10px 30px -10px rgba(5, 11, 20, 0.9), inset 0 1px 0 rgba(0, 229, 255, 0.08);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 10px 32px -4px rgba(0, 0, 0, 0.55),
+    0 0 28px rgba(168, 85, 247, 0.25);
   mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
   user-select: none;
@@ -1037,6 +1046,28 @@ dialog::backdrop {
   }
 }
 
+/* Dynamic Glass Light Prism Shine Sweep Beam across slideshow */
+.tech-marquee-glass-shine {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 15%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.08) 85%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  animation: hero-collab-shine 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .tech-marquee-edge-line {
   position: absolute;
   left: 0;
@@ -1048,12 +1079,12 @@ dialog::backdrop {
 
 .tech-marquee-edge-top {
   top: 0;
-  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.45) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5) 50%, transparent);
 }
 
 .tech-marquee-edge-bottom {
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.25) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25) 50%, transparent);
 }
 
 .tech-marquee-track {
@@ -1061,6 +1092,8 @@ dialog::backdrop {
   width: max-content;
   will-change: transform;
   animation: techMarqueeScroll 35s linear infinite;
+  position: relative;
+  z-index: 2;
 }
 
 /* Pause on hover and keyboard focus for high accessibility */
@@ -1075,48 +1108,77 @@ dialog::backdrop {
   flex-shrink: 0;
 }
 
-.tech-marquee-card {
-  display: inline-flex;
+/* Ultra-Premium 3D Icon Capsule Pedestal matching button liquid glass */
+.tech-marquee-pedestal {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 8px 18px 8px 12px;
+  justify-content: center;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(168, 85, 247, 0.2);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
   cursor: pointer;
+  overflow: hidden;
 }
 
-.tech-marquee-card:hover {
-  background: rgba(0, 229, 255, 0.05);
-  border-color: rgba(0, 229, 255, 0.35);
-  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.14), inset 0 0 14px rgba(0, 229, 255, 0.06);
-  transform: translateY(-2px);
+.tech-marquee-pedestal:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.85),
+    0 12px 32px rgba(0, 0, 0, 0.65),
+    0 0 30px rgba(168, 85, 247, 0.4);
 }
 
 @media (max-width: 768px) {
-  .tech-marquee-card {
-    gap: 8px;
-    padding: 4px 12px 4px 8px;
+  .tech-marquee-pedestal {
+    width: 52px;
+    height: 52px;
   }
+}
+
+.tech-marquee-pedestal-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.tech-marquee-pedestal:hover .tech-marquee-pedestal-shine {
+  opacity: 1;
 }
 
 /* 3D Image Container with subtle floating wave motion */
 .tech-marquee-img-wrap {
   position: relative;
-  width: 58px;
-  height: 58px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   perspective: 600px;
   animation: techMarqueeImgFloat 4s ease-in-out infinite;
+  z-index: 2;
 }
 
 @media (max-width: 768px) {
@@ -1133,75 +1195,47 @@ dialog::backdrop {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.4s ease;
   transform: perspective(600px) rotateY(0deg) rotateX(0deg) scale(1);
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
 }
 
-/* Gentle 3D rotation and cyan highlight on card hover */
-.tech-marquee-card:hover .tech-marquee-img {
-  transform: perspective(600px) rotateY(16deg) rotateX(-8deg) scale(1.12) translateZ(8px);
-  filter: drop-shadow(0 8px 18px rgba(0, 229, 255, 0.45));
+/* Gentle 3D rotation and electric cyan glow on pedestal hover */
+.tech-marquee-pedestal:hover .tech-marquee-img {
+  transform: perspective(600px) rotateY(18deg) rotateX(-10deg) scale(1.15) translateZ(12px);
+  filter: drop-shadow(0 10px 22px rgba(0, 229, 255, 0.55));
 }
 
-/* Typography */
-.tech-marquee-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  line-height: 1.15;
-}
-
-.tech-marquee-name {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 13.5px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: color 0.25s ease, text-shadow 0.25s ease;
-}
-
-.tech-marquee-card:hover .tech-marquee-name {
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
-}
-
-.tech-marquee-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+/* Minimalist Micro Tooltip Pill on Hover */
+.tech-marquee-tooltip {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 3px 8px;
+  border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(0, 229, 255, 0.85);
-  white-space: nowrap;
-  transition: color 0.25s ease;
-}
-
-.tech-marquee-card:hover .tech-marquee-badge {
   color: #00e5ff;
+  background: rgba(5, 11, 20, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 229, 255, 0.2);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 10;
 }
 
-.tech-marquee-dot {
-  width: 4.5px;
-  height: 4.5px;
-  border-radius: 9999px;
-  background-color: #00e5ff;
-  box-shadow: 0 0 6px #00e5ff;
+.tech-marquee-pedestal:hover .tech-marquee-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 @media (max-width: 768px) {
-  .tech-marquee-name {
-    font-size: 11.5px;
-  }
-  .tech-marquee-badge {
-    font-size: 8px;
-    letter-spacing: 0.08em;
-  }
-  .tech-marquee-dot {
-    width: 3.5px;
-    height: 3.5px;
+  .tech-marquee-tooltip {
+    display: none;
   }
 }
 
@@ -1210,19 +1244,19 @@ dialog::backdrop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-inline: clamp(18px, 2.2vw, 32px);
+  margin-inline: clamp(20px, 2.8vw, 40px);
   color: #00e5ff;
-  opacity: 0.7;
-  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.45));
+  opacity: 0.75;
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.5));
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.3s ease,
               filter 0.3s ease;
 }
 
 .marquee-3d-separator:hover {
-  transform: scale(1.3) rotate(15deg);
+  transform: scale(1.35) rotate(15deg);
   opacity: 1;
-  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.9));
+  filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.95));
 }
 
 /* 35-second seamless infinite horizontal loop */
@@ -8218,11 +8252,9 @@ body {
 }
 
 /* ==========================================================================
-   3. 05 / ENGINEERING ARSENAL & TOOLKIT - PURE BLACK WITH FROSTED GLASS CARDS
+   3. 05 / ENGINEERING ARSENAL & TOOLKIT — LIGHT WHITE THEME CANVAS WITH FROSTED GLASS CARDS
    ========================================================================== */
-.tech-stack-section,
-.tech-stack-dark,
-.tech-stack-light {
+.tech-stack-dark {
   background: #000000 !important;
   border-block: 1px solid rgba(255, 255, 255, 0.08);
   padding-block: 85px;
@@ -8230,55 +8262,88 @@ body {
   width: 100%;
 }
 
-.tech-stack-section .eyebrow,
-.tech-stack-dark .eyebrow,
-.tech-stack-light .eyebrow {
+.tech-stack-light {
+  background: #ffffff !important;
+  border-block: 1px solid rgba(0, 0, 0, 0.08) !important;
+  padding-block: 85px;
+  position: relative;
+  width: 100%;
+}
+
+.tech-stack-dark .eyebrow {
   color: #a855f7 !important;
   font-weight: 800 !important;
   font-family: monospace;
   letter-spacing: 0.12em;
 }
 
-.tech-stack-section .small-index,
-.tech-stack-dark .small-index,
-.tech-stack-light .small-index {
+.tech-stack-light .eyebrow {
+  color: #7c3aed !important;
+  font-weight: 800 !important;
+  font-family: monospace;
+  letter-spacing: 0.12em;
+}
+
+.tech-stack-dark .small-index {
   color: #94a3b8 !important;
   font-weight: 700 !important;
   font-family: monospace;
   letter-spacing: 0.08em;
 }
 
-.tech-stack-section h2,
-.tech-stack-dark h2,
-.tech-stack-light h2 {
+.tech-stack-light .small-index {
+  color: #64748b !important;
+  font-weight: 700 !important;
+  font-family: monospace;
+  letter-spacing: 0.08em;
+}
+
+.tech-stack-dark h2 {
   color: #ffffff !important;
   font-weight: 900 !important;
 }
 
-.tech-stack-section h2 span.text-muted,
-.tech-stack-section h2 .text-muted,
+.tech-stack-light h2 {
+  color: #09090b !important;
+  font-weight: 900 !important;
+}
+
 .tech-stack-dark h2 span.text-muted,
-.tech-stack-dark h2 .text-muted,
-.tech-stack-light h2 span.text-muted,
-.tech-stack-light h2 .text-muted {
+.tech-stack-dark h2 .text-muted {
   color: #94a3b8 !important;
 }
 
-.tech-stack-section p,
-.tech-stack-dark p,
-.tech-stack-light p {
+.tech-stack-light h2 span.text-muted,
+.tech-stack-light h2 .text-muted {
+  color: #64748b !important;
+}
+
+.tech-stack-dark p {
   color: #cbd5e1 !important;
+}
+
+.tech-stack-light p,
+.tech-stack-light .section-heading-row > p {
+  color: #475569 !important;
 }
 
 /* Slideshow Controls Bar in pure black glass */
 .tech-stack-section .slideshow-controls-bar,
-.tech-stack-dark .slideshow-controls-bar,
-.tech-stack-light .slideshow-controls-bar {
+.tech-stack-dark .slideshow-controls-bar {
   background: rgba(255, 255, 255, 0.03) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  border-radius: 18px;
+}
+
+.tech-stack-light .slideshow-controls-bar {
+  background: #080b14 !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
   border-radius: 18px;
 }
 
@@ -8692,13 +8757,7 @@ body {
 }
 
 .floral-ambient-watermark {
-  position: absolute;
-  right: -36px;
-  top: -36px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.7;
-  animation: none !important;
+  display: none !important;
 }
 
 @keyframes floralBloomSpin {

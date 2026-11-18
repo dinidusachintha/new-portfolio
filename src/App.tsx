@@ -8,6 +8,7 @@ import {
   Mail,
   Pause,
   Play,
+  Sparkles,
 } from "lucide-react";
 import { asset, profile } from "./data/portfolio";
 import type { Project } from "./data/portfolio";
@@ -16,6 +17,7 @@ import AboutSection from "./components/AboutSection";
 import ExperienceTimeline from "./components/ExperienceTimeline";
 import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
+import LeisureSection from "./components/LeisureSection";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
@@ -26,39 +28,13 @@ const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
 const ProjectGrid = lazy(() => import("./components/ProjectGrid"));
 
-function FloralLotusOrnament({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      className={`floral-lotus-svg ${className}`}
-      aria-hidden="true"
-    >
-      <path
-        d="M16 2C18.4 8.5 20.5 11.6 26 14C20.5 16.4 18.4 19.5 16 26C13.6 19.5 11.5 16.4 6 14C11.5 11.6 13.6 8.5 16 2Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 6C19.5 10.2 21.8 12.5 26 16C21.8 19.5 19.5 21.8 16 26C12.5 21.8 10.2 19.5 6 16C10.2 12.5 12.5 10.2 16 6Z"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeOpacity="0.55"
-        transform="rotate(45 16 16)"
-      />
-      <circle cx="16" cy="15" r="2" fill="currentColor" />
-    </svg>
-  );
-}
-
 const navLinks = [
   { name: "About", id: "about" },
   { name: "Experience", id: "experience" },
   { name: "Systems", id: "work" },
   { name: "Terminal", id: "terminal" },
   { name: "Arsenal", id: "stack" },
+  { name: "Beyond Code", id: "leisure" },
   { name: "Contact", id: "contact" },
 ];
 
@@ -258,12 +234,8 @@ function HaveASystemSection() {
 
   return (
     <div className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      <div className="floral-ambient-watermark" aria-hidden="true">
-        <FloralLotusOrnament className="w-64 h-64 text-violet-400/10" />
-      </div>
-
       <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
-        <FloralLotusOrnament className="w-3.5 h-3.5 text-violet-400" />
+        <Sparkles size={13} className="text-violet-400" />
         <span>07 // INITIATE COLLABORATION</span>
       </span>
 
@@ -798,7 +770,7 @@ export default function App() {
               <div className="container">
                 <div className="section-top reveal">
                   <span className="eyebrow inline-flex items-center gap-1.5">
-                    <FloralLotusOrnament className="w-3.5 h-3.5 text-violet-600" />
+                    <Sparkles size={13} className="text-violet-600" />
                     03 / PRODUCTION SYSTEMS & CASE STUDIES
                   </span>
                   <span className="small-index">END-TO-END ARCHITECTURAL WORK</span>
@@ -850,6 +822,9 @@ export default function App() {
 
             {/* 06 / Cinematic Video Showcase */}
             <VideoBanner />
+
+            {/* Beyond the Code — Premium Floating 3D Leisure Cards */}
+            <LeisureSection />
 
             {/* 07 // Initiate Collaboration Section */}
             <section className="section container contact-section" id="contact">
