@@ -22,6 +22,8 @@ import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
 import TechnologyMarquee from "./components/TechnologyMarquee";
+import IntroLoader from "./components/animations/IntroLoader";
+import { useIntroSession } from "./hooks/useIntroSession";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
