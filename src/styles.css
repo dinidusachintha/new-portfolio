@@ -8266,17 +8266,60 @@ body {
 }
 
 /* ==========================================================================
-   3. 05 / ENGINEERING ARSENAL & TOOLKIT — PURE BLACK WITH FROSTED GLASS CARDS
+   3. 05 / ENGINEERING ARSENAL & TOOLKIT — LIGHT WHITE THEME CANVAS
    ========================================================================== */
-.tech-stack-section,
-.tech-stack-dark {
-  background: #000000 !important;
-  border-block: 1px solid rgba(255, 255, 255, 0.08);
+.tech-stack-light {
+  background: #ffffff !important;
+  color: #09090b !important;
+  border-block: 1px solid rgba(0, 0, 0, 0.08) !important;
   padding-block: 85px;
   position: relative;
   width: 100%;
 }
 
+.tech-stack-light .eyebrow {
+  color: #7c3aed !important;
+  font-weight: 800 !important;
+  font-family: monospace;
+  letter-spacing: 0.12em;
+}
+
+.tech-stack-light .small-index {
+  color: #64748b !important;
+  font-weight: 700 !important;
+  font-family: monospace;
+  letter-spacing: 0.08em;
+}
+
+.tech-stack-light h2,
+.tech-stack-light .section-heading-row h2 {
+  color: #09090b !important;
+  font-weight: 900 !important;
+}
+
+.tech-stack-light h2 span.text-muted,
+.tech-stack-light h2 .text-muted {
+  color: #64748b !important;
+}
+
+.tech-stack-light p,
+.tech-stack-light .section-heading-row > p {
+  color: #475569 !important;
+}
+
+/* ==========================================================================
+   CORE RUNTIMES & CLOUD INFRASTRUCTURE — PURE DARK BLACK THEME (UNCHANGED BG)
+   ========================================================================== */
+.core-runtimes-section,
+.tech-stack-dark {
+  background: #000000 !important;
+  border-block: 1px solid rgba(255, 255, 255, 0.08);
+  padding-block: 70px;
+  position: relative;
+  width: 100%;
+}
+
+.core-runtimes-section .eyebrow,
 .tech-stack-section .eyebrow,
 .tech-stack-dark .eyebrow {
   color: #a855f7 !important;
@@ -8285,6 +8328,7 @@ body {
   letter-spacing: 0.12em;
 }
 
+.core-runtimes-section .small-index,
 .tech-stack-section .small-index,
 .tech-stack-dark .small-index {
   color: #94a3b8 !important;
