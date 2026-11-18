@@ -10,7 +10,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
-import HeroThreeBackground from "./HeroThreeBackground";
 
 // Stagger container for the whole name
 const nameContainerVariants: Variants = {
