@@ -144,7 +144,7 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Giant Merged Headline Typography with RGB Chromatic Glitch Fonts */}
+            {/* Giant Headline Typography with RGB Chromatic Glitch Fonts - Split into Two Lines */}
             <motion.div
               className={`hero-dymas-big-name hero-rgb-glitch-wrap ${isGlitching ? "is-glitching" : ""}`}
               aria-label="Dinidu Sachintha"
@@ -155,38 +155,43 @@ export default function Hero() {
               onClick={triggerGlitch}
               title="Hover to glitch"
             >
-              <span className="hero-name-outlined hero-glitch-word" data-text="DINIDU" aria-hidden="true">
-                {diniduChars.map((char, i) => (
-                  <motion.span
-                    key={`d-${i}`}
-                    custom={i}
-                    variants={letterVariants}
-                    className="hero-char-letter hero-rgb-char"
-                    data-char={char}
-                    style={{
-                      animationDelay: `${i * 0.14}s`,
-                    }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </span>
-              <span className="hero-name-solid hero-glitch-word" data-text="SACHINTHA" aria-hidden="true">
-                {sachinthaChars.map((char, i) => (
-                  <motion.span
-                    key={`s-${i}`}
-                    custom={i + 6}
-                    variants={letterVariants}
-                    className="hero-char-letter hero-rgb-char"
-                    data-char={char}
-                    style={{
-                      animationDelay: `${(i + 6) * 0.14}s`,
-                    }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </span>
+              <div className="hero-name-line hero-name-line-1">
+                <span className="hero-name-outlined hero-glitch-word" data-text="DINIDU" aria-hidden="true">
+                  {diniduChars.map((char, i) => (
+                    <motion.span
+                      key={`d-${i}`}
+                      custom={i}
+                      variants={letterVariants}
+                      className="hero-char-letter hero-rgb-char"
+                      data-char={char}
+                      style={{
+                        animationDelay: `${i * 0.12}s`,
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </span>
+              </div>
+
+              <div className="hero-name-line hero-name-line-2">
+                <span className="hero-name-solid hero-glitch-word" data-text="SACHINTHA" aria-hidden="true">
+                  {sachinthaChars.map((char, i) => (
+                    <motion.span
+                      key={`s-${i}`}
+                      custom={i + 6}
+                      variants={letterVariants}
+                      className="hero-char-letter hero-rgb-char"
+                      data-char={char}
+                      style={{
+                        animationDelay: `${(i + 6) * 0.12}s`,
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </span>
+              </div>
             </motion.div>
 
             {/* Bottom Left: Role Title, Tech Pill, and Action Button */}

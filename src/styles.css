@@ -6100,25 +6100,37 @@ main {
   justify-content: space-between;
 }
 
-/* Giant Merged Headline Typography - DINIDU SACHINTHA on ONE SINGLE LINE */
+/* Giant Headline Typography - DINIDU SACHINTHA Split into TWO STACKED LINES */
 .hero-dymas-big-name {
   position: absolute;
-  top: 11%;
+  top: 7%;
   left: 0;
-  display: inline-flex;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  align-items: baseline;
-  gap: clamp(14px, 1.8vw, 24px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0px, 0.4vw, 4px);
   max-width: none;
-  width: max-content;
+  width: auto;
   z-index: 15 !important;
-  /* Placed on one single line in front of the video */
-  pointer-events: none;
+  pointer-events: auto;
   user-select: none;
-  line-height: 0.95;
+  line-height: 0.9;
   animation: smoothNameFloatWave 7.5s ease-in-out infinite;
   will-change: transform;
+}
+
+.hero-name-line {
+  display: block;
+  white-space: nowrap;
+  line-height: 0.9;
+}
+
+.hero-name-line-1 {
+  margin-bottom: clamp(-4px, -0.5vw, -1px);
+}
+
+.hero-name-line-2 {
+  margin-top: clamp(-4px, -0.5vw, -1px);
 }
 
 .hero-char-letter {
@@ -6805,21 +6817,26 @@ main {
     margin-bottom: 6px;
     margin-inline: auto;
     display: flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     max-width: 100%;
-    gap: clamp(6px, 2vw, 12px);
+    gap: 3px;
     text-align: center;
     z-index: 15 !important;
   }
 
+  .hero-name-line {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+
   .hero-name-outlined,
   .hero-name-solid {
-    font-size: clamp(20px, 5.8vw, 34px);
-    line-height: 0.95;
+    font-size: clamp(26px, 7.5vw, 44px);
+    line-height: 0.92;
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
