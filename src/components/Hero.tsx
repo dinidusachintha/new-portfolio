@@ -10,7 +10,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
-import LightningBackground from "./LightningBackground";
 
 // Stagger container for the whole name
 const nameContainerVariants: Variants = {
@@ -70,10 +69,7 @@ export default function Hero() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
-        <div className="hero-dymas-frame relative overflow-hidden">
-          {/* Smooth Electric Plasma & Lightning Effect */}
-          <LightningBackground side="left" palette="cyan-violet" className="rounded-[24px]" />
-
+        <div className="hero-dymas-frame">
           {/* Top Bar: Minimalist System & Architecture Identifier */}
           <motion.div
             className="hero-dymas-topbar"
