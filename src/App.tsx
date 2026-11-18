@@ -19,6 +19,7 @@ import VideoBanner from "./components/VideoBanner";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
+import TechnologyMarquee from "./components/TechnologyMarquee";
 
 const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -59,13 +60,6 @@ const navLinks = [
   { name: "Terminal", id: "terminal" },
   { name: "Arsenal", id: "stack" },
   { name: "Contact", id: "contact" },
-];
-
-const techTickerSequence = [
-  { text: "TYPE SAFETY", symbol: "✿", type: "flower" },
-  { text: "ZERO DOWNTIME DEPLOYS", symbol: "✦", type: "star" },
-  { text: "DISTRIBUTED SYSTEMS", symbol: "✿", type: "flower" },
-  { text: "AI VIDEO PIPELINES", symbol: "✦", type: "star" },
 ];
 
 function CornerMusicButton() {
@@ -790,25 +784,8 @@ export default function App() {
             {/* Hero Section */}
             <Hero />
 
-            {/* Continuous Tech Ticker with Subtle Floral Accents */}
-            <div className="marquee-section" aria-hidden="true">
-              <div className="marquee-track">
-                {[0, 1].map((groupIdx) => (
-                  <div key={groupIdx} className="marquee-group">
-                    {[0, 1, 2, 3].map((repIdx) =>
-                      techTickerSequence.map((item, itemIdx) => (
-                        <span key={`${groupIdx}-${repIdx}-${itemIdx}`} className="marquee-item">
-                          <span className="marquee-text">{item.text}</span>
-                          <span className={`marquee-symbol ${item.type === "flower" ? "symbol-flower" : "symbol-star"}`}>
-                            {item.symbol}
-                          </span>
-                        </span>
-                      ))
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Futuristic 3D Infinite Technology Marquee */}
+            <TechnologyMarquee />
 
             {/* 01 / About Section */}
             <AboutSection />
