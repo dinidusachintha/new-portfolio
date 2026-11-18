@@ -339,7 +339,9 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("");
   const [workReady, setWorkReady] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const { shouldPlayIntro, markIntroSeen } = useIntroSession();
+  const [introActive, setIntroActive] = useState(shouldPlayIntro);
+  const [loaded, setLoaded] = useState(!shouldPlayIntro);
   const [scrollPercent, setScrollPercent] = useState(0);
 
   const handleOpenProject = (proj: Project, tab: "demo" | "arch" = "demo") => {
@@ -464,28 +466,26 @@ export default function App() {
     };
   }, []);
 
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [siteReady, setSiteReady] = useState(false);
+  const handleIntroComplete = () => {
+    markIntroSeen();
+    setIntroActive(false);
+    setLoaded(true);
+    lenis.current?.start();
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 60);
+  };
 
+  // Lock scrolling during intro reveal animation
   useEffect(() => {
-    let current = 0;
-    const interval = setInterval(() => {
-      current += Math.floor(Math.random() * 24) + 22;
-      if (current >= 100) {
-        current = 100;
-        setLoadingProgress(100);
-        clearInterval(interval);
-        setTimeout(() => {
-          setSiteReady(true);
-          setLoaded(true);
-        }, 140);
-      } else {
-        setLoadingProgress(current);
-      }
-    }, 45);
-
-    return () => clearInterval(interval);
-  }, []);
+    if (introActive) {
+      lenis.current?.stop();
+      document.documentElement.classList.add("intro-active");
+    } else {
+      lenis.current?.start();
+      document.documentElement.classList.remove("intro-active");
+    }
+  }, [introActive]);
 
   useEffect(() => {
     let frame = 0;
