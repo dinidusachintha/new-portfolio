@@ -32,8 +32,8 @@ export default function Navbar({
     <header
       className={`header fixed inset-x-0 top-0 z-[75] transition-all duration-300 ${
         scrolled
-          ? "bg-[#050508]/95 backdrop-blur-2xl py-3 border-b border-white/12 shadow-[0_10px_35px_-10px_rgba(0,0,0,0.9),0_0_25px_rgba(152,103,255,0.06)]"
-          : "bg-[#08080c]/85 backdrop-blur-xl py-4 sm:py-5 border-b border-white/[0.07] shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+          ? "bg-[#0A0F14]/95 backdrop-blur-2xl py-3 border-b border-[#2E6F73]/35 shadow-[0_10px_35px_-10px_rgba(0,0,0,0.9),0_0_25px_rgba(15,61,62,0.2)]"
+          : "bg-[#0A0F14]/85 backdrop-blur-xl py-4 sm:py-5 border-b border-[#2E6F73]/20 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
       }`}
       role="banner"
     >
@@ -49,7 +49,7 @@ export default function Navbar({
           aria-label="Dinidu Sachintha, Back to home top"
         >
           {/* Glass Brand Monogram with Live Indicator */}
-          <div className="relative p-1.5 sm:p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] backdrop-blur-md border border-white/20 hover:border-white/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:scale-105">
+          <div className="relative p-1.5 sm:p-2 rounded-xl bg-[#0F3D3E]/40 hover:bg-[#0F3D3E]/70 backdrop-blur-md border border-[#7FB3B8]/30 hover:border-[#7FB3B8]/60 shadow-[inset_0_1px_1px_rgba(234,220,200,0.25),0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:scale-105">
             <img
               src={asset("assets/images/ds-logo.png")}
               alt="DS Monogram"
@@ -62,17 +62,17 @@ export default function Navbar({
             />
             {/* Live Status Pulse Dot */}
             <span
-              className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#08080c] shadow-[0_0_8px_#10b981] animate-pulse"
+              className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#7FB3B8] border-2 border-[#0A0F14] shadow-[0_0_8px_#7FB3B8] animate-pulse"
               title="Available for high-impact software engineering roles"
             />
           </div>
 
           {/* Name & Title */}
           <div className="flex flex-col leading-none">
-            <span className="font-unbounded font-black text-sm sm:text-base tracking-tight text-white whitespace-nowrap group-hover:text-violet-300 transition-colors">
-              Dinidu<span className="text-violet-400">.</span>
+            <span className="font-unbounded font-black text-sm sm:text-base tracking-tight text-[#EADCC8] whitespace-nowrap group-hover:text-[#7FB3B8] transition-colors">
+              Dinidu<span className="text-[#C8601F]">.</span>
             </span>
-            <span className="font-mono text-[8px] sm:text-[9px] text-gray-400 tracking-wider uppercase hidden min-[360px]:block mt-0.5">
+            <span className="font-mono text-[8px] sm:text-[9px] text-[#8E9EA0] tracking-wider uppercase hidden min-[360px]:block mt-0.5">
               SYSTEMS ARCHITECT
             </span>
           </div>
@@ -80,7 +80,7 @@ export default function Navbar({
 
         {/* Desktop Centered Capsule Navigation Bar */}
         <nav
-          className="hidden md:flex items-center gap-1 lg:gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.5)]"
+          className="hidden md:flex items-center gap-1 lg:gap-1.5 px-3 py-1.5 rounded-full bg-[#0F3D3E]/30 backdrop-blur-2xl border border-[#2E6F73]/30 shadow-[inset_0_1px_1px_rgba(234,220,200,0.08),0_4px_20px_rgba(0,0,0,0.5)]"
           aria-label="Primary navigation"
         >
           {navLinks.map((link) => {
@@ -96,13 +96,13 @@ export default function Navbar({
                 }}
                 className={`relative px-3.5 py-1.5 rounded-full font-mono text-[11px] sm:text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                   isActive
-                    ? "bg-white/[0.12] text-white font-semibold border border-white/20 shadow-[0_0_14px_rgba(152,103,255,0.3)]"
-                    : "text-slate-400 hover:text-white hover:bg-white/[0.05]"
+                    ? "bg-[#0F3D3E]/80 text-[#EADCC8] font-semibold border border-[#7FB3B8]/40 shadow-[0_0_14px_rgba(46,111,115,0.4)]"
+                    : "text-[#8E9EA0] hover:text-[#EADCC8] hover:bg-white/[0.05]"
                 }`}
                 aria-current={isActive ? "location" : undefined}
               >
                 {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse shadow-[0_0_6px_#a855f7]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7FB3B8] animate-pulse shadow-[0_0_6px_#7FB3B8]" />
                 )}
                 <span>{link.name}</span>
               </a>
@@ -133,12 +133,12 @@ export default function Navbar({
               e.preventDefault();
               onNavigate("home", "contact");
             }}
-            className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-white font-mono text-xs font-semibold border border-white/15 hover:border-violet-400/50 shadow-sm transition-all duration-200 cursor-pointer group"
+            className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#C8601F] hover:bg-[#db6c25] active:scale-95 text-white font-mono text-xs font-semibold border border-[#EADCC8]/30 shadow-md transition-all duration-200 cursor-pointer group"
           >
             <span>Let’s Talk</span>
             <ArrowUpRight
               size={13}
-              className="text-violet-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+              className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
             />
           </a>
 

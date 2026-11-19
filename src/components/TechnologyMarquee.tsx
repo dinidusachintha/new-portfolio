@@ -73,7 +73,7 @@ function GeometricSeparator({ type }: { type: TechnologyItem["separatorType"] })
     case "diamond":
       return (
         <span className="marquee-3d-separator" aria-hidden="true">
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF]" viewBox="0 0 24 24" fill="currentColor">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#7FB3B8]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" />
           </svg>
         </span>
@@ -81,7 +81,7 @@ function GeometricSeparator({ type }: { type: TechnologyItem["separatorType"] })
     case "hexagon":
       return (
         <span className="marquee-3d-separator" aria-hidden="true">
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8601F]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2" />
             <circle cx="12" cy="12" r="2.5" fill="currentColor" />
           </svg>
@@ -90,7 +90,7 @@ function GeometricSeparator({ type }: { type: TechnologyItem["separatorType"] })
     case "star":
       return (
         <span className="marquee-3d-separator" aria-hidden="true">
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF]" viewBox="0 0 24 24" fill="currentColor">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#7FB3B8]" viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="12" r="3" />
             <path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -99,7 +99,7 @@ function GeometricSeparator({ type }: { type: TechnologyItem["separatorType"] })
     case "cube":
       return (
         <span className="marquee-3d-separator" aria-hidden="true">
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#EADCC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
         </span>

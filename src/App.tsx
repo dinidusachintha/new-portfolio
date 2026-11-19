@@ -234,8 +234,8 @@ function HaveASystemSection() {
 
   return (
     <div className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
-        <Sparkles size={13} className="text-violet-400" />
+      <span className="font-mono text-xs uppercase tracking-widest text-[#7FB3B8] mb-4 inline-flex items-center gap-2">
+        <Sparkles size={13} className="text-[#C8601F]" />
         <span>07 // INITIATE COLLABORATION</span>
       </span>
 
@@ -243,18 +243,18 @@ function HaveASystemSection() {
         line1="HAVE A SYSTEM TO BUILD OR ARCHITECT?"
         line2="LET'S BUILD IT."
         line2ClassName="have-a-system-outline font-unbounded block mt-2"
-        className="have-a-system-title font-unbounded font-black text-white tracking-tight leading-[1.02] mb-6"
+        className="have-a-system-title font-unbounded font-black text-[#EADCC8] tracking-tight leading-[1.02] mb-6"
       />
 
-      <p className="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed mb-6 sm:mb-7">
+      <p className="text-[#cbd5e1] text-base sm:text-lg max-w-2xl leading-relaxed mb-6 sm:mb-7">
         I am currently open for new projects. You bring the idea, and I will handle the code, the architecture, and all the fine details to make sure it runs flawlessly.
       </p>
 
-      {/* Action Buttons matching Image 3 */}
+      {/* Action Buttons with Premium Liquid Glass Style */}
       <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-6 sm:mb-8">
         <a
           href={`mailto:${profile.email}?subject=Project%20Architecture%20Inquiry`}
-          className="inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 cursor-pointer whitespace-nowrap"
+          className="glass-btn glass-btn-primary inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-full text-white font-bold text-xs sm:text-sm transition-all shadow-lg cursor-pointer whitespace-nowrap"
         >
           <span>start a project</span>
           <Mail size={15} className="sm:w-4 sm:h-4" />
@@ -264,7 +264,7 @@ function HaveASystemSection() {
           <a
             href={asset(profile.cv)}
             download
-            className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white font-mono text-xs sm:text-sm border border-white/20 transition-all cursor-pointer whitespace-nowrap"
+            className="glass-btn glass-btn-secondary inline-flex items-center justify-center gap-1.5 sm:gap-2 px-5 sm:px-7 py-3 rounded-full text-[#EADCC8] font-mono text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap"
           >
             <span>download cv</span>
             <ArrowUpRight size={14} className="sm:w-[15px] sm:h-[15px]" />
@@ -274,7 +274,7 @@ function HaveASystemSection() {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 rounded-full bg-white/[0.02] hover:bg-white/[0.06] text-gray-400 hover:text-white font-mono text-[11px] sm:text-xs border border-white/10 transition-all cursor-pointer max-w-full truncate"
+          className="glass-btn glass-btn-ghost inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full text-[#8E9EA0] hover:text-[#EADCC8] font-mono text-[11px] sm:text-xs transition-all cursor-pointer max-w-full truncate"
           title="Click to copy email address"
         >
           <span className="truncate">{copied ? "Email Copied!" : profile.email}</span>
@@ -282,13 +282,13 @@ function HaveASystemSection() {
       </div>
 
       {/* Social Links Row matching Image 3 with compact vertical spacing */}
-      <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-5 sm:pt-6 pb-2 border-t border-white/10 font-mono text-xs text-gray-400">
+      <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-5 sm:pt-6 pb-2 border-t border-[#2E6F73]/30 font-mono text-xs text-[#8E9EA0]">
         {profile.linkedin && (
           <a
             href={profile.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors flex items-center gap-1.5"
+            className="hover:text-[#7FB3B8] transition-colors flex items-center gap-1.5"
           >
             <span>LINKEDIN</span>
             <ArrowUpRight size={13} />
@@ -299,7 +299,7 @@ function HaveASystemSection() {
             href={profile.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors flex items-center gap-1.5"
+            className="hover:text-[#7FB3B8] transition-colors flex items-center gap-1.5"
           >
             <span>GITHUB</span>
             <ArrowUpRight size={13} />
@@ -309,7 +309,7 @@ function HaveASystemSection() {
           href="https://instagram.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-white transition-colors flex items-center gap-1.5"
+          className="hover:text-[#7FB3B8] transition-colors flex items-center gap-1.5"
         >
           <span>INSTAGRAM</span>
           <ArrowUpRight size={13} />
@@ -319,7 +319,7 @@ function HaveASystemSection() {
             href={`https://wa.me/${profile.phone.replace(/\D/g, "")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors flex items-center gap-1.5"
+            className="hover:text-[#7FB3B8] transition-colors flex items-center gap-1.5"
           >
             <span>WHATSAPP</span>
             <ArrowUpRight size={13} />
@@ -796,26 +796,28 @@ export default function App() {
         )}
       </main>
 
-      {/* Simple Footer matching Image 3 with reduced compact spacing */}
-      <footer className="footer-simple container border-t border-white/10 pt-4 pb-20 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-mono text-xs text-gray-400">
-        <div className="flex items-center gap-3">
-          <span>© {new Date().getFullYear()} DINIDU SACHINTHA</span>
-        </div>
+      {/* Simple Footer with Dedicated Obsidian Glass Background */}
+      <footer className="footer-simple w-full pt-6 pb-20 sm:py-6 border-t font-mono text-xs text-[#8E9EA0]">
+        <div className="container flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-3">
+            <span>© {new Date().getFullYear()} DINIDU SACHINTHA</span>
+          </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            if (lenis.current) {
-              lenis.current.scrollTo(0, { duration: 1.1 });
-            } else {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
-        >
-          <span>BACK TO TOP</span>
-          <ArrowUp size={14} />
-        </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (lenis.current) {
+                lenis.current.scrollTo(0, { duration: 1.1 });
+              } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            className="flex items-center gap-1.5 hover:text-[#7FB3B8] transition-colors cursor-pointer"
+          >
+            <span>BACK TO TOP</span>
+            <ArrowUp size={14} />
+          </button>
+        </div>
       </footer>
 
       {/* Background Corner Music Play/Pause Toggle (Icon Only) matching Image 3 */}
