@@ -139,7 +139,7 @@ export default function MobileSidebar({
           {/* Slide-In Navigation Drawer */}
           <motion.div
             ref={sidebarRef}
-            className="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] h-full h-[100dvh] bg-[#0A0F14] border-l border-[#2E6F73]/30 shadow-[-20px_0_60px_rgba(0,0,0,0.95)] flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
+            className="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] h-full h-[100dvh] bg-[#090812] border-l border-white/15 shadow-[-20px_0_60px_rgba(0,0,0,0.95)] flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
             style={{
               paddingTop: "max(1rem, env(safe-area-inset-top))",
               paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
@@ -155,19 +155,19 @@ export default function MobileSidebar({
           >
             {/* Ambient Background Glow Flares */}
             <div
-              className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-[#0F3D3E]/40 blur-3xl pointer-events-none"
+              className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-violet-600/20 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
             <div
-              className="absolute bottom-10 left-0 w-48 h-48 rounded-full bg-[#C8601F]/15 blur-3xl pointer-events-none"
+              className="absolute bottom-10 left-0 w-48 h-48 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
 
             {/* TOP HEADER */}
-            <div className="relative z-10 px-5 pt-3 pb-4 border-b border-[#2E6F73]/20 flex items-center justify-between">
+            <div className="relative z-10 px-5 pt-3 pb-4 border-b border-white/[0.08] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 {/* Brand Logo Monogram */}
-                <div className="w-8 h-8 rounded-xl bg-[#0F3D3E]/40 border border-[#7FB3B8]/30 p-1 flex items-center justify-center shadow-inner">
+                <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 p-1 flex items-center justify-center shadow-inner">
                   <img
                     src={asset("assets/images/ds-logo.png")}
                     alt="DS Monogram"
@@ -175,10 +175,10 @@ export default function MobileSidebar({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-unbounded font-black text-sm tracking-tight text-[#EADCC8] leading-none">
-                    Dinidu<span className="text-[#C8601F]">.</span>
+                  <span className="font-unbounded font-black text-sm tracking-tight text-white leading-none">
+                    Dinidu<span className="text-violet-400">.</span>
                   </span>
-                  <span className="font-mono text-[9px] text-[#8E9EA0] tracking-wider uppercase mt-0.5">
+                  <span className="font-mono text-[9px] text-gray-400 tracking-wider uppercase mt-0.5">
                     ARCHITECT
                   </span>
                 </div>
@@ -186,7 +186,7 @@ export default function MobileSidebar({
 
               {/* Close Button */}
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#0F3D3E]/50 border border-[#7FB3B8]/30 text-[9px] font-mono font-bold text-[#7FB3B8] uppercase tracking-widest">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[9px] font-mono font-bold text-violet-300 uppercase tracking-widest">
                   <Code2 size={10} />
                   NAV
                 </span>
@@ -209,18 +209,18 @@ export default function MobileSidebar({
                 <button
                   type="button"
                   onClick={handleBlogClick}
-                  className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#0F3D3E]/70 via-[#0A0F14]/80 to-[#2E6F73]/40 border border-[#7FB3B8]/30 hover:border-[#7FB3B8]/60 active:scale-[0.99] transition-all flex items-center justify-between shadow-lg group cursor-pointer"
+                  className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-violet-950/60 via-purple-900/30 to-black/70 border border-violet-500/40 hover:border-violet-400/80 active:scale-[0.99] transition-all flex items-center justify-between shadow-lg group cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
                     <Sparkles
                       size={13}
-                      className="text-[#C8601F] group-hover:rotate-12 transition-transform"
+                      className="text-violet-400 group-hover:rotate-12 transition-transform"
                     />
-                    <span className="font-unbounded font-bold text-xs text-[#EADCC8] tracking-wide">
+                    <span className="font-unbounded font-bold text-xs text-white tracking-wide">
                       {currentPage === "blog" ? "RETURN TO PORTFOLIO" : "EXPLORE BLOG ARTICLES"}
                     </span>
                   </div>
-                  <span className="px-1.5 py-0.5 rounded bg-[#C8601F] text-[9.5px] font-mono font-bold text-white shadow-sm">
+                  <span className="px-1.5 py-0.5 rounded bg-violet-600 text-[9.5px] font-mono font-bold text-white shadow-sm">
                     NEW
                   </span>
                 </button>
@@ -239,8 +239,8 @@ export default function MobileSidebar({
                       onClick={(e) => handleLinkClick(e, link.id)}
                       className={`min-h-[46px] px-3.5 py-2.5 rounded-xl flex items-center justify-between text-sm transition-all duration-200 cursor-pointer group ${
                         isActive
-                          ? "bg-[#0F3D3E]/80 text-[#EADCC8] font-bold border border-[#7FB3B8]/40 shadow-[0_0_15px_rgba(46,111,115,0.3)]"
-                          : "text-[#8E9EA0] hover:text-[#EADCC8] hover:bg-white/[0.04] active:bg-white/[0.08]"
+                          ? "bg-violet-500/20 text-white font-bold border border-violet-400/40 shadow-[0_0_15px_rgba(152,103,255,0.2)]"
+                          : "text-gray-300 hover:text-white hover:bg-white/[0.04] active:bg-white/[0.08]"
                       }`}
                       aria-current={isActive ? "location" : undefined}
                     >
@@ -248,8 +248,8 @@ export default function MobileSidebar({
                         <span
                           className={`font-mono text-[10.5px] tracking-wider transition-colors ${
                             isActive
-                              ? "text-[#7FB3B8] font-bold"
-                              : "text-[#8E9EA0]/60 group-hover:text-[#7FB3B8]"
+                              ? "text-violet-300 font-bold"
+                              : "text-gray-500 group-hover:text-violet-400"
                           }`}
                         >
                           {itemNumber}
@@ -261,12 +261,12 @@ export default function MobileSidebar({
 
                       <div className="flex items-center gap-2">
                         {isActive && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#7FB3B8] animate-pulse shadow-[0_0_8px_#7FB3B8]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_#a855f7]" />
                         )}
                         <ArrowUpRight
                           size={15}
                           className={`transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
-                            isActive ? "text-[#7FB3B8]" : "text-[#8E9EA0]/60 group-hover:text-[#EADCC8]"
+                            isActive ? "text-violet-300" : "text-gray-500 group-hover:text-gray-300"
                           }`}
                         />
                       </div>
@@ -277,18 +277,18 @@ export default function MobileSidebar({
             </div>
 
             {/* BOTTOM FOOTER */}
-            <div className="relative z-10 px-5 pt-3 border-t border-[#2E6F73]/20 space-y-3.5">
+            <div className="relative z-10 px-5 pt-3 border-t border-white/[0.08] space-y-3.5">
               {/* Quick Collaboration CTA */}
               <a
                 href="#contact"
                 onClick={(e) => handleLinkClick(e, "contact")}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-[#0F3D3E]/40 hover:bg-[#0F3D3E]/70 active:scale-[0.99] border border-[#7FB3B8]/30 flex items-center justify-between text-xs font-mono text-[#EADCC8] transition-colors"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.99] border border-white/10 flex items-center justify-between text-xs font-mono text-gray-200 transition-colors"
               >
                 <span className="flex items-center gap-2">
-                  <Mail size={13} className="text-[#C8601F]" />
+                  <Mail size={13} className="text-violet-400" />
                   <span>Let’s build together</span>
                 </span>
-                <ArrowUpRight size={14} className="text-[#8E9EA0]" />
+                <ArrowUpRight size={14} className="text-gray-400" />
               </a>
 
               {/* Social Media Links */}

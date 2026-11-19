@@ -39,15 +39,15 @@ export default function TechStack() {
   const getPillarIcon = (iconName: string) => {
     switch (iconName) {
       case "Layout":
-        return <Layout size={24} className="text-[#7FB3B8]" />;
+        return <Layout size={24} className="text-cyan-400" />;
       case "Server":
-        return <Server size={24} className="text-[#C8601F]" />;
+        return <Server size={24} className="text-violet-400" />;
       case "Database":
-        return <Database size={24} className="text-[#7FB3B8]" />;
+        return <Database size={24} className="text-emerald-400" />;
       case "Cloud":
-        return <Cloud size={24} className="text-[#2E6F73]" />;
+        return <Cloud size={24} className="text-blue-400" />;
       default:
-        return <Cpu size={24} className="text-[#EADCC8]" />;
+        return <Cpu size={24} className="text-violet-400" />;
     }
   };
 
@@ -55,15 +55,15 @@ export default function TechStack() {
 
   return (
     <>
-      {/* SECTION 1: ENGINEERING ARSENAL & TOOLKIT */}
-      <section className="tech-stack-section tech-stack-arsenal" id="stack">
+      {/* SECTION 1: ENGINEERING ARSENAL & TOOLKIT (WHITE BACKGROUND) */}
+      <section className="tech-stack-section tech-stack-light" id="stack">
         <div className="container">
           <div className="section-top reveal">
-            <span className="eyebrow flex items-center gap-1.5 font-mono text-[#7FB3B8]">
-              <Code2 size={13} className="text-[#C8601F]" />
+            <span className="eyebrow">
+              <Code2 size={13} className="inline mr-1 text-violet-600" />
               05 / ENGINEERING ARSENAL & TOOLKIT
             </span>
-            <span className="small-index font-mono text-[#8E9EA0]">INTERACTIVE ARCHITECTURAL SLIDESHOW</span>
+            <span className="small-index">INTERACTIVE ARCHITECTURAL SLIDESHOW</span>
           </div>
 
           <div className="section-heading-row reveal">
@@ -71,11 +71,11 @@ export default function TechStack() {
               <FlyingHeading
                 line1="Structured for scale."
                 line2="Proven in production."
-                line2ClassName="text-[#8E9EA0]"
+                line2ClassName="text-muted"
                 className="font-unbounded"
               />
             </div>
-            <p className="text-[#8E9EA0]">
+            <p>
               I select tools based on domain requirements, low-latency performance, and
               long-term maintainability.
             </p>
@@ -119,8 +119,8 @@ export default function TechStack() {
               </button>
 
               <div className="slide-counter-badge font-mono text-xs">
-                <span className="text-[#7FB3B8] font-bold">0{currentSlide + 1}</span>
-                <span className="text-[#8E9EA0]"> / 0{skillPillars.length}</span>
+                <span className="text-violet-300 font-bold">0{currentSlide + 1}</span>
+                <span className="text-muted"> / 0{skillPillars.length}</span>
               </div>
 
               <button
@@ -145,7 +145,7 @@ export default function TechStack() {
             </div>
           </div>
 
-          {/* Main Slide Showcase Card with Premium Glass Effect */}
+          {/* Main Slide Showcase Card */}
           <div className="slideshow-stage mt-6 reveal-scale">
             <div key={activePillar.id} className="slideshow-card">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -156,29 +156,29 @@ export default function TechStack() {
                       {getPillarIcon(activePillar.icon)}
                     </div>
                     <div>
-                      <span className="pillar-badge font-mono">{activePillar.badge}</span>
-                      <h3 className="pillar-title font-unbounded text-xl sm:text-2xl font-bold text-[#EADCC8] mt-0.5">
+                      <span className="pillar-badge">{activePillar.badge}</span>
+                      <h3 className="pillar-title font-unbounded text-xl sm:text-2xl font-bold text-white mt-0.5">
                         {activePillar.title}
                       </h3>
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#cbd5e1] leading-relaxed">
+                  <p className="text-sm text-gray-300 leading-relaxed">
                     {activePillar.description}
                   </p>
 
-                  <div className="pillar-meta-box p-4 rounded-xl space-y-2">
+                  <div className="pillar-meta-box p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#8E9EA0]">ARCHITECTURAL DOMAIN</span>
-                      <span className="text-[#C8601F] font-semibold">Tier-1 Production</span>
+                      <span className="text-gray-400">ARCHITECTURAL DOMAIN</span>
+                      <span className="text-violet-400 font-semibold">Tier-1 Production</span>
                     </div>
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#8E9EA0]">ACTIVE COMPETENCIES</span>
-                      <span className="text-[#7FB3B8] font-semibold">{activePillar.skills.length} Specializations</span>
+                      <span className="text-gray-400">ACTIVE COMPETENCIES</span>
+                      <span className="text-cyan-400 font-semibold">{activePillar.skills.length} Specializations</span>
                     </div>
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#8E9EA0]">COMPLIANCE</span>
-                      <span className="text-[#EADCC8] font-semibold">Clean Code & SOLID</span>
+                      <span className="text-gray-400">COMPLIANCE</span>
+                      <span className="text-emerald-400 font-semibold">Clean Code & SOLID</span>
                     </div>
                   </div>
 
@@ -198,7 +198,7 @@ export default function TechStack() {
 
                 {/* Right Column: In-Depth Skill Rows */}
                 <div className="lg:col-span-7 space-y-3.5">
-                  <div className="flex items-center justify-between pb-1 border-b border-white/10 text-xs font-mono text-[#8E9EA0]">
+                  <div className="flex items-center justify-between pb-1 border-b border-white/10 text-xs font-mono text-muted">
                     <span>CORE SPECIALIZATION</span>
                     <span>PROFICIENCY & BENCHMARK</span>
                   </div>
@@ -206,7 +206,7 @@ export default function TechStack() {
                   {activePillar.skills.map((skill) => (
                     <div key={skill.name} className="skill-slide-row">
                       <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-                        <span className="text-[#EADCC8] flex items-center gap-2 text-sm font-medium">
+                        <span className="text-white flex items-center gap-2 text-sm">
                           <span className="skill-dot" />
                           {skill.name}
                         </span>
@@ -221,7 +221,7 @@ export default function TechStack() {
                         </span>
                       </div>
 
-                      <p className="text-xs text-[#94a3b8] leading-relaxed">
+                      <p className="text-xs text-gray-400 leading-relaxed">
                         {skill.desc}
                       </p>
 
@@ -242,18 +242,18 @@ export default function TechStack() {
         </div>
       </section>
 
-      {/* SECTION 2: CORE RUNTIMES & CLOUD INFRASTRUCTURE */}
+      {/* SECTION 2: CORE RUNTIMES & CLOUD INFRASTRUCTURE (UNCHANGED DARK BLACK BACKGROUND) */}
       <section className="core-runtimes-section tech-stack-dark" id="runtimes">
         <div className="container">
           <div className="section-top reveal mb-5">
-            <span className="eyebrow flex items-center gap-1.5 font-mono text-[#7FB3B8]">
-              <Zap size={13} className="text-[#C8601F]" />
+            <span className="eyebrow flex items-center gap-1.5">
+              <Zap size={13} className="text-violet-400" />
               CORE RUNTIMES & CLOUD INFRASTRUCTURE
             </span>
-            <span className="small-index font-mono text-[#8E9EA0]">END-TO-END OBSERVABILITY</span>
+            <span className="small-index">END-TO-END OBSERVABILITY</span>
           </div>
 
-          {/* Infinite Tech Marquee with Floating Glass Pills */}
+          {/* Infinite Tech Marquee */}
           <div className="tech-marquee-wrapper reveal" aria-hidden="true">
             <div className="tech-marquee-strip">
               <div className="marquee-content-track">
@@ -267,38 +267,38 @@ export default function TechStack() {
             </div>
           </div>
 
-          {/* CS Fundamentals & Architecture Badges with Frosted Glass */}
-          <div className="cs-fundamentals-bar mt-10 p-5 rounded-2xl reveal">
+          {/* CS Fundamentals & Architecture Badges */}
+          <div className="cs-fundamentals-bar mt-10 p-5 rounded-2xl bg-white/[0.02] border border-white/5 reveal">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
               <div className="p-3">
-                <div className="text-sm font-bold text-[#7FB3B8] font-mono tracking-wide">
+                <div className="text-sm font-bold text-violet-300 font-mono">
                   SYSTEM DESIGN
                 </div>
-                <div className="text-xs text-[#8E9EA0] mt-1">
+                <div className="text-xs text-muted mt-1">
                   Microservices & Event-Driven
                 </div>
               </div>
               <div className="p-3">
-                <div className="text-sm font-bold text-[#EADCC8] font-mono tracking-wide">
+                <div className="text-sm font-bold text-cyan-300 font-mono">
                   ALGORITHMS & DSA
                 </div>
-                <div className="text-xs text-[#8E9EA0] mt-1">
+                <div className="text-xs text-muted mt-1">
                   Time & Space Complexity
                 </div>
               </div>
               <div className="p-3">
-                <div className="text-sm font-bold text-[#7FB3B8] font-mono tracking-wide">
+                <div className="text-sm font-bold text-emerald-300 font-mono">
                   ACID GUARANTEES
                 </div>
-                <div className="text-xs text-[#8E9EA0] mt-1">
+                <div className="text-xs text-muted mt-1">
                   Transactions & Locking
                 </div>
               </div>
               <div className="p-3">
-                <div className="text-sm font-bold text-[#C8601F] font-mono tracking-wide">
+                <div className="text-sm font-bold text-amber-300 font-mono">
                   CLEAN CODE
                 </div>
-                <div className="text-xs text-[#8E9EA0] mt-1">
+                <div className="text-xs text-muted mt-1">
                   SOLID & Design Patterns
                 </div>
               </div>

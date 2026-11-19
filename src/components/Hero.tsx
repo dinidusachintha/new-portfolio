@@ -111,10 +111,10 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Left: Minimalist System & Architecture Identifier */}
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-[#2E6F73]/30 bg-[#0F3D3E]/30 backdrop-blur-md">
-              <Sparkles size={13} className="text-[#C8601F] animate-pulse" />
-              <span className="font-mono text-[11px] sm:text-xs text-[#EADCC8] font-semibold tracking-wider uppercase">
-                Systems Architect <span className="text-[#7FB3B8]">✦</span> Full Stack
+            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md">
+              <Sparkles size={13} className="text-violet-400 animate-pulse" />
+              <span className="font-mono text-[11px] sm:text-xs text-slate-300 font-semibold tracking-wider uppercase">
+                Systems Architect <span className="text-white/30">✦</span> Full Stack
               </span>
             </div>
           </motion.div>
@@ -223,11 +223,11 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Code2 size={12} className="text-[#7FB3B8] shrink-0" />
+                <Code2 size={12} className="text-cyan-400 shrink-0" />
                 <span>TypeScript</span>
-                <span className="text-[#C8601F]">✦</span>
+                <span className="text-violet-400">✦</span>
                 <span>React</span>
-                <span className="text-[#7FB3B8]">✦</span>
+                <span className="text-violet-400">✦</span>
                 <span>Node.js</span>
               </motion.div>
 
