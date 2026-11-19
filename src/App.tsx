@@ -25,7 +25,6 @@ import TechnologyMarquee from "./components/TechnologyMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
 import { useIntroSession } from "./hooks/useIntroSession";
 
-const InteractiveTerminal = lazy(() => import("./components/InteractiveTerminal"));
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
 const ProjectGrid = lazy(() => import("./components/ProjectGrid"));
@@ -34,7 +33,6 @@ const navLinks = [
   { name: "About", id: "about" },
   { name: "Experience", id: "experience" },
   { name: "Systems", id: "work" },
-  { name: "Terminal", id: "terminal" },
   { name: "Arsenal", id: "stack" },
   { name: "Beyond Code", id: "leisure" },
   { name: "Contact", id: "contact" },
@@ -780,11 +778,6 @@ export default function App() {
                 </div>
               </div>
             </section>
-
-            {/* 04 / Interactive Developer Console */}
-            <Suspense fallback={<div className="container py-16"><div className="skeleton h-96 w-full rounded-3xl" /></div>}>
-              <InteractiveTerminal />
-            </Suspense>
 
             {/* 05 / Engineering Arsenal & Tech Stack */}
             <TechStack />
