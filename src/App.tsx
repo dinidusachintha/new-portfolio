@@ -24,6 +24,7 @@ import Navbar from "./components/Navbar";
 import TechnologyMarquee from "./components/TechnologyMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
 import { useIntroSession } from "./hooks/useIntroSession";
+import Butterflies from "./components/butterflies/ButterflyOverlay"
 
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
@@ -779,14 +780,14 @@ export default function App() {
               </div>
             </section>
 
-            {/* 05 / Engineering Arsenal & Tech Stack */}
+            {/* 05 / Engineering Arsenal & Tech Stack (+ Core Runtimes & Cloud Infrastructure) */}
             <TechStack />
 
-            {/* 06 / Cinematic Video Showcase */}
-            <VideoBanner />
-
-            {/* Beyond the Code — Premium Floating 3D Leisure Cards */}
+            {/* 06 / Beyond the Code — The Human Side (White Background) */}
             <LeisureSection />
+
+            {/* Cinematic Video Showcase */}
+            <VideoBanner />
 
             {/* 07 // Initiate Collaboration Section */}
             <section className="section container contact-section" id="contact">

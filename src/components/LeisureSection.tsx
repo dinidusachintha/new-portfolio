@@ -20,7 +20,7 @@ export default function LeisureSection() {
             cy="160"
             rx="460"
             ry="110"
-            stroke="rgba(152, 103, 255, 0.16)"
+            stroke="rgba(124, 58, 237, 0.18)"
             strokeWidth="1.2"
             strokeDasharray="6 8"
           />
@@ -30,7 +30,7 @@ export default function LeisureSection() {
             cy="160"
             rx="340"
             ry="80"
-            stroke="rgba(168, 85, 247, 0.28)"
+            stroke="rgba(168, 85, 247, 0.26)"
             strokeWidth="1.5"
           />
           {/* Inner Focused Core Ring (Cyan) */}
@@ -39,12 +39,12 @@ export default function LeisureSection() {
             cy="160"
             rx="200"
             ry="50"
-            stroke="rgba(0, 229, 255, 0.35)"
+            stroke="rgba(8, 145, 178, 0.3)"
             strokeWidth="1.5"
           />
           {/* Glowing Light Nodes on Rings */}
-          <circle cx="340" cy="115" r="3.5" fill="#c084fc" filter="drop-shadow(0 0 8px #a855f7)" />
-          <circle cx="660" cy="205" r="3" fill="#00E5FF" filter="drop-shadow(0 0 8px #00E5FF)" />
+          <circle cx="340" cy="115" r="3.5" fill="#7c3aed" filter="drop-shadow(0 0 8px #a855f7)" />
+          <circle cx="660" cy="205" r="3" fill="#0891b2" filter="drop-shadow(0 0 8px #06b6d4)" />
         </svg>
       </div>
 
@@ -57,9 +57,9 @@ export default function LeisureSection() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Section Eyebrow matching main portfolio theme */}
-          <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#120d1f]/90 border border-violet-500/30 text-violet-300 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-[0_0_20px_rgba(152,103,255,0.18)] backdrop-blur-md">
-            <Sparkles size={13} className="text-violet-400" />
+          {/* Section Eyebrow matching light theme */}
+          <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-sm">
+            <Sparkles size={13} className="text-violet-600" />
             <span>/ 06 — THE HUMAN SIDE</span>
           </div>
 
