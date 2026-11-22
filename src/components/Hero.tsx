@@ -169,8 +169,8 @@ export default function Hero() {
                   playsInline
                   preload="metadata"
                   poster={asset("assets/images/video2-preview.jpg")}
-                  width={560}
-                  height={640}
+                  width={1920}
+                  height={1080}
                   className="hero-dymas-portrait-video"
                   aria-label="Dinidu Sachintha video portrait"
                 />
