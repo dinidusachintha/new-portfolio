@@ -23,21 +23,31 @@
 :root {
   font-family: var(--font-sans);
   color: #FFFFFF;
-  background: #0A0F14;
+  background: #050507;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --color-background: #0A0F14;
-  --color-surface: #0F303E;
+
+  /* Shared Motion Tokens */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 200ms;
+  --dur-base: 600ms;
+  --dur-slow: 1100ms;
+
+  /* Design System Colors */
+  --bg-base: #050507;
+  --color-background: #050507;
+  --color-surface: #0e0e14;
+  --accent: #9867ff;
+  --accent-violet: #9867ff;
   --color-teal: #2E6F73;
   --color-aqua: #7FB6B8;
   --color-white: #FFFFFF;
   --color-cream: #EADCC8;
   --color-orange: #CB601F;
-  --accent: #7FB6B8;
   --accent-orange: #CB601F;
-  --line: #2E6F73;
-  --color-muted: #7FB6B8;
+  --line: rgba(152, 103, 255, 0.2);
+  --color-muted: #94a3b8;
   --scroll-progress: 0;
   --scroll-y: 0px;
   --hero-drift: 0px;

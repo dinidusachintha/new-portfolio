@@ -25,12 +25,17 @@ export default function VideoBanner() {
     const container = containerRef.current;
     if (!video || !container) return;
 
-    // Lazy-play video only when near viewport to optimize initial page bandwidth
+    video.muted = isMuted;
+
+    // Lazy-play video strictly when near viewport to eliminate startup bandwidth usage and duplicate requests
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+            video
+              .play()
+              .then(() => setIsPlaying(true))
+              .catch(() => setIsPlaying(false));
           } else if (!video.paused) {
             video.pause();
             setIsPlaying(false);
@@ -98,7 +103,7 @@ export default function VideoBanner() {
           ref={containerRef}
           className={`video-banner-card ${isFullscreen ? "is-fullscreen" : ""}`}
         >
-        {/* Background Video */}
+        {/* Background Video (controlled strictly via IntersectionObserver, no eager autoPlay) */}
         <video
           ref={videoRef}
           className="video-banner-media"
@@ -107,7 +112,6 @@ export default function VideoBanner() {
           loop
           muted={isMuted}
           playsInline
-          autoPlay
           preload="metadata"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
