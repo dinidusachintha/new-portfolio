@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { asset } from "../data/portfolio";
+import BrandLogo from "./BrandLogo";
 
 export interface NavLinkItem {
   name: string;
@@ -50,16 +50,7 @@ export default function Navbar({
         >
           {/* Glass Brand Monogram with Live Indicator */}
           <div className="relative p-1.5 sm:p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] backdrop-blur-md border border-white/20 hover:border-white/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:scale-105">
-            <img
-              src={asset("assets/images/ds-logo.png")}
-              alt="DS Monogram"
-              className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
-              style={{
-                filter: "contrast(1.2) brightness(1.06) drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
-                imageRendering: "-webkit-optimize-contrast",
-              }}
-              loading="eager"
-            />
+            <BrandLogo className="w-7 h-7 sm:w-8 sm:h-8" />
             {/* Live Status Pulse Dot */}
             <span
               className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#08080c] shadow-[0_0_8px_#10b981] animate-pulse"

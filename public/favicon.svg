@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="17" fill="#111"/><path d="M42 12A23 23 0 1 0 54 44C44 54 25 50 21 37S28 10 42 12Z" fill="#eee"/><circle cx="46" cy="21" r="4" fill="#9867ff"/><circle cx="54" cy="12" r="2" fill="#9867ff"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <rect width="48" height="48" rx="12" fill="#08080c" />
+  <defs>
+    <linearGradient id="favChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#CBD5E1" />
+      <stop offset="100%" stop-color="#64748B" />
+    </linearGradient>
+    <linearGradient id="favViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E9D5FF" />
+      <stop offset="50%" stop-color="#9867FF" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(1, 0)">
+    <path d="M 8 10 L 17 6 L 17 38 L 8 42 Z" fill="url(#favChrome)" />
+    <path d="M 17 6 L 31 13 L 26 17 L 17 12 Z" fill="#E2E8F0" />
+    <path d="M 31 13 L 38 21 L 38 27 L 31 35 L 26 31 L 32 25 L 32 22 L 26 17 Z" fill="url(#favChrome)" />
+    <path d="M 17 32 L 26 31 L 31 35 L 17 42 Z" fill="#94A3B8" />
+    <path d="M 23 15 L 40 15 L 40 21 L 29 21 Z" fill="url(#favViolet)" />
+    <path d="M 25 21 L 40 29 L 36 34 L 21 26 Z" fill="url(#favViolet)" />
+    <path d="M 21 34 L 37 34 L 37 40 L 20 40 Z" fill="url(#favViolet)" />
+    <circle cx="24" cy="24" r="1.2" fill="#FFFFFF" />
+  </g>
+</svg>

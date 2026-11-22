@@ -19,6 +19,7 @@ import {
 import { asset, blogPosts, companySpotlight } from "../data/portfolio";
 import type { BlogPost, BlogSection } from "../data/portfolio";
 import SmartImage from "./SmartImage";
+import BrandLogo from "./BrandLogo";
 
 type FilterTab = "All Sections" | BlogSection;
 
@@ -127,11 +128,7 @@ export default function BlogPage({
 
         <div className="flex items-center gap-3">
           <div className="blog-author-pill hidden sm:inline-flex items-center gap-2 font-mono text-xs text-gray-300 bg-white/[0.04] backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-            <img
-              src={asset("assets/images/ds-logo.png")}
-              alt="DS Logo"
-              className="w-4 h-4 object-contain filter contrast-125 brightness-105"
-            />
+            <BrandLogo className="w-4 h-4" glow={false} />
             <span className="text-white font-semibold">DINIDU SACHINTHA</span>
             <span className="text-violet-400">// ARCHITECTURE LOGS</span>
           </div>
@@ -184,14 +181,7 @@ export default function BlogPage({
           {/* Author Callout with DS Monogram */}
           <div className="blog-reader-author flex items-center gap-3.5 pb-6 mb-8 border-b border-white/10">
             <div className="w-12 h-12 rounded-xl bg-white/[0.04] backdrop-blur-xl border border-white/20 p-2 flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_4px_16px_rgba(0,0,0,0.5)]">
-              <img
-                src={asset("assets/images/ds-logo.png")}
-                alt="DS Logo"
-                className="w-full h-full object-contain filter contrast-125 brightness-105"
-                style={{
-                  filter: "contrast(1.22) brightness(1.06) drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
-                }}
-              />
+              <BrandLogo className="w-full h-full" />
             </div>
             <div>
               <div className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
@@ -382,14 +372,7 @@ export default function BlogPage({
 
                   {/* Founder & Web Developer Role Statement with DS Logo */}
                   <div className="founder-badge flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/20 w-fit shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                    <img
-                      src={asset("assets/images/ds-logo.png")}
-                      alt="DS Monogram"
-                      className="w-7 h-7 object-contain"
-                      style={{
-                        filter: "contrast(1.22) brightness(1.06) drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
-                      }}
-                    />
+                    <BrandLogo className="w-7 h-7" />
                     <div>
                       <span className="text-xs text-gray-400 font-mono block">FOUNDER & WEB DEVELOPER</span>
                       <span className="text-xs sm:text-sm font-bold text-white">

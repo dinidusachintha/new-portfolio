@@ -9,8 +9,9 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { asset, profile } from "../data/portfolio";
+import { profile } from "../data/portfolio";
 import type { NavLinkItem } from "./Navbar";
+import BrandLogo from "./BrandLogo";
 
 interface MobileSidebarProps {
   isOpen: boolean;
@@ -168,11 +169,7 @@ export default function MobileSidebar({
               <div className="flex items-center gap-2.5">
                 {/* Brand Logo Monogram */}
                 <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 p-1 flex items-center justify-center shadow-inner">
-                  <img
-                    src={asset("assets/images/ds-logo.png")}
-                    alt="DS Monogram"
-                    className="w-full h-full object-contain"
-                  />
+                  <BrandLogo className="w-full h-full" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-unbounded font-black text-sm tracking-tight text-white leading-none">
