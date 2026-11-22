@@ -40,52 +40,6 @@ export const stats = [
   { value: "99.9%", label: "System Availability", detail: "Uptime focus" },
 ];
 
-export const bentoAboutData = {
-  name: "Dinidu Sachintha",
-  role: "Software Engineer",
-  bio: "Designing digital products and resilient architectures that are clear, usable, and conversion focused. Bridging high-performance backend infrastructure with fluid client experiences.",
-  availability: "Open to work",
-  location: "Sri Lanka",
-  stats: [
-    { label: "Industry experience", value: 1, suffix: "y", ariaLabel: "1 year" },
-    { label: "Production projects", value: 5, suffix: "+", ariaLabel: "5 plus" },
-    { label: "GitHub repositories", value: 20, suffix: "+", ariaLabel: "20 plus" },
-  ],
-  stackChips: [
-    "TypeScript",
-    "React",
-    "Node.js",
-    "Java",
-    "Spring Boot",
-    "PostgreSQL",
-    "Docker",
-    "AWS",
-  ],
-};
-
-export const processSteps = [
-  {
-    number: "01",
-    title: "Discover",
-    desc: "Deconstruct system requirements, domain boundaries, and data models to define scalable architecture.",
-  },
-  {
-    number: "02",
-    title: "Design",
-    desc: "Draft high-throughput API schemas, database indexing strategies, and component design systems.",
-  },
-  {
-    number: "03",
-    title: "Build",
-    desc: "Develop modular microservices, type-safe frontends, and CI/CD pipelines with high test coverage.",
-  },
-  {
-    number: "04",
-    title: "Ship",
-    desc: "Deploy resilient cloud infrastructure, configure observability metrics, and ensure sub-100ms response times.",
-  },
-];
-
 export type Project = {
   id: string;
   index: string;
