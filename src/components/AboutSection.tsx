@@ -14,6 +14,7 @@ import {
 import { asset, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
 import CountUpNumber from "./CountUpNumber";
+import Odometer from "./animations/Odometer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,8 +67,72 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="about-section about-section-light" id="ethos">
+    <section ref={sectionRef} className="about-section about-section-light" id="about">
       <div className="container">
+        {/* 4 Bento Stat Tiles on White Canvas Above the About Card */}
+        <div className="about-stats-grid mb-8 sm:mb-12">
+          {/* Card 1: 1y */}
+          <div className="bento-tile bento-tile-stat is-visible">
+            <dd className="bento-stat-num font-mono font-black" aria-label="1 year industry experience">
+              <Odometer
+                value="1y"
+                label="1 year industry experience"
+                digitClassName="text-white"
+                suffixClassName="text-[#9867ff] font-sans font-bold"
+              />
+            </dd>
+            <dt className="bento-stat-label text-xs sm:text-sm text-gray-400 mt-2 font-mono">
+              Industry experience
+            </dt>
+          </div>
+
+          {/* Card 2: 5+ */}
+          <div className="bento-tile bento-tile-stat is-visible">
+            <dd className="bento-stat-num font-mono font-black" aria-label="5 plus production projects">
+              <Odometer
+                value="5+"
+                label="5 plus production projects"
+                digitClassName="text-white"
+                suffixClassName="text-[#9867ff] font-sans font-bold"
+              />
+            </dd>
+            <dt className="bento-stat-label text-xs sm:text-sm text-gray-400 mt-2 font-mono">
+              Production projects
+            </dt>
+          </div>
+
+          {/* Card 3: 20+ */}
+          <div className="bento-tile bento-tile-stat is-visible">
+            <dd className="bento-stat-num font-mono font-black" aria-label="20 plus GitHub repositories">
+              <Odometer
+                value="20+"
+                label="20 plus GitHub repositories"
+                digitClassName="text-white"
+                suffixClassName="text-[#9867ff] font-sans font-bold"
+              />
+            </dd>
+            <dt className="bento-stat-label text-xs sm:text-sm text-gray-400 mt-2 font-mono">
+              GitHub repositories
+            </dt>
+          </div>
+
+          {/* Card 4: Open to work */}
+          <div className="bento-tile bento-tile-availability is-visible">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-3 w-3">
+                <span className="bento-pulse-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+              </span>
+              <span className="font-mono text-xs sm:text-sm text-emerald-400 font-semibold tracking-wide">
+                Open to work
+              </span>
+            </div>
+            <p className="text-gray-400 text-xs mt-2 font-mono">
+              Full-time & high-impact contracts
+            </p>
+          </div>
+        </div>
+
         {/* Glass Effect Black Card Floating on White Background */}
         <div className="about-glass-black-card reveal relative overflow-hidden">
           <div className="dot-grid-spotlight" aria-hidden="true" />

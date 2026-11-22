@@ -6834,11 +6834,6 @@ main {
   margin-bottom: 8px;
   white-space: nowrap !important;
 }
-  color: #ffffff;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  margin-bottom: 8px;
-}
 
 .hero-dymas-role-desc {
   font-size: 13.5px;
@@ -10541,6 +10536,38 @@ body {
   height: 480px;
   transform: translate3d(-50%, 0, 0);
   pointer-events: none;
+}
+
+/* ==========================================================================
+   4 STAT CARDS GRID ON WHITE CANVAS (ABOVE ABOUT SECTION CARD)
+   ========================================================================== */
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 1024px) {
+  .about-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+}
+
+.about-stats-grid .bento-tile {
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.55), 0 0 1px rgba(255, 255, 255, 0.1);
+  opacity: 1;
+  transform: none;
 }
 
 /* ==========================================================================
