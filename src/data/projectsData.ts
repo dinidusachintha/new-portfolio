@@ -3,6 +3,7 @@ import schoolrideLkImg from "../assets/projects/schoolride-lk.jpg";
 import waterboardInventoryImg from "../assets/projects/waterboard-inventory.jpg";
 import farmcartBlogImg from "../assets/projects/farmcart-blog.jpg";
 import spicySellingSiteImg from "../assets/projects/spicy-selling-site.jpg";
+import ayurvedicPlantImg from "../assets/projects/ayurvedic-plant-recognition.jpg";
 
 export type ProjectDomain = "Full Stack" | "Cloud & Backend" | "AI & Media";
 
@@ -28,7 +29,9 @@ export interface ProjectItem {
   problem: string;
   solution: string;
   architecture: string;
+  overviewLabel?: string;
   coreFeatures?: string;
+  techStackLabel?: string;
   highlights: string[];
   architectureNodes: ArchitectureNode[];
   technologies: string[];
@@ -42,6 +45,12 @@ export interface ProjectItem {
   glowColor: string;
   tagBg: string;
   tagColor: string;
+  tagBorderColor?: string;
+  statusBadgeVariant?: "emerald" | "cyan-green" | "violet";
+  imageOverlayLeft?: string;
+  imageOverlayRight?: string;
+  primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
   metrics: { value: string; label: string }[];
   capabilitiesLabel?: string;
   capabilitiesText?: string;
@@ -258,8 +267,72 @@ export const projectsData: ProjectItem[] = [
     imageAlt: "FarmCart Blog - Agriculture Content and Blogging Platform",
   },
   {
-    id: "spicy-selling-site",
+    id: "ayurvedic-plant-recognition",
     number: "05",
+    badgeCategory: "05 · AI / ML RESEARCH",
+    category: "AI / ML Research",
+    domain: "AI & Media",
+    year: "2026",
+    role: "ARTIFICIAL INTELLIGENCE",
+    status: "RESEARCH PROJECT",
+    title: "Ayurvedic Plant Recognition",
+    subtitle: "AI-POWERED MEDICINAL PLANT IDENTIFICATION",
+    overviewLabel: "PROJECT OVERVIEW",
+    shortDescription:
+      "An AI-powered mobile application that identifies Sri Lankan Ayurvedic medicinal plants using deep learning, computer vision, and image recognition.",
+    description:
+      "An AI-powered mobile application that identifies Sri Lankan Ayurvedic medicinal plants using deep learning, computer vision, and image recognition. Combines multi-organ botanical classification (leaf, flower, and seed analysis) with Grad-CAM explainable AI visual heatmaps and bilingual Sinhala & English medicinal knowledge.",
+    problem:
+      "Accurate identification of Sri Lankan Ayurvedic medicinal plants requires specialized botanical taxonomy knowledge, as many therapeutic species share visually similar leaf morphologies with non-medicinal or toxic lookalikes.",
+    solution:
+      "Engineered an AI-powered mobile application utilizing EfficientNet deep learning models, OpenCV image preprocessing, and Grad-CAM explainable heatmaps to classify medicinal plants from leaf, flower, and seed images with bilingual Sinhala & English therapeutic profiles.",
+    architecture:
+      "Flutter & Dart cross-platform mobile client connected to a Python deep learning inference pipeline powered by TensorFlow, EfficientNet transfer learning, OpenCV morphological segmentation, and Grad-CAM visual explainability.",
+    coreFeatures: "Plant Recognition · Image Classification · Grad-CAM · Bilingual Support",
+    techStackLabel: "PRIMARY TECH STACK",
+    highlights: [
+      "Deep learning medicinal plant classification trained on indigenous Sri Lankan Ayurvedic flora",
+      "Multi-part botanical recognition supporting leaf, flower, and seed morphological analysis",
+      "Explainable AI (XAI) integration with Grad-CAM visual attention heatmaps for transparent predictions",
+      "OpenCV preprocessing pipeline for background removal, leaf venation enhancement, and lighting normalization",
+      "Bilingual Sinhala and English Ayurvedic encyclopedic profiles detailing therapeutic uses and preparation",
+      "Cross-platform Flutter mobile interface designed for real-time field and clinical verification",
+    ],
+    architectureNodes: [
+      { layer: "Mobile Client", tech: "Flutter + Dart", detail: "Cross-platform mobile camera scanner & bilingual Sinhala/English plant library" },
+      { layer: "Vision Preprocessing", tech: "OpenCV + Python", detail: "Leaf segmentation, noise filtering & morphological feature extraction" },
+      { layer: "Deep Learning Core", tech: "TensorFlow + EfficientNet", detail: "Multi-class CNN classification across leaf, flower & seed specimens" },
+      { layer: "Explainable AI (XAI)", tech: "Grad-CAM Heatmaps", detail: "Visual class-activation mapping highlighting diagnostic botanical traits" },
+    ],
+    technologies: ["Flutter", "Dart", "Python", "TensorFlow", "EfficientNet", "OpenCV"],
+    liveUrl: "",
+    sourceUrl: "https://github.com/dinee10/R26-IT-021/tree/feature-dinidu",
+    screenshot: ayurvedicPlantImg,
+    demoUrl: "https://github.com/dinee10/R26-IT-021/tree/feature-dinidu",
+    accentColor: "#00D9FF",
+    cardBg: "linear-gradient(145deg, #0B1726 0%, #071525 60%, #050e1a 100%)",
+    borderColor: "rgba(0, 217, 255, 0.35)",
+    glowColor: "rgba(0, 217, 255, 0.25)",
+    tagBg: "rgba(16, 185, 129, 0.15)",
+    tagColor: "#6ee7b7",
+    tagBorderColor: "rgba(16, 185, 129, 0.45)",
+    statusBadgeVariant: "cyan-green",
+    imageOverlayLeft: "AI · DEEP LEARNING",
+    imageOverlayRight: "RESEARCH 2026",
+    primaryCtaLabel: "EXPLORE PROJECT",
+    secondaryCtaLabel: "VIEW RESEARCH & CODE",
+    metrics: [
+      { value: "98.7%", label: "Classification Confidence" },
+      { value: "Grad-CAM", label: "Explainable AI" },
+      { value: "Bilingual", label: "Sinhala & English" },
+    ],
+    capabilitiesLabel: "RESEARCH CAPABILITIES",
+    capabilitiesText: "LEAF + FLOWER + SEED ANALYSIS ✦ EXPLAINABLE AI",
+    imageAlt: "Ayurvedic Plant Recognition — AI-Powered Medicinal Plant Identification",
+  },
+  {
+    id: "spicy-selling-site",
+    number: "06",
     category: "E-Commerce",
     domain: "Full Stack",
     year: "2026",

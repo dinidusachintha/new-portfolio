@@ -229,8 +229,45 @@ export const projects: Project[] = [
     sourceUrl: "https://github.com/dinidusachintha/Farm-cart-blog-main",
   },
   {
-    id: "spicy-selling-site",
+    id: "ayurvedic-plant-recognition",
     index: "05",
+    title: "Ayurvedic Plant Recognition",
+    kind: "AI / ML Research · AI-Powered Medicinal Plant Identification",
+    category: "Mobile & Systems",
+    year: "2026",
+    status: "RESEARCH PROJECT",
+    summary:
+      "An AI-powered mobile application that identifies Sri Lankan Ayurvedic medicinal plants using deep learning, computer vision, and image recognition.",
+    image: "assets/images/ayurvedic-plant-recognition.jpg",
+    mockupImage: "assets/images/ayurvedic-plant-recognition.jpg",
+    accent: "#00D9FF",
+    stack: ["FLUTTER", "DART", "PYTHON", "TENSORFLOW", "EFFICIENTNET", "OPENCV"],
+    metrics: [
+      { value: "98.7%", label: "Model Confidence" },
+      { value: "Grad-CAM", label: "Explainable AI" },
+      { value: "Bilingual", label: "Sinhala & English" },
+    ],
+    problem:
+      "Accurate identification of Sri Lankan Ayurvedic medicinal plants requires specialized botanical taxonomy knowledge, as many therapeutic species share visually similar leaf morphologies with non-medicinal lookalikes.",
+    solution:
+      "Engineered an AI-powered mobile application utilizing EfficientNet deep learning models, OpenCV image preprocessing, and Grad-CAM explainable heatmaps to classify medicinal plants from leaf, flower, and seed images with bilingual Sinhala & English therapeutic profiles.",
+    architecture:
+      "Flutter & Dart cross-platform mobile client connected to a Python deep learning inference pipeline powered by TensorFlow, EfficientNet transfer learning, OpenCV morphological segmentation, and Grad-CAM visual explainability.",
+    highlights: [
+      "Deep learning medicinal plant classification trained on indigenous Sri Lankan Ayurvedic flora",
+      "Multi-part botanical recognition supporting leaf, flower, and seed morphological analysis",
+      "Explainable AI (XAI) integration with Grad-CAM visual attention heatmaps for transparent predictions",
+      "OpenCV preprocessing pipeline for background removal, leaf venation enhancement, and lighting normalization",
+      "Bilingual Sinhala and English Ayurvedic encyclopedic profiles detailing therapeutic uses and preparation",
+      "Cross-platform Flutter mobile interface designed for real-time field and clinical verification",
+    ],
+    role: "ARTIFICIAL INTELLIGENCE · 2026",
+    liveUrl: "",
+    sourceUrl: "https://github.com/dinee10/R26-IT-021/tree/feature-dinidu",
+  },
+  {
+    id: "spicy-selling-site",
+    index: "06",
     title: "Spicy Selling Site",
     kind: "E-Commerce · Modern Spice Shopping Experience",
     category: "Full Stack",
