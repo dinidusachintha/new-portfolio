@@ -1,5 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import Lenis from "lenis";
+import { lazy, Suspense, useEffect, useRef, useState, useCallback } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUp,
@@ -26,6 +25,7 @@ import IntroLoader from "./components/animations/IntroLoader";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useIntroSession } from "./hooks/useIntroSession";
+import { useSmoothScroll, type LenisScrollEvent } from "./hooks/useSmoothScroll";
 
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
@@ -303,7 +303,10 @@ export default function App() {
   const { shouldPlayIntro, markIntroSeen } = useIntroSession();
   const [introActive, setIntroActive] = useState(shouldPlayIntro);
   const [loaded, setLoaded] = useState(!shouldPlayIntro);
-  const [scrollPercent, setScrollPercent] = useState(0);
+
+  const scrollProgressBarRef = useRef<HTMLDivElement>(null);
+  const scrollProgressRingRef = useRef<SVGCircleElement>(null);
+  const scrolledRef = useRef(false);
 
   const handleOpenProject = (proj: Project, tab: "demo" | "arch" = "demo") => {
     setSelectedTab(tab);
@@ -318,8 +321,41 @@ export default function App() {
   });
 
   const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null);
-  const lenis = useRef<Lenis | null>(null);
   const work = useRef<HTMLElement>(null);
+
+  // Consolidated scroll handler: zero synchronous layout reads, direct ref styles
+  const handleScroll = useCallback((e: LenisScrollEvent) => {
+    const scrollY = e.scroll;
+    const progress = e.progress;
+
+    // Direct JS fallback for scroll-progress bar only if CSS animation-timeline is unsupported
+    if (scrollProgressBarRef.current && (!window.CSS || !CSS.supports("animation-timeline", "scroll()"))) {
+      scrollProgressBarRef.current.style.transform = `scaleX(${progress})`;
+    }
+
+    // Direct SVG circle ring progress
+    if (scrollProgressRingRef.current) {
+      scrollProgressRingRef.current.style.strokeDashoffset = `${Math.max(0, 119.38 * (1 - progress))}`;
+    }
+
+    // Direct CSS variables for hero section (only updated when hero is in view <= 650px)
+    if (scrollY <= 650) {
+      document.documentElement.style.setProperty("--hero-drift", `${(scrollY * 0.12).toFixed(1)}px`);
+      document.documentElement.style.setProperty("--hero-fade", (Math.max(0, 1 - scrollY / 550)).toFixed(3));
+    }
+
+    // Toggle navbar and scroll-to-top button only on threshold crossing (no re-renders during steady scrolling)
+    const nextScrolled = scrollY > 40;
+    if (nextScrolled !== scrolledRef.current) {
+      scrolledRef.current = nextScrolled;
+      setScrolled(nextScrolled);
+    }
+  }, []);
+
+  const { lenis, scrollTo, stop, start } = useSmoothScroll({
+    enabled: true,
+    onScroll: handleScroll,
+  });
 
   // Sync hash routing
   useEffect(() => {
@@ -466,63 +502,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    lenis.current = new Lenis({
-      autoRaf: true,
-      anchors: { offset: -86 },
-      duration: 1.15,
-      smoothWheel: true,
-    });
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis.current;
-
-    let frame = 0;
-    const updateScrollMetrics = () => {
-      const scrollY = lenis.current?.scroll ?? window.scrollY;
-      const maxScroll = Math.max(
-        1,
-        document.documentElement.scrollHeight - window.innerHeight,
-      );
-      const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-      setScrollPercent(Math.round(progress * 100));
-      document.documentElement.style.setProperty(
-        "--scroll-progress",
-        String(progress),
-      );
-      document.documentElement.style.setProperty(
-        "--scroll-y",
-        `${scrollY}px`,
-      );
-      document.documentElement.style.setProperty(
-        "--hero-drift",
-        `${Math.min(scrollY * 0.12, 120)}px`,
-      );
-      document.documentElement.style.setProperty(
-        "--hero-fade",
-        String(Math.max(0, 1 - scrollY / 550)),
-      );
-      setScrolled(scrollY > 40);
-      ScrollTrigger.update();
-    };
-
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        updateScrollMetrics();
-        frame = 0;
-      });
-    };
-
-    lenis.current.on("scroll", onScroll);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    updateScrollMetrics();
-
-    return () => {
-      lenis.current?.destroy();
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, [currentPage]);
-
-  useEffect(() => {
     const revealObserver = new IntersectionObserver(
       (entries) =>
         entries.forEach((entry) => {
@@ -553,47 +532,48 @@ export default function App() {
     const mainEl = document.getElementById("main") || document.body;
     mutationObserver.observe(mainEl, { childList: true, subtree: true });
 
-    // Deterministic, flicker-free active section scroll spy for primary nav links
-    const navSectionIds = navLinks.map((l) => l.id);
-    const updateActiveNavSection = () => {
-      if (currentPage !== "home") {
-        setActiveSection("");
-        return;
-      }
-      const scrollY = window.scrollY || window.pageYOffset;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      if (windowHeight + scrollY >= documentHeight - 90) {
-        setActiveSection("contact");
-        return;
-      }
-
-      if (scrollY < 180) {
-        setActiveSection("");
-        return;
-      }
-
-      const headerOffset = 130;
-      let matched = "";
-      for (const id of navSectionIds) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const top = el.offsetTop - headerOffset;
-        const height = el.offsetHeight;
-        if (scrollY >= top && scrollY < top + height) {
-          matched = id;
-          break;
+    // Zero-reflow active section spy using IntersectionObserver
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        if (currentPage !== "home") {
+          setActiveSection("");
+          return;
         }
-      }
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            setActiveSection(id === "home" ? "" : id);
+          }
+        });
+      },
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+    );
 
-      if (matched) {
-        setActiveSection(matched);
-      }
-    };
+    const sectionIds = ["home", ...navLinks.map((l) => l.id)];
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) sectionObserver.observe(el);
+    });
 
-    window.addEventListener("scroll", updateActiveNavSection, { passive: true });
-    updateActiveNavSection();
+    // Viewport-pausing for all marquee tracks when off-screen
+    const marqueeObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const tracks = entry.target.querySelectorAll<HTMLElement>(
+            ".hero-pill-marquee-track, .marquee-content-track, .marquee-track, .tech-3d-track, .tech-marquee-track"
+          );
+          tracks.forEach((track) => {
+            track.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+          });
+        });
+      },
+      { rootMargin: "100px" }
+    );
+
+    const marqueeContainers = document.querySelectorAll(
+      ".hero-pill-marquee-wrap, .tech-marquee-container, .tech-3d-marquee-container, .marquee-container"
+    );
+    marqueeContainers.forEach((el) => marqueeObserver.observe(el));
 
     const workObserver = new IntersectionObserver(
       (entries) => {
@@ -609,24 +589,25 @@ export default function App() {
     return () => {
       revealObserver.disconnect();
       mutationObserver.disconnect();
-      window.removeEventListener("scroll", updateActiveNavSection);
+      sectionObserver.disconnect();
+      marqueeObserver.disconnect();
       workObserver.disconnect();
     };
   }, [workReady, currentPage]);
 
   useEffect(() => {
     if (menuOpen || selected) {
-      lenis.current?.stop();
+      stop();
       document.documentElement.classList.add("dialog-open");
     } else {
-      lenis.current?.start();
+      start();
       document.documentElement.classList.remove("dialog-open");
     }
 
     return () => {
       document.documentElement.classList.remove("dialog-open");
     };
-  }, [menuOpen, selected]);
+  }, [menuOpen, selected, stop, start]);
 
   useEffect(() => {
     const resize = () => {
@@ -649,7 +630,7 @@ export default function App() {
       </a>
 
       {/* Top Scroll Progress Indicator */}
-      <div className="scroll-progress" aria-hidden="true" />
+      <div ref={scrollProgressBarRef} className="scroll-progress" aria-hidden="true" />
 
       {/* Recreated High-Performance Navbar */}
       <Navbar
@@ -791,11 +772,7 @@ export default function App() {
         aria-label="Scroll back to top"
         onClick={(e) => {
           e.preventDefault();
-          if (lenis.current) {
-            lenis.current.scrollTo(0, { duration: 1.1 });
-          } else {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
+          scrollTo(0, { duration: 1.1 });
         }}
       >
         <svg
@@ -807,16 +784,14 @@ export default function App() {
         >
           <circle className="progress-ring-track" cx="23" cy="23" r="19" />
           <circle
+            ref={scrollProgressRingRef}
             className="progress-ring-fill"
             cx="23"
             cy="23"
             r="19"
             style={{
               strokeDasharray: 119.38,
-              strokeDashoffset: Math.max(
-                0,
-                119.38 - 119.38 * (scrollPercent / 100),
-              ),
+              strokeDashoffset: 119.38,
             }}
           />
         </svg>

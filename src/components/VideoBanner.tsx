@@ -103,6 +103,7 @@ export default function VideoBanner() {
           ref={videoRef}
           className="video-banner-media"
           src={asset(profile.video)}
+          poster={asset("assets/images/video1-poster.jpg")}
           loop
           muted={isMuted}
           playsInline

@@ -23,31 +23,26 @@ const nameContainerVariants: Variants = {
   },
 };
 
-// Flying effect for each individual letter
+// Flying effect for each individual letter (transform and opacity only)
 const letterVariants: Variants = {
   hidden: (i: number) => ({
     opacity: 0,
-    y: i % 2 === 0 ? -55 : 55,
-    x: (i - 7) * 7,
-    scale: 0.5,
-    rotateZ: i % 2 === 0 ? -14 : 14,
-    filter: "blur(12px)",
+    y: i % 2 === 0 ? -30 : 30,
+    scale: 0.8,
   }),
   visible: {
     opacity: 1,
     y: 0,
-    x: 0,
     scale: 1,
-    rotateZ: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.85,
+      duration: 0.7,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },
 };
 
 export default function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [diniduChars, setDiniduChars] = useState<string[]>(() => "DINIDU".split(""));
   const [sachinthaChars, setSachinthaChars] = useState<string[]>(() => "SACHINTHA".split(""));
@@ -75,25 +70,52 @@ export default function Hero() {
   };
 
   useEffect(() => {
+    const el = heroRef.current;
     const v = videoRef.current;
-    if (!v) return;
+    if (!el || !v) return;
+
     v.muted = true;
-    v.play().catch(() => {
-      // Auto-play policy catch fallback
-    });
+    let glitchTimer: ReturnType<typeof setInterval> | null = null;
 
-    // Periodic gentle micro-glitch trigger
-    const glitchTimer = setInterval(() => {
-      if (Math.random() > 0.4) {
-        triggerGlitch();
+    const startGlitchTimer = () => {
+      if (glitchTimer) clearInterval(glitchTimer);
+      glitchTimer = setInterval(() => {
+        if (Math.random() > 0.4) {
+          triggerGlitch();
+        }
+      }, 7500);
+    };
+
+    const stopGlitchTimer = () => {
+      if (glitchTimer) {
+        clearInterval(glitchTimer);
+        glitchTimer = null;
       }
-    }, 6500);
+    };
 
-    return () => clearInterval(glitchTimer);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          v.play().catch(() => {});
+          startGlitchTimer();
+        } else {
+          v.pause();
+          stopGlitchTimer();
+        }
+      },
+      { rootMargin: "100px" }
+    );
+
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      stopGlitchTimer();
+    };
   }, []);
 
   return (
-    <section className="hero-dymas-section container" id="home">
+    <section ref={heroRef} className="hero-dymas-section container" id="home">
       {/* Outer Liquid Obsidian Mockup Frame with Cinematic Landing Animation */}
       <motion.div
         className="hero-dymas-mockup-wrapper"
@@ -199,8 +221,8 @@ export default function Hero() {
               <motion.h1
                 className="hero-dymas-role-title hero-role-glitch"
                 data-text="Software Engineer"
-                initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.75, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
               >
                 Software Engineer

@@ -44,6 +44,21 @@ export default function ProjectGrid({
   const [angle, setAngle] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Pause carousel rotation loop when off-screen to preserve CPU
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "250px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Scroll progress for Stacked Cards view
   const { scrollYProgress } = useScroll({
@@ -123,7 +138,7 @@ export default function ProjectGrid({
 
   // Smooth continuous rotation loop
   useEffect(() => {
-    if (viewMode !== "carousel" || totalCards <= 1) return;
+    if (viewMode !== "carousel" || totalCards <= 1 || !isVisible) return;
 
     const animate = (timestamp: number) => {
       if (lastTimeRef.current === null) {
@@ -163,7 +178,7 @@ export default function ProjectGrid({
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       lastTimeRef.current = null;
     };
-  }, [isPlaying, isHovered, viewMode, stepAngle, totalCards]);
+  }, [isPlaying, isHovered, viewMode, stepAngle, totalCards, isVisible]);
 
   // Pointer drag events for horizontal spinning
   const handlePointerDown = (e: React.PointerEvent) => {

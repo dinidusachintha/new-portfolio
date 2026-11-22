@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, type Variants } from "framer-motion";
 
 interface FlyingHeadingProps {
@@ -24,21 +24,15 @@ const headingContainerVariants: Variants = {
 const letterFlyVariants: Variants = {
   hidden: (i: number) => ({
     opacity: 0,
-    y: i % 2 === 0 ? -38 : 38,
-    x: ((i % 5) - 2) * 5,
-    scale: 0.6,
-    rotateZ: i % 2 === 0 ? -12 : 12,
-    filter: "blur(8px)",
+    y: i % 2 === 0 ? -20 : 20,
+    scale: 0.85,
   }),
   visible: {
     opacity: 1,
     y: 0,
-    x: 0,
     scale: 1,
-    rotateZ: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.75,
+      duration: 0.5,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },
@@ -94,6 +88,8 @@ export default function FlyingHeading({
   as: Component = "h2",
   enableGlitch = true,
 }: FlyingHeadingProps) {
+  const elementRef = useRef<HTMLHeadingElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   const [displayLine1, setDisplayLine1] = useState(line1);
   const [displayLine2, setDisplayLine2] = useState(line2 || "");
   const [isGlitching, setIsGlitching] = useState(false);
@@ -103,6 +99,20 @@ export default function FlyingHeading({
     setDisplayLine1(line1);
     setDisplayLine2(line2 || "");
   }, [line1, line2]);
+
+  // Viewport intersection observer to avoid running timers off-screen
+  useEffect(() => {
+    const el = elementRef.current;
+    if (!el || !enableGlitch) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "50px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [enableGlitch]);
 
   // High-speed cyber scramble and RGB glitch trigger on hover/interaction
   const triggerGlitch = useCallback(() => {
@@ -140,23 +150,24 @@ export default function FlyingHeading({
     }, 60);
   }, [enableGlitch, isGlitching, line1, line2]);
 
-  // Ambient periodic subtle micro-glitch (every 7 seconds)
+  // Ambient periodic subtle micro-glitch (only when visible in viewport)
   useEffect(() => {
-    if (!enableGlitch) return;
+    if (!enableGlitch || !isVisible) return;
 
     const timer = setInterval(() => {
       if (Math.random() > 0.5) {
         triggerGlitch();
       }
-    }, 7500);
+    }, 8500);
 
     return () => clearInterval(timer);
-  }, [enableGlitch, triggerGlitch]);
+  }, [enableGlitch, isVisible, triggerGlitch]);
 
   const line1Len = displayLine1.replace(/\s+/g, "").length;
 
   return (
     <Component
+      ref={elementRef}
       className={`${className} flying-heading-glitch-wrap ${isGlitching ? "is-glitching" : ""}`}
       aria-label={line2 ? `${line1} ${line2}` : line1}
       onMouseEnter={triggerGlitch}

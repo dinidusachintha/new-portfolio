@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import {
   Gamepad2,
   Headphones,
@@ -27,14 +27,15 @@ export default function FloatingCard({
   floatDelay = 0,
 }: FloatingCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const innerCardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
 
-  // Dynamic mouse-tracking 3D tilt (only when hovered on desktop)
+  // Dynamic mouse-tracking 3D tilt via direct ref style (no setState, no forced reflow)
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!cardRef.current || window.innerWidth < 768) return;
-      const rect = cardRef.current.getBoundingClientRect();
+      if (!innerCardRef.current || window.innerWidth < 768) return;
+      const rect = rectRef.current;
+      if (!rect) return;
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const centerX = rect.width / 2;
@@ -43,18 +44,23 @@ export default function FloatingCard({
       // Subtle tilt max ±7 degrees
       const rotateX = ((y - centerY) / centerY) * -7;
       const rotateY = ((x - centerX) / centerX) * 7;
-      setTilt({ rotateX, rotateY });
+      innerCardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-8px) scale(1.03)`;
     },
     []
   );
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    if (cardRef.current && window.innerWidth >= 768) {
+      const r = cardRef.current.getBoundingClientRect();
+      rectRef.current = { left: r.left, top: r.top, width: r.width, height: r.height };
+    }
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTilt({ rotateX: 0, rotateY: 0 });
+    rectRef.current = null;
+    if (innerCardRef.current) {
+      innerCardRef.current.style.transform = "";
+    }
   };
 
   const renderIcon = () => {
@@ -98,15 +104,11 @@ export default function FloatingCard({
       aria-current={isCenter ? "true" : undefined}
     >
       <div
+        ref={innerCardRef}
         className={`leisure-floating-card group ${isCenter ? "is-active-card" : ""}`}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{
-          transform: isHovered
-            ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateY(-8px) scale(1.03)`
-            : undefined,
-        }}
       >
         {/* Soft cyan floor shadow beneath the card */}
         <div className="leisure-card-shadow" aria-hidden="true" />

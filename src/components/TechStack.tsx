@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -17,17 +17,33 @@ import FlyingHeading from "./FlyingHeading";
 import Tech3DMarquee from "./Tech3DMarquee";
 
 export default function TechStack() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Auto-play slideshow timer
+  // Pause auto-play when off-screen
   useEffect(() => {
-    if (!autoPlay) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "100px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Auto-play slideshow timer (only when visible in viewport)
+  useEffect(() => {
+    if (!autoPlay || !isVisible) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % skillPillars.length);
     }, 5500);
     return () => clearInterval(interval);
-  }, [autoPlay]);
+  }, [autoPlay, isVisible]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % skillPillars.length);
@@ -57,7 +73,7 @@ export default function TechStack() {
   return (
     <>
       {/* SECTION 1: ENGINEERING ARSENAL & TOOLKIT (BACKGROUND BLACK) */}
-      <section className="tech-stack-section tech-stack-dark" id="stack">
+      <section ref={sectionRef} className="tech-stack-section tech-stack-dark" id="stack">
         <div className="container">
           <div className="section-top reveal">
             <span className="eyebrow">

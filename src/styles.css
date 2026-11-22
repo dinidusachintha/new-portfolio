@@ -296,9 +296,27 @@ div[id] {
   width: 100%;
   transform: scaleX(var(--scroll-progress, 0));
   transform-origin: left;
+  will-change: transform;
   z-index: 120;
   pointer-events: none;
   box-shadow: 0 0 12px rgba(152, 103, 255, 0.7);
+}
+
+@supports (animation-timeline: scroll()) {
+  @keyframes scrollProgressScale {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .scroll-progress {
+    transform: scaleX(0);
+    animation: scroll-gradient 8s linear infinite, scrollProgressScale linear both;
+    animation-timeline: auto, scroll(root);
+  }
 }
 
 .scroll-progress::after {
@@ -2202,9 +2220,10 @@ dialog::backdrop {
 }
 
 .floating-top:hover {
-  background: #242429;
-  border-color: var(--accent);
-  box-shadow: 0 0 25px rgba(152, 103, 255, 0.45);
+  background: #181524;
+  border-color: #9867ff;
+  color: #c084fc;
+  box-shadow: 0 0 25px rgba(152, 103, 255, 0.55), 0 0 10px rgba(152, 103, 255, 0.3);
   transform: translateY(-3px) scale(1.06);
 }
 
@@ -2225,9 +2244,10 @@ dialog::backdrop {
 
 .progress-ring-fill {
   fill: none;
-  stroke: var(--accent);
+  stroke: #9867ff;
   stroke-width: 2.2;
   stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(152, 103, 255, 0.7));
   transition: stroke-dashoffset 0.15s ease-out;
 }
 

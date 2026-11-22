@@ -140,6 +140,7 @@ export default function MobileSidebar({
           {/* Slide-In Navigation Drawer */}
           <motion.div
             ref={sidebarRef}
+            data-lenis-prevent
             className="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] h-full h-[100dvh] bg-[#090812] border-l border-white/15 shadow-[-20px_0_60px_rgba(0,0,0,0.95)] flex flex-col justify-between overflow-y-auto overscroll-contain z-10"
             style={{
               paddingTop: "max(1rem, env(safe-area-inset-top))",
