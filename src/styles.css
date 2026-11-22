@@ -8228,11 +8228,13 @@ body {
   font-weight: 900 !important;
 }
 
-/* Floating Dark Obsidian Dock for 3D Marquee over White Background */
+/* Floating Dark Obsidian Dock for 3D Marquee over White Background (No Fades) */
 .core-runtimes-light .tech-3d-marquee-container {
   background-color: #0a0d18 !important;
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
 }
 
 /* CS Fundamentals Card on White Canvas */
@@ -9729,8 +9731,6 @@ body {
   display: flex;
   align-items: center;
   box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
   user-select: none;
 }
 
@@ -9738,8 +9738,6 @@ body {
   .tech-3d-marquee-container {
     height: 84px;
     border-radius: 16px;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
   }
 }
 
