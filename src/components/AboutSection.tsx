@@ -66,7 +66,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="about-section about-section-light" id="about">
+    <section ref={sectionRef} className="about-section about-section-light" id="about-narrative">
       <div className="container">
         {/* Glass Effect Black Card Floating on White Background */}
         <div className="about-glass-black-card reveal relative overflow-hidden">

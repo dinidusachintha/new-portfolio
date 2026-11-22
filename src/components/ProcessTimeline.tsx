@@ -42,28 +42,26 @@ export default function ProcessTimeline() {
             start: "top 70%",
             end: "bottom 70%",
             scrub: true,
+            onUpdate: (self) => {
+              const totalSteps = stepRefs.current.length;
+              stepRefs.current.forEach((stepEl, idx) => {
+                if (!stepEl) return;
+                const nodeEl = nodeRefs.current[idx];
+                const threshold = idx / Math.max(1, totalSteps - 1) * 0.92;
+                const shouldBeActive = self.progress >= threshold;
+
+                if (shouldBeActive) {
+                  stepEl.classList.add("is-active");
+                  nodeEl?.classList.add("is-active");
+                } else {
+                  stepEl.classList.remove("is-active");
+                  nodeEl?.classList.remove("is-active");
+                }
+              });
+            },
           },
         },
       );
-
-      // 2. Class toggling for each node and step content (0 per-frame style writes)
-      stepRefs.current.forEach((stepEl, idx) => {
-        if (!stepEl) return;
-        const nodeEl = nodeRefs.current[idx];
-
-        ScrollTrigger.create({
-          trigger: stepEl,
-          start: "top 68%",
-          onEnter: () => {
-            stepEl.classList.add("is-active");
-            nodeEl?.classList.add("is-active");
-          },
-          onLeaveBack: () => {
-            stepEl.classList.remove("is-active");
-            nodeEl?.classList.remove("is-active");
-          },
-        });
-      });
     }, container);
 
     return () => ctx.revert();

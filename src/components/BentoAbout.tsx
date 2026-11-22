@@ -43,7 +43,7 @@ function StatTile({ label, targetValue, suffix, ariaLabel }: StatItemProps) {
             // Exponential ease out: 1 - Math.pow(2, -10 * t)
             const easeOut =
               progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-            const current = Math.floor(easeOut * targetValue);
+            const current = Math.round(easeOut * targetValue);
 
             if (numRef.current) {
               numRef.current.textContent = String(current);
