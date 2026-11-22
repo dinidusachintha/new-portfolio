@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { profile } from "../data/portfolio";
 

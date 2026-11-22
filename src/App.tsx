@@ -13,11 +13,8 @@ import {
 import { asset, profile } from "./data/portfolio";
 import type { Project } from "./data/portfolio";
 import Hero from "./components/Hero";
-import BentoAbout from "./components/BentoAbout";
 import AboutSection from "./components/AboutSection";
 import ExperienceTimeline from "./components/ExperienceTimeline";
-import ProcessTimeline from "./components/ProcessTimeline";
-import AvailabilityBadge from "./components/AvailabilityBadge";
 import TechStack from "./components/TechStack";
 import VideoBanner from "./components/VideoBanner";
 import LeisureSection from "./components/LeisureSection";
@@ -40,7 +37,6 @@ const navLinks = [
   { name: "About", id: "about" },
   { name: "Experience", id: "experience" },
   { name: "Systems", id: "work" },
-  { name: "Process", id: "process" },
   { name: "Arsenal", id: "stack" },
   { name: "Beyond Code", id: "leisure" },
   { name: "Contact", id: "contact" },
@@ -717,9 +713,6 @@ export default function App() {
             {/* Hero Section */}
             <Hero />
 
-            {/* Bento About Section (Immediately after Hero) */}
-            <BentoAbout />
-
             {/* Focus Lens Continuous Technology Marquee */}
             <FocusMarquee />
 
@@ -776,9 +769,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* 04 / Process Methodology Timeline */}
-            <ProcessTimeline />
-
             {/* 05 / Engineering Arsenal & Tech Stack (+ Core Runtimes & Cloud Infrastructure) */}
             <TechStack />
 
@@ -788,9 +778,8 @@ export default function App() {
             {/* Cinematic Video Showcase */}
             <VideoBanner />
 
-            {/* 07 // Initiate Collaboration Section with AvailabilityBadge */}
+            {/* 07 // Initiate Collaboration Section */}
             <section className="section container contact-section" id="contact">
-              <AvailabilityBadge />
               <HaveASystemSection />
             </section>
           </>
