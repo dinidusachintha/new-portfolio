@@ -39,8 +39,8 @@ export default function FocusMarquee() {
     const measureGeometries = () => {
       containerWidth = container.offsetWidth || window.innerWidth;
       const isMobile = containerWidth < 768;
-      // Generous spacing (56px desktop, 38px mobile) so scaled items (up to 1.32x) never overlap or touch borders
-      const gap = isMobile ? 38 : 56;
+      // Generous spacing (64px desktop, 42px mobile) so scaled items (up to 1.32x) never overlap or touch borders
+      const gap = isMobile ? 42 : 64;
       let cumOffset = 0;
 
       // Measure first half
