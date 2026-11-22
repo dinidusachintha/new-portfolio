@@ -10123,6 +10123,193 @@ body {
   }
 }
 
+/* ==========================================================================
+   PHASE E: BACKGROUND ANIMATIONS
+   - Hero 3 Drifting Glow Orbs (Transform Only, GPU Accelerated)
+   - Global Fixed Twinkling Stars (30-40, Behind Content)
+   - About & Contact Dot Grid with Cursor Spotlight
+   - Footer 3D Perspective Grid Floor Loop
+   ========================================================================== */
+
+/* 1. Global Twinkling Stars */
+.global-starfield {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star-twinkle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  will-change: opacity, transform;
+  animation: star-glow-pulse linear infinite alternate;
+}
+
+@keyframes star-glow-pulse {
+  0% {
+    opacity: 0.15;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0.95;
+    transform: scale(1.35);
+  }
+}
+
+@media (max-width: 768px) {
+  .star-twinkle:nth-child(even) {
+    display: none; /* Show fewer stars on mobile */
+  }
+}
+
+/* 2. Hero Drifting Glow Orbs */
+.hero-glow-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.hero-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-glow-orb-1 {
+  width: clamp(260px, 30vw, 440px);
+  height: clamp(260px, 30vw, 440px);
+  top: 10%;
+  left: 5%;
+  background: radial-gradient(circle, rgba(152, 103, 255, 0.42) 0%, rgba(152, 103, 255, 0.12) 50%, transparent 75%);
+  filter: blur(30px);
+  animation: hero-orb-drift-1 9s ease-in-out infinite alternate;
+}
+
+.hero-glow-orb-2 {
+  width: clamp(240px, 28vw, 400px);
+  height: clamp(240px, 28vw, 400px);
+  top: 30%;
+  right: 6%;
+  background: radial-gradient(circle, rgba(91, 59, 214, 0.38) 0%, rgba(91, 59, 214, 0.1) 50%, transparent 75%);
+  filter: blur(30px);
+  animation: hero-orb-drift-2 11s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+.hero-glow-orb-3 {
+  width: clamp(200px, 22vw, 340px);
+  height: clamp(200px, 22vw, 340px);
+  bottom: 12%;
+  left: 38%;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.35) 0%, rgba(192, 132, 252, 0.08) 50%, transparent 75%);
+  filter: blur(30px);
+  animation: hero-orb-drift-3 13s ease-in-out infinite alternate;
+  animation-delay: -6s;
+}
+
+@keyframes hero-orb-drift-1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(30px, -22px, 0) scale(1.08); }
+  100% { transform: translate3d(-18px, 26px, 0) scale(0.96); }
+}
+
+@keyframes hero-orb-drift-2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-35px, 28px, 0) scale(1.1); }
+  100% { transform: translate3d(20px, -18px, 0) scale(0.95); }
+}
+
+@keyframes hero-orb-drift-3 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(26px, 18px, 0) scale(1.06); }
+  100% { transform: translate3d(-30px, -22px, 0) scale(0.98); }
+}
+
+@media (max-width: 768px) {
+  .hero-glow-orb-1, .hero-glow-orb-2 {
+    filter: blur(16px);
+  }
+  .hero-glow-orb-3 {
+    display: none !important; /* Only 2 orbs on mobile */
+  }
+}
+
+/* 3. About & Contact Dot Grid with Cursor Spotlight */
+.dot-grid-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(152, 103, 255, 0.22) 1.2px, transparent 1.2px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 100%);
+  opacity: 0.85;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .dot-grid-spotlight {
+    display: block;
+  }
+}
+
+/* 4. Footer 3D Perspective Grid Floor */
+.footer-perspective-grid-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  perspective: 420px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  mask-image: linear-gradient(to top, black 25%, transparent 95%);
+  -webkit-mask-image: linear-gradient(to top, black 25%, transparent 95%);
+}
+
+.footer-perspective-grid-plane {
+  position: absolute;
+  inset: -140% -60% 0 -60%;
+  background-image:
+    linear-gradient(to right, rgba(152, 103, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(152, 103, 255, 0.25) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: rotateX(68deg);
+  transform-origin: center bottom;
+  animation: perspective-grid-move 14s linear infinite;
+  will-change: transform;
+}
+
+@keyframes perspective-grid-move {
+  0% {
+    transform: rotateX(68deg) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: rotateX(68deg) translate3d(0, 40px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-twinkle,
+  .hero-glow-orb,
+  .footer-perspective-grid-plane {
+    animation: none !important;
+  }
+}
+
 
 
 

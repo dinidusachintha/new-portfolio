@@ -189,7 +189,14 @@ export default function Hero() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
-        <div className="hero-dymas-frame">
+        <div className="hero-dymas-frame relative overflow-hidden">
+          {/* Phase E: 3 Drifting Blurred Glow Orbs (Transform Only, GPU Accelerated) */}
+          <div className="hero-glow-orbs" aria-hidden="true">
+            <div className="hero-glow-orb hero-glow-orb-1" />
+            <div className="hero-glow-orb hero-glow-orb-2" />
+            <div className="hero-glow-orb hero-glow-orb-3" />
+          </div>
+
           {/* Top Bar: Minimalist System & Architecture Identifier */}
           <motion.div
             className="hero-dymas-topbar"

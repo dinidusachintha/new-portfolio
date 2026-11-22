@@ -23,6 +23,7 @@ import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
 import FocusMarquee from "./components/FocusMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
+import GlobalStarfield from "./components/animations/GlobalStarfield";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useIntroSession } from "./hooks/useIntroSession";
@@ -230,6 +231,11 @@ function HaveASystemSection() {
 
   return (
     <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
+      {/* Background Dot Grid Spotlight & Perspective Floor */}
+      <div className="dot-grid-spotlight" aria-hidden="true" />
+      <div className="footer-perspective-grid-wrap" aria-hidden="true">
+        <div className="footer-perspective-grid-plane" />
+      </div>
       <div className="have-a-system-reveal">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
           <Sparkles size={13} className="text-violet-400" />
@@ -664,6 +670,7 @@ export default function App() {
       )}
 
       <div className="ambient-spotlight" aria-hidden="true" />
+      <GlobalStarfield />
       <a className="skip-link" href="#main">
         Skip to main content
       </a>

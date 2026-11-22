@@ -69,7 +69,8 @@ export default function AboutSection() {
     <section ref={sectionRef} className="about-section about-section-light" id="about">
       <div className="container">
         {/* Glass Effect Black Card Floating on White Background */}
-        <div className="about-glass-black-card reveal">
+        <div className="about-glass-black-card reveal relative overflow-hidden">
+          <div className="dot-grid-spotlight" aria-hidden="true" />
           <div className="about-black-glass-glow" aria-hidden="true" />
 
           <div className="section-top relative z-10">
