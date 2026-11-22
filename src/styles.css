@@ -6598,39 +6598,20 @@ main {
   }
 }
 
-/* Centered Live Video 2 Portrait of Dinidu - Full Uncut View IN FRONT of big name letters */
+/* Centered Live Video 2 Portrait of Dinidu - IN FRONT of big name letters */
 .hero-dymas-portrait-wrap {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
-  width: min(960px, 95vw);
-  height: min(650px, 75vh);
+  /* Rendered IN FRONT of the big name typography */
+  width: min(720px, 86%);
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
-}
-
-/* Soft Violet Radial Glow Behind Hero Portrait */
-.hero-photo-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(680px, 92vw);
-  height: min(680px, 92vw);
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle at center,
-    rgba(152, 103, 255, 0.22) 0%,
-    rgba(124, 58, 237, 0.08) 50%,
-    transparent 72%
-  );
-  filter: blur(65px);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .hero-portrait-video-frame {
@@ -6641,24 +6622,24 @@ main {
   justify-content: center;
   align-items: flex-end;
   overflow: visible;
-  z-index: 2;
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
 }
 
 .hero-dymas-portrait-video {
   width: 100%;
   height: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: none !important;
-  filter: contrast(1.05) brightness(1.02);
-  transition: opacity 0.3s ease;
+  max-height: 620px;
+  object-fit: cover;
+  object-position: 50% 12%;
+  transform: scale(1.32);
+  transform-origin: center bottom;
+  mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
+  filter: contrast(1.07) brightness(1.03);
+  transition: transform 0.4s ease;
 }
 
 .hero-dymas-portrait-wrap:hover .hero-dymas-portrait-video {
-  transform: none !important;
+  transform: scale(1.35);
 }
 
 /* Tech Pill Row from Image 3: <> TypeScript ✦ React ✦ Node.js */
@@ -6864,128 +6845,6 @@ main {
   color: #ffffff;
 }
 
-/* Secondary Ghost Button: "View projects" */
-.hero-dymas-ghost-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 9999px;
-  color: #f1f5f9;
-  font-size: 13.5px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.hero-dymas-ghost-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(168, 85, 247, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.25);
-  color: #ffffff;
-}
-
-.hero-ghost-arrow {
-  color: #c084fc;
-  transition: transform 0.25s ease;
-}
-
-.hero-dymas-ghost-btn:hover .hero-ghost-arrow {
-  transform: translateY(2px);
-  color: #ffffff;
-}
-
-/* Compact Social Icons Row with Tooltips */
-.hero-social-compact-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.hero-social-icon-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #94a3b8;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-social-icon-btn:hover {
-  background: rgba(152, 103, 255, 0.18);
-  border-color: rgba(168, 85, 247, 0.6);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
-}
-
-.hero-social-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: #090c16;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  font-size: 10px;
-  pointer-events: none;
-  opacity: 0;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-  z-index: 20;
-}
-
-.hero-social-icon-btn:hover .hero-social-tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Subtle Animated Scroll-Down Cue Indicator */
-.hero-scroll-cue {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  z-index: 10;
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.hero-scroll-cue:hover {
-  opacity: 1 !important;
-}
-
-.hero-scroll-cue-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 9999px;
-  background: #a855f7;
-  box-shadow: 0 0 8px #a855f7;
-}
-
 .hero-tech-pill-row {
   display: inline-flex;
   align-items: center;
@@ -7093,13 +6952,13 @@ main {
   }
 
   .hero-dymas-portrait-wrap {
-    width: min(800px, 92vw);
-    height: min(540px, 68vh);
+    width: min(540px, 80%);
+    height: 510px;
   }
 
   .hero-dymas-portrait-video {
-    transform: none !important;
-    object-position: center bottom;
+    transform: scale(1.24);
+    object-position: 50% 12%;
   }
 
   .hero-dymas-big-name {
@@ -7176,17 +7035,17 @@ main {
     left: auto;
     bottom: auto;
     transform: none;
-    width: min(600px, 96vw);
-    height: min(440px, 58vh);
-    margin: 12px auto 0;
+    width: min(440px, 94%);
+    height: 400px;
+    margin: 8px auto 0;
     z-index: 2;
   }
 
   .hero-dymas-portrait-video {
-    max-height: 100%;
+    max-height: 400px;
     height: 100%;
-    transform: none !important;
-    object-position: center bottom;
+    transform: scale(1.2);
+    object-position: 50% 12%;
   }
 
   .hero-dymas-bottom-left {
@@ -7269,14 +7128,13 @@ main {
   }
 
   .hero-dymas-portrait-wrap {
-    width: 100%;
-    height: min(360px, 50vh);
+    width: min(320px, 94%);
+    height: 330px;
   }
 
   .hero-dymas-portrait-video {
-    max-height: 100%;
-    transform: none !important;
-    object-position: center bottom;
+    max-height: 330px;
+    transform: scale(1.18);
   }
 
   .hero-dymas-social-stack {
