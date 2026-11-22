@@ -6745,56 +6745,41 @@ main {
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
-  width: min(860px, 92%);
-  height: min(640px, 72vh);
+  /* Rendered IN FRONT of the big name typography */
+  width: min(720px, 86%);
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
 }
 
-/* Reduced soft violet radial glow behind the video portrait */
-.hero-dymas-portrait-wrap::before {
-  content: "";
-  position: absolute;
-  top: 15%;
-  left: 20%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle at 50% 50%, rgba(152, 103, 255, 0.14) 0%, rgba(152, 103, 255, 0.04) 50%, transparent 70%);
-  filter: blur(50px);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .hero-portrait-video-frame {
   position: relative;
-  z-index: 2;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   overflow: visible;
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
 }
 
 .hero-dymas-portrait-video {
   width: 100%;
   height: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: none !important;
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
-  filter: contrast(1.04) brightness(1.02);
+  max-height: 620px;
+  object-fit: cover;
+  object-position: 50% 12%;
+  transform: scale(1.32);
+  transform-origin: center bottom;
+  mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
+  filter: contrast(1.07) brightness(1.03);
   transition: transform 0.4s ease;
 }
 
 .hero-dymas-portrait-wrap:hover .hero-dymas-portrait-video {
-  transform: none !important;
+  transform: scale(1.35);
 }
 
 /* Tech Pill Row from Image 3: <> TypeScript ✦ React ✦ Node.js */
@@ -7112,10 +7097,8 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    transform: none !important;
-    object-fit: contain;
-    object-position: center bottom;
-    max-height: 100%;
+    transform: scale(1.24);
+    object-position: 50% 12%;
   }
 
   .hero-dymas-big-name {
@@ -7199,11 +7182,10 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    max-height: 100%;
+    max-height: 400px;
     height: 100%;
-    transform: none !important;
-    object-fit: contain;
-    object-position: center bottom;
+    transform: scale(1.2);
+    object-position: 50% 12%;
   }
 
   .hero-dymas-bottom-left {
@@ -7291,10 +7273,8 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    max-height: 100%;
-    transform: none !important;
-    object-fit: contain;
-    object-position: center bottom;
+    max-height: 330px;
+    transform: scale(1.18);
   }
 
   .hero-dymas-social-stack {
