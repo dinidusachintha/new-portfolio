@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Code2,
@@ -10,10 +13,60 @@ import {
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import CountUpNumber from "./CountUpNumber";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const ABOUT_NARRATIVE =
+  "I am a software engineering undergraduate at the Sri Lanka Institute of Information Technology (SLIIT). I bridge deep backend infrastructure with fluid client experiences, architecting resilient databases and type-safe systems that solve real-world operational challenges.";
 
 export default function AboutSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
+
+  const words = ABOUT_NARRATIVE.split(" ");
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    const p = paragraphRef.current;
+    if (!el || !p) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const wordEls = p.querySelectorAll<HTMLElement>(".about-word");
+
+    if (prefersReducedMotion) {
+      wordEls.forEach((w) => {
+        w.style.color = "rgba(255, 255, 255, 0.95)";
+        w.style.opacity = "1";
+      });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      if (wordEls.length > 0) {
+        gsap.to(wordEls, {
+          color: "rgba(255, 255, 255, 0.98)",
+          opacity: 1,
+          stagger: 0.04,
+          ease: "none",
+          scrollTrigger: {
+            trigger: p,
+            start: "top 80%",
+            end: "bottom 50%",
+            scrub: 0.4,
+          },
+        });
+      }
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="about-section about-section-light" id="about">
+    <section ref={sectionRef} className="about-section about-section-light" id="about">
       <div className="container">
         {/* Glass Effect Black Card Floating on White Background */}
         <div className="about-glass-black-card reveal">
@@ -54,8 +107,25 @@ export default function AboutSection() {
                 </span>
               </h3>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                I am a software engineering undergraduate at the Sri Lanka Institute of Information Technology (SLIIT). I bridge deep backend infrastructure with fluid client experiences, architecting resilient databases and type-safe systems that solve real-world operational challenges.
+              {/* Large Paragraph with Word-by-Word Scroll Reveal */}
+              <p
+                ref={paragraphRef}
+                className="text-sm sm:text-base leading-relaxed select-none"
+                aria-label={ABOUT_NARRATIVE}
+              >
+                {words.map((word, i) => (
+                  <span
+                    key={i}
+                    className="about-word inline-block mr-[0.3em] font-normal"
+                    style={{
+                      color: "rgba(255, 255, 255, 0.22)",
+                      opacity: 0.35,
+                      willChange: "color, opacity",
+                    }}
+                  >
+                    {word}
+                  </span>
+                ))}
               </p>
 
               <p className="text-slate-400 text-sm leading-relaxed">
@@ -96,7 +166,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Right Column: 3 Architectural Pillars */}
+            {/* Right Column: 3 Architectural Pillars with Animated Count-Up Numbers */}
             <div className="lg:col-span-6 space-y-6">
               <div className="pb-6 border-b border-white/10">
                 <div className="flex items-center justify-between mb-2">
@@ -104,7 +174,9 @@ export default function AboutSection() {
                     <Layers size={16} className="text-violet-400" />
                     <span>01 // DISTRIBUTED BACKENDS & APIS</span>
                   </div>
-                  <span className="text-[11px] font-mono text-violet-300 font-bold">&lt;100ms p95</span>
+                  <span className="text-[11px] font-mono text-violet-300 font-bold">
+                    <CountUpNumber value="<100ms" /> p95
+                  </span>
                 </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
                   Designing normalized PostgreSQL schemas, table partitioning, Redis caching layers, and concurrency locks preventing double-allocations under high throughput.
@@ -117,7 +189,9 @@ export default function AboutSection() {
                     <Code2 size={16} className="text-violet-400" />
                     <span>02 // TYPE-SAFE FULL STACK CLIENTS</span>
                   </div>
-                  <span className="text-[11px] font-mono text-violet-300 font-bold">100% Strict</span>
+                  <span className="text-[11px] font-mono text-violet-300 font-bold">
+                    <CountUpNumber value="100%" /> Strict
+                  </span>
                 </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
                   Engineering modern React and Next.js applications with strict TypeScript AST validation, optimistic UI mutations, and accessible design system primitives.
@@ -130,7 +204,9 @@ export default function AboutSection() {
                     <Zap size={16} className="text-violet-400" />
                     <span>03 // RESILIENT DEVOPS & CLOUD</span>
                   </div>
-                  <span className="text-[11px] font-mono text-violet-300 font-bold">Zero Downtime</span>
+                  <span className="text-[11px] font-mono text-violet-300 font-bold">
+                    <CountUpNumber value="99.9%" /> Uptime
+                  </span>
                 </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
                   Dockerized containerization, automated GitHub Actions CI/CD pipelines, and health observability for high availability production deployments.

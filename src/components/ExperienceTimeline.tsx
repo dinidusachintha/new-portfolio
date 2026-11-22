@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Briefcase,
@@ -10,15 +12,69 @@ import {
 import { asset, experience, profile } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function ExperienceTimeline() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const line = lineRef.current;
+    if (!container || !line) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReducedMotion) {
+      line.style.transform = "scaleY(1)";
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        line,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container,
+            start: "top 78%",
+            end: "bottom 60%",
+            scrub: 0.3,
+            onUpdate: (self) => {
+              markersRef.current.forEach((marker, i) => {
+                if (!marker) return;
+                const ratio = i / Math.max(1, markersRef.current.length - 1);
+                if (self.progress >= ratio * 0.92) {
+                  marker.classList.add("marker-illuminated");
+                } else {
+                  marker.classList.remove("marker-illuminated");
+                }
+              });
+            },
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isDropdownOpen]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 350);
   };
 
   return (
-    <section className="experience-section container" id="experience">
+    <section ref={sectionRef} className="experience-section container" id="experience">
       <div className="section-top reveal">
         <span className="eyebrow flex items-center gap-1.5 text-violet-400">
           <Briefcase size={13} />
@@ -94,11 +150,24 @@ export default function ExperienceTimeline() {
         }`}
       >
         <div className="experience-dropdown-inner pt-8">
-          <div className="timeline-container relative pl-4 sm:pl-8 border-l border-white/10 ml-2 sm:ml-4 space-y-8">
+          <div ref={containerRef} className="timeline-container relative pl-4 sm:pl-8 border-l border-white/10 ml-2 sm:ml-4 space-y-8">
+            {/* Dynamic scroll-drawing violet line rail */}
+            <div
+              ref={lineRef}
+              className="timeline-progress-line"
+              style={{ transform: "scaleY(0)" }}
+              aria-hidden="true"
+            />
+
             {experience.map((item, idx) => (
               <div key={idx} className="timeline-item relative group">
                   {/* Pulsing Timeline Node */}
-                  <div className="timeline-marker absolute -left-[21px] sm:-left-[37px] top-1.5 w-3.5 h-3.5 rounded-full bg-violet-500 border-4 border-[#080808] group-hover:scale-125 transition-transform" />
+                  <div
+                    ref={(el) => {
+                      markersRef.current[idx] = el;
+                    }}
+                    className="timeline-marker absolute -left-[21px] sm:-left-[37px] top-1.5 w-3.5 h-3.5 rounded-full bg-violet-500 border-4 border-[#080808] group-hover:scale-125 transition-all"
+                  />
 
                   <div className="timeline-card p-6 sm:p-7 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 transition-all">
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">

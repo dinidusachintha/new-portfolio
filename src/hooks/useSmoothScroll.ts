@@ -78,6 +78,7 @@ export function useSmoothScroll({ enabled = true, onScroll }: SmoothScrollOption
     lenis.on("scroll", (e: LenisScrollEvent) => {
       ScrollTrigger.update();
       onScrollRef.current?.(e);
+      window.dispatchEvent(new CustomEvent("lenis-scroll", { detail: e }));
     });
 
     // 2. Drive Lenis through GSAP ticker for 60fps frame synchronization

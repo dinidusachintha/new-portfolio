@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { aiVideoSkills } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import CountUpNumber from "./CountUpNumber";
 
 export default function AiVideoSkills() {
   const [activePillarIdx, setActivePillarIdx] = useState(0);
@@ -65,7 +66,7 @@ export default function AiVideoSkills() {
         {aiVideoSkills.stats.map((s, idx) => (
           <div key={idx} className="ai-stat-box p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center">
             <div className="font-mono text-xl sm:text-2xl font-bold text-violet-300">
-              {s.value}
+              <CountUpNumber value={s.value} />
             </div>
             <div className="text-xs text-gray-400 mt-1 font-mono">{s.label}</div>
           </div>

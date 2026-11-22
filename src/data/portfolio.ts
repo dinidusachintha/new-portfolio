@@ -298,11 +298,7 @@ export const skillPillars = [
   },
 ];
 
-export const techMarquee = [
-  "TypeScript",
-  "React 19",
-  "Next.js",
-  "Node.js",
+export const focusMarqueeTech = [
   "Spring Boot",
   "Java",
   "PostgreSQL",
@@ -310,6 +306,9 @@ export const techMarquee = [
   "Docker",
   "AWS",
   "Redis",
+  "TypeScript",
+  "React",
+  "Node.js",
   "Tailwind CSS",
   "GraphQL",
   "WebSockets",
@@ -317,6 +316,8 @@ export const techMarquee = [
   "REST APIs",
   "Jest / Vitest",
 ];
+
+export const techMarquee = focusMarqueeTech;
 
 export const principles = [
   {

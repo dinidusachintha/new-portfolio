@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, type Variants } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Code2,
@@ -10,6 +12,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Stagger container for the whole name
 const nameContainerVariants: Variants = {
@@ -108,9 +112,70 @@ export default function Hero() {
 
     io.observe(el);
 
+    // Modern Scroll Parallax & Scroll Cue (Transform and Opacity only)
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let ctx: gsap.Context | null = null;
+    if (!prefersReducedMotion) {
+      ctx = gsap.context(() => {
+        // 1. Split-name parallax: DINIDU moves left, SACHINTHA moves right, both fade out
+        gsap.to(".hero-name-line-1", {
+          xPercent: -35,
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "bottom 30%",
+            scrub: true,
+          },
+        });
+
+        gsap.to(".hero-name-line-2", {
+          xPercent: 35,
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "bottom 30%",
+            scrub: true,
+          },
+        });
+
+        // 2. Photo parallax: moves slower than page scroll
+        gsap.to(".hero-dymas-portrait-wrap", {
+          yPercent: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+
+        // 3. Scroll cue fade out on initial scroll
+        gsap.to(".hero-scroll-cue", {
+          opacity: 0,
+          y: 20,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "+=100",
+            scrub: true,
+          },
+        });
+      }, el);
+    }
+
     return () => {
       io.disconnect();
       stopGlitchTimer();
+      ctx?.revert();
     };
   }, []);
 
@@ -324,6 +389,14 @@ export default function Hero() {
                   </motion.a>
                 ))}
               </div>
+            </div>
+
+            {/* Subtle Looping Scroll Cue */}
+            <div className="hero-scroll-cue" aria-hidden="true">
+              <div className="hero-scroll-cue-pill">
+                <div className="hero-scroll-cue-dot" />
+              </div>
+              <span className="hero-scroll-cue-label">SCROLL</span>
             </div>
           </div>
         </div>

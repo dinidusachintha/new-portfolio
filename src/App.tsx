@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, useCallback } from "react";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUp,
@@ -20,7 +21,7 @@ import LeisureSection from "./components/LeisureSection";
 import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
-import TechnologyMarquee from "./components/TechnologyMarquee";
+import FocusMarquee from "./components/FocusMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
@@ -185,7 +186,39 @@ function CornerMusicButton() {
 }
 
 function HaveASystemSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".have-a-system-reveal",
+        { y: 35, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 82%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleCopy = () => {
     if (profile.email) {
@@ -196,25 +229,31 @@ function HaveASystemSection() {
   };
 
   return (
-    <div className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
-        <Sparkles size={13} className="text-violet-400" />
-        <span>07 // INITIATE COLLABORATION</span>
-      </span>
+    <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
+      <div className="have-a-system-reveal">
+        <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
+          <Sparkles size={13} className="text-violet-400" />
+          <span>07 // INITIATE COLLABORATION · LET’S WORK TOGETHER</span>
+        </span>
+      </div>
 
-      <FlyingHeading
-        line1="HAVE A SYSTEM TO BUILD OR ARCHITECT?"
-        line2="LET'S BUILD IT."
-        line2ClassName="have-a-system-outline font-unbounded block mt-2"
-        className="have-a-system-title font-unbounded font-black text-white tracking-tight leading-[1.02] mb-6"
-      />
+      <div className="have-a-system-reveal">
+        <FlyingHeading
+          line1="HAVE A SYSTEM TO BUILD OR ARCHITECT?"
+          line2="LET'S BUILD IT."
+          line2ClassName="have-a-system-outline font-unbounded block mt-2"
+          className="have-a-system-title font-unbounded font-black text-white tracking-tight leading-[1.02] mb-6"
+        />
+      </div>
 
-      <p className="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed mb-6 sm:mb-7">
-        I am currently open for new projects. You bring the idea, and I will handle the code, the architecture, and all the fine details to make sure it runs flawlessly.
-      </p>
+      <div className="have-a-system-reveal">
+        <p className="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed mb-6 sm:mb-7">
+          I am currently open for new projects. You bring the idea, and I will handle the code, the architecture, and all the fine details to make sure it runs flawlessly.
+        </p>
+      </div>
 
-      {/* Action Buttons matching Image 3 */}
-      <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-6 sm:mb-8">
+      {/* Action Buttons matching Image 3 with Scroll Reveal */}
+      <div className="have-a-system-reveal flex flex-wrap items-center gap-2.5 sm:gap-4 mb-6 sm:mb-8">
         <a
           href={`mailto:${profile.email}?subject=Project%20Architecture%20Inquiry`}
           className="inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 cursor-pointer whitespace-nowrap"
@@ -667,8 +706,8 @@ export default function App() {
             {/* Hero Section */}
             <Hero />
 
-            {/* Futuristic 3D Infinite Technology Marquee */}
-            <TechnologyMarquee />
+            {/* Focus Lens Continuous Technology Marquee */}
+            <FocusMarquee />
 
             {/* 01 / About Section */}
             <AboutSection />

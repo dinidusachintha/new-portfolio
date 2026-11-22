@@ -1044,111 +1044,156 @@ dialog::backdrop {
 }
 
 /* ==========================================================================
-   HERO TEXT-PILL SLIDESHOW / MARQUEE (MATCHES IMAGE 2 - ZERO CYAN COLOUR)
-   - Dark Obsidian Glass Pills with Violet/Purple Bullets (No Cyan)
-   - Seamless Infinite Loop (35s)
-   - Hover Pause & Keyboard Focus Accessibility
+   FOCUS LENS MARQUEE STRIP
+   - Optical Center Lens Magnification (0.82 to 1.32 Desktop / 0.90 to 1.15 Mobile)
+   - Continuous rAF Transform/Opacity Animation (Zero-Reflow)
+   - Dynamic Velocity & Scroll Direction Integration
    ========================================================================== */
-.hero-pill-marquee-wrap {
+
+.focus-marquee-section {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  background-color: #08080c;
+  overflow: hidden;
+}
+
+.focus-marquee-strip {
   position: relative;
   width: 100%;
   max-width: 100vw;
+  height: 96px;
+  min-height: 96px;
   overflow: hidden;
-  padding-block: 20px;
-  background-color: #000000;
-  border-block: 1px solid rgba(255, 255, 255, 0.08);
-  margin-top: 24px;
-  margin-bottom: 24px;
+  background-color: #08080c;
+  border-block: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   user-select: none;
-}
-
-@media (max-width: 768px) {
-  .hero-pill-marquee-wrap {
-    padding-block: 14px;
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
-}
-
-.hero-pill-marquee-track {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: max-content;
-  will-change: transform;
-  animation: heroPillMarqueeScroll 35s linear infinite;
-}
-
-.hero-pill-marquee-wrap:hover .hero-pill-marquee-track,
-.hero-pill-marquee-wrap:focus-within .hero-pill-marquee-track {
-  animation-play-state: paused;
-}
-
-.hero-pill-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f1f5f9;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: default;
 }
 
+.focus-marquee-center-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(152, 103, 255, 0.5);
+  box-shadow: 0 0 8px rgba(152, 103, 255, 0.45);
+  pointer-events: none;
+  z-index: 8;
+  transform: translateX(-50%);
+}
+
+.focus-marquee-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(70px, 14vw, 180px);
+  pointer-events: none;
+  z-index: 6;
+}
+
+.focus-marquee-fade-left {
+  left: 0;
+  background: linear-gradient(to right, #08080c 0%, rgba(8, 8, 12, 0) 100%);
+}
+
+.focus-marquee-fade-right {
+  right: 0;
+  background: linear-gradient(to left, #08080c 0%, rgba(8, 8, 12, 0) 100%);
+}
+
+.focus-marquee-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.focus-marquee-item {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 22px;
+  border-radius: 9999px;
+  background: #111118;
+  border: 0.5px solid #2a2a38;
+  color: #94a3b8;
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.focus-marquee-item.is-focused {
+  border-color: #9867ff !important;
+  background-color: #1a1426 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(152, 103, 255, 0.45) !important;
+}
+
 @media (max-width: 768px) {
-  .hero-pill-item {
-    padding: 6px 14px;
-    font-size: 11.5px;
-    gap: 6px;
+  .focus-marquee-strip {
+    height: 84px;
+    min-height: 84px;
+  }
+
+  .focus-marquee-item {
+    padding: 6px 16px;
+    font-size: 13px;
   }
 }
 
-.hero-pill-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(168, 85, 247, 0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), 0 0 16px rgba(168, 85, 247, 0.3);
-  color: #ffffff;
+/* Smooth transition from dark focus strip to light About section */
+.about-section-light {
+  border-top-left-radius: 36px !important;
+  border-top-right-radius: 36px !important;
+  box-shadow: 0 -24px 50px rgba(0, 0, 0, 0.6) !important;
+  position: relative;
+  z-index: 10;
 }
 
-.hero-pill-bullet {
-  color: #a855f7;
-  font-size: 11px;
-  line-height: 1;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.hero-pill-item:hover .hero-pill-bullet {
-  color: #c084fc;
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.8));
-}
-
-@keyframes heroPillMarqueeScroll {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-33.333333%, 0, 0);
+@media (max-width: 768px) {
+  .about-section-light {
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-pill-marquee-track {
-    animation: none;
+  .focus-marquee-strip {
     overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline: 20px;
+  }
+
+  .focus-marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: max-content;
+    height: auto;
+  }
+
+  .focus-marquee-item {
+    position: static;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .focus-marquee-center-line {
+    display: none;
   }
 }
 
@@ -6289,6 +6334,71 @@ main {
   margin-top: clamp(-4px, -0.5vw, -1px);
 }
 
+/* Looping Hero Scroll Cue */
+.hero-scroll-cue {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+  z-index: 20;
+  will-change: transform, opacity;
+}
+
+.hero-scroll-cue-pill {
+  width: 18px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(152, 103, 255, 0.45);
+  background: rgba(10, 10, 22, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+  box-shadow: 0 0 12px rgba(152, 103, 255, 0.25);
+}
+
+.hero-scroll-cue-dot {
+  width: 3.5px;
+  height: 6px;
+  border-radius: 2px;
+  background: #9867ff;
+  box-shadow: 0 0 6px #9867ff;
+  animation: heroScrollCueBounce 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes heroScrollCueBounce {
+  0% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(11px); opacity: 0.25; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.hero-scroll-cue-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .hero-scroll-cue {
+    bottom: 8px;
+    transform: translateX(-50%) scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue-dot {
+    animation: none;
+  }
+}
+
 .hero-char-letter {
   display: inline-block;
   position: relative;
@@ -7479,6 +7589,31 @@ body {
   min-height: 0;
 }
 
+/* Scroll-Drawing Violet Timeline Rail */
+.timeline-progress-line {
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #9867ff 0%, #c084fc 50%, #9867ff 100%);
+  transform-origin: top;
+  will-change: transform;
+  box-shadow: 0 0 10px rgba(152, 103, 255, 0.85);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.timeline-marker {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s, background-color 0.3s !important;
+}
+
+.timeline-marker.marker-illuminated {
+  background-color: #c084fc !important;
+  box-shadow: 0 0 16px rgba(152, 103, 255, 0.95), 0 0 32px rgba(152, 103, 255, 0.5) !important;
+  transform: scale(1.3) !important;
+}
+
 /* About Portrait Verified Tag */
 .portrait-verified-tag {
   position: absolute;
@@ -7693,7 +7828,46 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
-@media (max-width: 768px) {
+/* Clip-path reveal for project preview mockups */
+.project-mockup-reveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: clip-path;
+}
+
+.project-mockup-reveal.is-revealed {
+  clip-path: inset(0% 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-mockup-reveal {
+    clip-path: none !important;
+    transition: none !important;
+  }
+}
+
+/* Replace pinned effects on screens under 768px with normal vertical stacking */
+@media (max-width: 767px) {
+  .card-container {
+    position: relative !important;
+    top: auto !important;
+    margin-bottom: 2.5rem !important;
+    z-index: 1 !important;
+  }
+
+  .card-container:last-child {
+    margin-bottom: 2.5rem !important;
+  }
+
+  .card-inner {
+    border-radius: 20px;
+    width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
   :root {
     --card-top-base: 64px;
     --card-step: 14px;
@@ -7719,6 +7893,17 @@ body {
 /* ==========================================================================
    HAVE A SYSTEM TO BUILD OR ARCHITECT? SECTION & FOOTER (MATCHING IMAGE 3)
    ========================================================================== */
+
+.have-a-system-reveal {
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .have-a-system-reveal {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
 
 .have-a-system-title {
   font-family: "Manrope Variable", Arial, sans-serif;

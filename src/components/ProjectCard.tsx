@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useTransform,
@@ -24,16 +24,40 @@ export default function ProjectCard({
   total,
   progress,
   range,
-  targetScale = 0.94,
+  targetScale = 0.95,
   onSelect,
 }: ProjectCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  // Lazy-init clip-path image reveal with IntersectionObserver
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (shouldReduceMotion) {
+      setIsRevealed(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsRevealed(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shouldReduceMotion]);
 
   const isLast = index === total - 1;
 
-  // Stacking transform: scale down to targetScale and dim slightly as next card stacks over
+  // Stacking transform: scale down to targetScale (0.95) and dim to 0.7 as next card stacks over
   const rawScale = useTransform(
     progress,
     range,
@@ -44,7 +68,7 @@ export default function ProjectCard({
   const rawOpacity = useTransform(
     progress,
     range,
-    isLast ? [1, 1] : [1, 0.8],
+    isLast ? [1, 1] : [1, 0.7],
     { clamp: true }
   );
 
@@ -333,8 +357,12 @@ export default function ProjectCard({
                 </span>
               </div>
 
-              {/* Multi-Device Mockup Composition */}
-              <div className="relative w-full max-w-[460px] flex items-end justify-center py-3 px-1 my-auto">
+              {/* Multi-Device Mockup Composition with Scroll-Linked Clip-Path Reveal */}
+              <div
+                className={`relative w-full max-w-[460px] flex items-end justify-center py-3 px-1 my-auto project-mockup-reveal ${
+                  isRevealed ? "is-revealed" : ""
+                }`}
+              >
                 {/* 1. Phone Mockup (Front-Left) */}
                 <div className="absolute left-0 sm:-left-2 bottom-1 sm:bottom-2 z-20 w-[22%] sm:w-[25%] aspect-[9/18.5] rounded-[11px] sm:rounded-[20px] p-[2.5px] sm:p-[4px] bg-[#16192b] border border-violet-300/30 shadow-[0_15px_30px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover/showcase:-translate-y-1.5">
                   <div className="w-full h-full rounded-[9px] sm:rounded-[16px] overflow-hidden bg-black relative">
