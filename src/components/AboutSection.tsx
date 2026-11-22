@@ -69,7 +69,7 @@ export default function AboutSection() {
   return (
     <section ref={sectionRef} className="about-section about-section-light" id="about">
       <div className="container">
-        {/* 4 Bento Stat Tiles on White Canvas Above the About Card */}
+        {/* 3 Bento Stat Tiles on White Canvas Above the About Card */}
         <div className="about-stats-grid mb-8 sm:mb-12">
           {/* Card 1: 1y */}
           <div className="bento-tile bento-tile-stat is-visible">
@@ -114,22 +114,6 @@ export default function AboutSection() {
             <dt className="bento-stat-label text-xs sm:text-sm text-gray-400 mt-2 font-mono">
               GitHub repositories
             </dt>
-          </div>
-
-          {/* Card 4: Open to work */}
-          <div className="bento-tile bento-tile-availability is-visible">
-            <div className="flex items-center gap-2.5">
-              <span className="relative flex h-3 w-3">
-                <span className="bento-pulse-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-              </span>
-              <span className="font-mono text-xs sm:text-sm text-emerald-400 font-semibold tracking-wide">
-                Open to work
-              </span>
-            </div>
-            <p className="text-gray-400 text-xs mt-2 font-mono">
-              Full-time & high-impact contracts
-            </p>
           </div>
         </div>
 
