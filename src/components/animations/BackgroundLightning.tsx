@@ -1,123 +1,299 @@
 import { useEffect, useRef, useState } from "react";
 
-interface LightningStrike {
-  id: number;
-  originX: number; // percentage
-  originY: number; // percentage
-  branchPath: string;
+interface Point {
+  x: number;
+  y: number;
 }
 
-// Organic pre-computed branching lightning paths (normalized coordinates)
-const LIGHTNING_PATHS = [
-  "M 0,0 Q 15,35 10,70 T 30,120 Q 25,160 45,210 T 35,260 Q 55,310 50,370 M 10,70 Q -15,100 -25,130 M 30,120 Q 50,150 70,175 M 45,210 Q 25,245 15,270",
-  "M 0,0 Q -20,40 -15,80 T -35,135 Q -30,180 -50,230 T -40,290 Q -65,340 -55,400 M -15,80 Q 10,110 25,140 M -35,135 Q -55,165 -75,190",
-  "M 0,0 Q 25,45 20,90 T 5,140 Q 30,190 25,240 T 40,300 M 20,90 Q 45,115 60,145 M 5,140 Q -15,170 -30,200",
-];
+interface LightningData {
+  id: number;
+  viewBox: string;
+  originXPercent: number;
+  originYPercent: number;
+  trunkPath: string;
+  branchPaths: string[];
+  twigPaths: string[];
+  skyFlashIntensity: number;
+}
+
+type LightningPhase =
+  | "idle"
+  | "leader"
+  | "stroke1"
+  | "dip1"
+  | "stroke2"
+  | "dip2"
+  | "stroke3"
+  | "decay";
+
+/**
+ * Procedurally generates an authentic, organic fractal lightning bolt
+ * using randomized jagged dielectric breakdown with recursive branching.
+ */
+function generateFractalLightning(
+  width = 1440,
+  height = 960,
+  type: "top-right" | "top-left" | "top-center" | "crawler" = "top-right"
+): LightningData {
+  let startX: number;
+  let startY: number;
+  let targetX: number;
+  let targetY: number;
+
+  if (type === "top-right") {
+    startX = width * (0.65 + Math.random() * 0.25);
+    startY = -15;
+    targetX = width * (0.2 + Math.random() * 0.4);
+    targetY = height * (0.6 + Math.random() * 0.35);
+  } else if (type === "top-left") {
+    startX = width * (0.12 + Math.random() * 0.25);
+    startY = -15;
+    targetX = width * (0.4 + Math.random() * 0.35);
+    targetY = height * (0.6 + Math.random() * 0.35);
+  } else if (type === "top-center") {
+    startX = width * (0.4 + Math.random() * 0.2);
+    startY = -15;
+    targetX = width * (0.3 + Math.random() * 0.4);
+    targetY = height * (0.7 + Math.random() * 0.25);
+  } else {
+    // Upper atmospheric cloud-to-cloud sheet crawler
+    startX = width * (0.1 + Math.random() * 0.15);
+    startY = height * (0.08 + Math.random() * 0.12);
+    targetX = width * (0.8 + Math.random() * 0.15);
+    targetY = height * (0.12 + Math.random() * 0.18);
+  }
+
+  const trunkPoints: Point[] = [{ x: Math.round(startX), y: Math.round(startY) }];
+  const branchPaths: string[] = [];
+  const twigPaths: string[] = [];
+
+  let currentX = startX;
+  let currentY = startY;
+
+  const totalDx = targetX - startX;
+  const totalDy = targetY - startY;
+  const totalDist = Math.hypot(totalDx, totalDy);
+  const baseAngle = Math.atan2(totalDy, totalDx);
+
+  const stepCount = Math.max(14, Math.floor(totalDist / 34));
+  const segmentLength = totalDist / stepCount;
+
+  for (let i = 0; i < stepCount; i++) {
+    const progress = (i + 1) / stepCount;
+    const targetInterpX = startX + totalDx * progress;
+    const targetInterpY = startY + totalDy * progress;
+
+    // Angular deviation: sharp jagged turns
+    const angleJitter = (Math.random() - 0.5) * 1.05;
+    const angle = baseAngle + angleJitter;
+    const len = segmentLength * (0.7 + Math.random() * 0.55);
+
+    currentX = Math.round(currentX + Math.cos(angle) * len);
+    currentY = Math.round(currentY + Math.sin(angle) * len);
+
+    // Guide towards ground/target
+    currentX = Math.round(currentX * 0.68 + targetInterpX * 0.32);
+    currentY = Math.round(currentY * 0.68 + targetInterpY * 0.32);
+
+    trunkPoints.push({ x: currentX, y: currentY });
+
+    // Organic branching: ~42% chance at each vertex
+    if (Math.random() < 0.44 && i > 1 && i < stepCount - 1) {
+      const forkSide = Math.random() > 0.5 ? 1 : -1;
+      const branchAngle = baseAngle + forkSide * (0.42 + Math.random() * 0.48);
+      const branchSteps = 3 + Math.floor(Math.random() * 4);
+      let bX = currentX;
+      let bY = currentY;
+      const bPoints: Point[] = [{ x: bX, y: bY }];
+
+      for (let s = 0; s < branchSteps; s++) {
+        const bSubAngle = branchAngle + (Math.random() - 0.5) * 0.75;
+        const bLen = segmentLength * (0.55 + Math.random() * 0.4);
+        bX = Math.round(bX + Math.cos(bSubAngle) * bLen);
+        bY = Math.round(bY + Math.sin(bSubAngle) * bLen);
+        bPoints.push({ x: bX, y: bY });
+
+        // Micro-twig off secondary branch
+        if (Math.random() < 0.36 && s >= 1) {
+          const tAngle =
+            bSubAngle + (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 0.4);
+          const tLen = segmentLength * 0.42;
+          const tX = Math.round(bX + Math.cos(tAngle) * tLen);
+          const tY = Math.round(bY + Math.sin(tAngle) * tLen);
+          twigPaths.push(`M ${bX},${bY} L ${tX},${tY}`);
+        }
+      }
+
+      branchPaths.push(
+        bPoints.map((p, idx) => `${idx === 0 ? "M" : "L"} ${p.x},${p.y}`).join(" ")
+      );
+    }
+  }
+
+  const trunkPath = trunkPoints
+    .map((p, idx) => `${idx === 0 ? "M" : "L"} ${p.x},${p.y}`)
+    .join(" ");
+
+  return {
+    id: Date.now() + Math.random(),
+    viewBox: `0 0 ${width} ${height}`,
+    originXPercent: Math.round((startX / width) * 100),
+    originYPercent: Math.max(4, Math.round((startY / height) * 100)),
+    trunkPath,
+    branchPaths,
+    twigPaths,
+    skyFlashIntensity: 0.88 + Math.random() * 0.12,
+  };
+}
 
 export default function BackgroundLightning() {
-  const [strike, setStrike] = useState<LightningStrike | null>(null);
-  const [phase, setPhase] = useState<"idle" | "flash1" | "dip" | "flash2" | "fade">("idle");
-  const strikeCountRef = useRef(0);
+  const [bolt, setBolt] = useState<LightningData | null>(null);
+  const [phase, setPhase] = useState<LightningPhase>("idle");
+  const strikeCounterRef = useRef(0);
 
   useEffect(() => {
     // Accessibility check: disable if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion: reduce)"
     ).matches;
     if (prefersReducedMotion) return;
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     let sequenceTimeouts: ReturnType<typeof setTimeout>[] = [];
 
-    const clearSequence = () => {
+    const clearTimeouts = () => {
       sequenceTimeouts.forEach((t) => clearTimeout(t));
       sequenceTimeouts = [];
+      if (timeoutId) clearTimeout(timeoutId);
       setPhase("idle");
-      setStrike(null);
+      setBolt(null);
     };
 
-    // Schedule next rare lightning strike (every 10s to 16s)
+    /**
+     * Executes the rapid multi-return-stroke lightning sequence.
+     */
+    const fireStrikeSequence = (data: LightningData, onDone: () => void) => {
+      setBolt(data);
+
+      // Phase 1: Stepped Leader Pre-Ionization (0ms)
+      setPhase("leader");
+
+      // Phase 2: Massive Primary Return Stroke (25ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("stroke1");
+        }, 25)
+      );
+
+      // Phase 3: Dark Dip / Intermission (75ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("dip1");
+        }, 75)
+      );
+
+      // Phase 4: Second Return Stroke / Dart Leader (115ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("stroke2");
+        }, 115)
+      );
+
+      // Phase 5: Second Dip (165ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("dip2");
+        }, 165)
+      );
+
+      // Phase 6: Third Strike / Residual Pulse (205ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("stroke3");
+        }, 205)
+      );
+
+      // Phase 7: Exponential Atmospheric Cloud Decay (265ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("decay");
+        }, 265)
+      );
+
+      // Phase 8: Return to Idle (1100ms)
+      sequenceTimeouts.push(
+        setTimeout(() => {
+          setPhase("idle");
+          setBolt(null);
+          onDone();
+        }, 1100)
+      );
+    };
+
+    /**
+     * Schedules the next lightning strike event (every 8 to 14 seconds).
+     */
     const scheduleNextStrike = () => {
-      const delay = 10000 + Math.random() * 6000;
+      const delay = 8000 + Math.random() * 6000;
 
       timeoutId = setTimeout(() => {
-        // Only trigger if document is visible and not light theme
         const isDark = document.documentElement.getAttribute("data-theme") !== "light";
         if (!document.hidden && isDark) {
-          triggerRareLightning();
+          executeLightningEvent();
         } else {
           scheduleNextStrike();
         }
       }, delay);
     };
 
-    const triggerRareLightning = () => {
-      strikeCountRef.current++;
-      const strikeIdx = strikeCountRef.current % LIGHTNING_PATHS.length;
-
-      // Random origin in upper atmospheric region
-      const origins = [
-        { x: 72 + Math.random() * 16, y: 8 + Math.random() * 12 }, // Upper right
-        { x: 26 + Math.random() * 20, y: 6 + Math.random() * 10 }, // Upper left-center
-        { x: 50 + Math.random() * 18, y: 5 + Math.random() * 8 },  // Upper center
+    /**
+     * Triggers a realistic lightning strike event with organic variety.
+     */
+    const executeLightningEvent = () => {
+      strikeCounterRef.current++;
+      const types: Array<"top-right" | "top-left" | "top-center" | "crawler"> = [
+        "top-right",
+        "top-left",
+        "top-center",
+        "top-right",
+        "crawler",
       ];
-      const selectedOrigin = origins[strikeCountRef.current % origins.length];
+      const selectedType = types[strikeCounterRef.current % types.length];
+      const newBolt = generateFractalLightning(1440, 960, selectedType);
 
-      setStrike({
-        id: Date.now(),
-        originX: selectedOrigin.x,
-        originY: selectedOrigin.y,
-        branchPath: LIGHTNING_PATHS[strikeIdx],
-      });
+      // Occasional double-strike in nature (~25% probability)
+      const isDoubleStrike = Math.random() < 0.26;
 
-      // Atmospheric multi-burst lightning timing:
-      // 0ms: Initial fast flash
-      setPhase("flash1");
-
-      // 90ms: Brief dip
-      sequenceTimeouts.push(
-        setTimeout(() => {
-          setPhase("dip");
-        }, 90)
-      );
-
-      // 170ms: Main luminous pulse with branch illumination
-      sequenceTimeouts.push(
-        setTimeout(() => {
-          setPhase("flash2");
-        }, 170)
-      );
-
-      // 360ms: Silky atmospheric decay/afterglow
-      sequenceTimeouts.push(
-        setTimeout(() => {
-          setPhase("fade");
-        }, 360)
-      );
-
-      // 1800ms: Complete and schedule next rare event
-      sequenceTimeouts.push(
-        setTimeout(() => {
-          setPhase("idle");
-          setStrike(null);
+      fireStrikeSequence(newBolt, () => {
+        if (isDoubleStrike) {
+          // Secondary discharge nearby after 140ms
+          sequenceTimeouts.push(
+            setTimeout(() => {
+              const secondaryType = selectedType === "top-right" ? "top-left" : "top-right";
+              const secondBolt = generateFractalLightning(1440, 960, secondaryType);
+              fireStrikeSequence(secondBolt, () => {
+                scheduleNextStrike();
+              });
+            }, 140)
+          );
+        } else {
           scheduleNextStrike();
-        }, 1800)
-      );
+        }
+      });
     };
 
-    // Initial first trigger after 4s to welcome the user, then every 10s-16s
+    // First initial strike welcomes the user after 3.2s
     timeoutId = setTimeout(() => {
       if (!document.hidden) {
-        triggerRareLightning();
+        executeLightningEvent();
       } else {
         scheduleNextStrike();
       }
-    }, 4000);
+    }, 3200);
 
     const handleVisibility = () => {
       if (document.hidden) {
-        clearSequence();
-        if (timeoutId) clearTimeout(timeoutId);
+        clearTimeouts();
       } else {
         scheduleNextStrike();
       }
@@ -126,74 +302,180 @@ export default function BackgroundLightning() {
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      clearSequence();
+      clearTimeouts();
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
-  if (!strike || phase === "idle") return null;
+  if (!bolt || phase === "idle") return null;
 
   return (
     <div
       className={`background-lightning-container phase-${phase}`}
       aria-hidden="true"
-      style={{
-        "--lightning-x": `${strike.originX}%`,
-        "--lightning-y": `${strike.originY}%`,
-      } as React.CSSProperties}
+      style={
+        {
+          "--lightning-x": `${bolt.originXPercent}%`,
+          "--lightning-y": `${bolt.originYPercent}%`,
+          "--lightning-intensity": bolt.skyFlashIntensity,
+        } as React.CSSProperties
+      }
     >
-      {/* 1. Atmospheric Violet Sky Sheet Illumination */}
-      <div className="lightning-sheet-glow" />
+      {/* 1. Full-screen Atmospheric Ambient Flash */}
+      <div className="lightning-ambient-flash" />
 
-      {/* 2. Soft Violet Ambient Aura */}
-      <div className="lightning-ambient-aura" />
+      {/* 2. Concentrated Atmospheric Sky Cloud Sheet Illumination */}
+      <div className="lightning-sky-sheet" />
 
-      {/* 3. Subtle Ethereal Branch Filament */}
+      {/* 3. Upper Atmospheric Horizon Scatter */}
+      <div className="lightning-horizon-glow" />
+
+      {/* 4. Multi-Layer Organic Fractal Lightning SVG */}
       <svg
-        className="lightning-filament-svg"
-        viewBox="-100 0 200 450"
-        style={{
-          left: `${strike.originX}%`,
-          top: `${strike.originY}%`,
-        }}
+        className="lightning-svg-canvas"
+        viewBox={bolt.viewBox}
+        preserveAspectRatio="none"
       >
         <defs>
-          <linearGradient id="lightningVioletGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-            <stop offset="25%" stopColor="#c084fc" stopOpacity="0.85" />
-            <stop offset="70%" stopColor="#9867ff" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
-          </linearGradient>
-          <filter id="lightningVioletGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur1" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur2" />
+          {/* Intense Violet Plasma Bloom Filter */}
+          <filter
+            id="plasmaGlow"
+            x="-60%"
+            y="-60%"
+            width="220%"
+            height="220%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5.5" result="blur1" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur2" />
             <feMerge>
               <feMergeNode in="blur2" />
               <feMergeNode in="blur1" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+
+          {/* Crisp Ionization Sheath Filter */}
+          <filter
+            id="ionGlow"
+            x="-40%"
+            y="-40%"
+            width="180%"
+            height="180%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Electric Violet Radial Plasma Gradient */}
+          <linearGradient id="plasmaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="20%" stopColor="#e9d5ff" stopOpacity="0.95" />
+            <stop offset="65%" stopColor="#c084fc" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#9867ff" stopOpacity="0.4" />
+          </linearGradient>
+
+          {/* Branch Plasma Gradient */}
+          <linearGradient id="branchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#f3e8ff" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#c084fc" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#9867ff" stopOpacity="0.25" />
+          </linearGradient>
         </defs>
 
-        {/* Glow halo path */}
-        <path
-          d={strike.branchPath}
-          fill="none"
-          stroke="url(#lightningVioletGrad)"
-          strokeWidth="3.5"
-          filter="url(#lightningVioletGlow)"
-          className="lightning-path-glow"
-        />
+        {/* LAYER A: Wide Plasma Halo (Trunk & Branches) */}
+        <g className="lightning-layer-plasma" filter="url(#plasmaGlow)">
+          <path
+            d={bolt.trunkPath}
+            fill="none"
+            stroke="#9867ff"
+            strokeWidth="8.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lightning-trunk-plasma"
+          />
+          {bolt.branchPaths.map((bp, i) => (
+            <path
+              key={`b-plasma-${i}`}
+              d={bp}
+              fill="none"
+              stroke="#a855f7"
+              strokeWidth="4.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lightning-branch-plasma"
+            />
+          ))}
+        </g>
 
-        {/* Crisp core path */}
-        <path
-          d={strike.branchPath}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth="1.2"
-          className="lightning-path-core"
-        />
+        {/* LAYER B: Ionization Sheath (Lavender/Violet) */}
+        <g className="lightning-layer-ion" filter="url(#ionGlow)">
+          <path
+            d={bolt.trunkPath}
+            fill="none"
+            stroke="url(#plasmaGrad)"
+            strokeWidth="3.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lightning-trunk-ion"
+          />
+          {bolt.branchPaths.map((bp, i) => (
+            <path
+              key={`b-ion-${i}`}
+              d={bp}
+              fill="none"
+              stroke="url(#branchGrad)"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lightning-branch-ion"
+            />
+          ))}
+        </g>
+
+        {/* LAYER C: Hyper-Hot Pure White Electrical Core */}
+        <g className="lightning-layer-core">
+          {/* Main Trunk Core */}
+          <path
+            d={bolt.trunkPath}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lightning-trunk-core"
+          />
+          {/* Fork Branches Core */}
+          {bolt.branchPaths.map((bp, i) => (
+            <path
+              key={`b-core-${i}`}
+              d={bp}
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lightning-branch-core"
+            />
+          ))}
+          {/* Fine Micro-Twigs */}
+          {bolt.twigPaths.map((tp, i) => (
+            <path
+              key={`t-core-${i}`}
+              d={tp}
+              fill="none"
+              stroke="#f5f3ff"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lightning-twig-core"
+            />
+          ))}
+        </g>
       </svg>
     </div>
   );

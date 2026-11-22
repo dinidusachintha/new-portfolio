@@ -234,6 +234,12 @@ function HaveASystemSection() {
 
   return (
     <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
+      {/* Background Dot Grid Spotlight & Perspective Floor */}
+      <div className="dot-grid-spotlight" aria-hidden="true" />
+      <div className="footer-perspective-grid-wrap" aria-hidden="true">
+        <div className="footer-perspective-grid-plane" />
+      </div>
+
       <div className="have-a-system-reveal">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
           <Sparkles size={13} className="text-violet-400" />
@@ -812,7 +818,7 @@ export default function App() {
       </main>
 
       {/* Simple Footer matching Image 3 with reduced compact spacing */}
-      <footer className="footer-simple container border-t border-white/10 pt-4 pb-20 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-mono text-xs text-gray-400">
+      <footer className="footer-simple container border-t border-white/10 pt-4 pb-24 sm:py-6 sm:pl-36 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-mono text-xs text-gray-400">
         <div className="flex items-center gap-3">
           <span>© {new Date().getFullYear()} DINIDU SACHINTHA</span>
         </div>
