@@ -66,7 +66,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="about-section about-section-light" id="about">
+    <section ref={sectionRef} className="about-section about-section-light" id="ethos">
       <div className="container">
         {/* Glass Effect Black Card Floating on White Background */}
         <div className="about-glass-black-card reveal relative overflow-hidden">
@@ -147,11 +147,14 @@ export default function AboutSection() {
               <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
                 <a
                   href="#contact"
-                  className="about-glass-touch-btn"
+                  className="about-glass-touch-btn btn-liquid-fill"
                   id="about-get-in-touch-btn"
                 >
-                  <span>Get in Touch</span>
-                  <ArrowUpRight size={15} className="about-glass-btn-arrow" />
+                  <span className="liquid-fill-shape" aria-hidden="true" />
+                  <span className="liquid-btn-content">
+                    <span>Get in Touch</span>
+                    <ArrowUpRight size={15} className="about-glass-btn-arrow liquid-btn-arrow" />
+                  </span>
                 </a>
 
                 {profile.cv && (

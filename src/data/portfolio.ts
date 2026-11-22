@@ -40,6 +40,29 @@ export const stats = [
   { value: "99.9%", label: "System Availability", detail: "Uptime focus" },
 ];
 
+export const bentoAboutData = {
+  name: "Dinidu Sachintha",
+  role: "Software Engineer",
+  bio: "Designing digital products and resilient architectures that are clear, usable, and conversion focused. Bridging high-performance backend infrastructure with fluid client experiences.",
+  availability: "Open to work",
+  location: "Sri Lanka",
+  stats: [
+    { label: "Industry experience", value: "1y", suffix: "y", ariaLabel: "1 year industry experience" },
+    { label: "Production projects", value: "5+", suffix: "+", ariaLabel: "5 plus production projects" },
+    { label: "GitHub repositories", value: "20+", suffix: "+", ariaLabel: "20 plus GitHub repositories" },
+  ],
+  stackChips: [
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Java",
+    "Spring Boot",
+    "PostgreSQL",
+    "Docker",
+    "AWS",
+  ],
+};
+
 export type Project = {
   id: string;
   index: string;

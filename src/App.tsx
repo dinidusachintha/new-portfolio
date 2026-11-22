@@ -24,6 +24,10 @@ import Navbar from "./components/Navbar";
 import FocusMarquee from "./components/FocusMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
 import GlobalStarfield from "./components/animations/GlobalStarfield";
+import BackgroundLightning from "./components/animations/BackgroundLightning";
+import CursorImageTrail from "./components/animations/CursorImageTrail";
+import CurtainTransition from "./components/animations/CurtainTransition";
+import BentoAbout from "./components/BentoAbout";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useIntroSession } from "./hooks/useIntroSession";
@@ -231,11 +235,6 @@ function HaveASystemSection() {
 
   return (
     <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      {/* Background Dot Grid Spotlight & Perspective Floor */}
-      <div className="dot-grid-spotlight" aria-hidden="true" />
-      <div className="footer-perspective-grid-wrap" aria-hidden="true">
-        <div className="footer-perspective-grid-plane" />
-      </div>
       <div className="have-a-system-reveal">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
           <Sparkles size={13} className="text-violet-400" />
@@ -353,9 +352,26 @@ export default function App() {
   const scrollProgressRingRef = useRef<SVGCircleElement>(null);
   const scrolledRef = useRef(false);
 
+  const [curtainActive, setCurtainActive] = useState(false);
+  const pendingProjectRef = useRef<{ proj: Project; tab: "demo" | "arch" } | null>(null);
+
   const handleOpenProject = (proj: Project, tab: "demo" | "arch" = "demo") => {
-    setSelectedTab(tab);
-    setSelected(proj);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setSelectedTab(tab);
+      setSelected(proj);
+      return;
+    }
+    pendingProjectRef.current = { proj, tab };
+    setCurtainActive(true);
+  };
+
+  const handleCurtainCovered = () => {
+    if (pendingProjectRef.current) {
+      setSelectedTab(pendingProjectRef.current.tab);
+      setSelected(pendingProjectRef.current.proj);
+      pendingProjectRef.current = null;
+    }
   };
 
   // Client Routing state: 'home' or 'blog'
@@ -669,8 +685,16 @@ export default function App() {
         <IntroLoader onComplete={handleIntroComplete} />
       )}
 
+      {/* 5-Bar Violet Curtain Transition for Case Studies */}
+      <CurtainTransition
+        isActive={curtainActive}
+        onCovered={handleCurtainCovered}
+        onComplete={() => setCurtainActive(false)}
+      />
+
       <div className="ambient-spotlight" aria-hidden="true" />
       <GlobalStarfield />
+      <BackgroundLightning />
       <a className="skip-link" href="#main">
         Skip to main content
       </a>
@@ -713,6 +737,9 @@ export default function App() {
             {/* Hero Section */}
             <Hero />
 
+            {/* Bento About Section with Odometer Rolling Digits (1y, 5+, 20+) */}
+            <BentoAbout />
+
             {/* Focus Lens Continuous Technology Marquee */}
             <FocusMarquee />
 
@@ -732,18 +759,20 @@ export default function App() {
                   </span>
                   <span className="small-index">END-TO-END ARCHITECTURAL WORK</span>
                 </div>
-                <div className="section-heading-row reveal">
-                  <FlyingHeading
-                    line1="Engineered systems."
-                    line2="Measurable production impact."
-                    line2ClassName="text-muted"
-                    className="font-unbounded"
-                  />
-                  <p>
-                    A selection of full stack platforms, distributed backend services, and
-                    responsive applications built for performance.
-                  </p>
-                </div>
+                <CursorImageTrail className="mb-4">
+                  <div className="section-heading-row reveal">
+                    <FlyingHeading
+                      line1="Engineered systems."
+                      line2="Measurable production impact."
+                      line2ClassName="text-muted"
+                      className="font-unbounded"
+                    />
+                    <p>
+                      A selection of full stack platforms, distributed backend services, and
+                      responsive applications built for performance.
+                    </p>
+                  </div>
+                </CursorImageTrail>
 
                 {workReady ? (
                   <Suspense fallback={<ProjectGridSkeleton count={3} />}>

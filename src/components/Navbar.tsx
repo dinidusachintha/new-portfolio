@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import BrandLogo from "./BrandLogo";
+import ScrambleText from "./animations/ScrambleText";
 
 export interface NavLinkItem {
   name: string;
@@ -95,7 +96,7 @@ export default function Navbar({
                 {isActive && (
                   <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse shadow-[0_0_6px_#a855f7]" />
                 )}
-                <span>{link.name}</span>
+                <ScrambleText text={link.name} as="span" />
               </a>
             );
           })}
@@ -117,20 +118,23 @@ export default function Navbar({
             <span className="blog-new-pill">NEW</span>
           </button>
 
-          {/* Quick Contact CTA (Desktop only) */}
+          {/* Quick Contact CTA with Liquid Fill */}
           <a
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
               onNavigate("home", "contact");
             }}
-            className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-white font-mono text-xs font-semibold border border-white/15 hover:border-violet-400/50 shadow-sm transition-all duration-200 cursor-pointer group"
+            className="hidden lg:inline-flex items-center px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-white font-mono text-xs font-semibold border border-white/15 hover:border-violet-400/50 shadow-sm transition-all duration-200 cursor-pointer group btn-liquid-fill"
           >
-            <span>Let’s Talk</span>
-            <ArrowUpRight
-              size={13}
-              className="text-violet-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-            />
+            <span className="liquid-fill-shape" aria-hidden="true" />
+            <span className="liquid-btn-content">
+              <span>Let’s Talk</span>
+              <ArrowUpRight
+                size={13}
+                className="text-violet-400 liquid-btn-arrow"
+              />
+            </span>
           </a>
 
           {/* Mobile Menu Toggle Button (Hamburger / Close) */}

@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
+import LetterWave from "./animations/LetterWave";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,25 +53,42 @@ export default function Hero() {
   const [sachinthaChars, setSachinthaChars] = useState<string[]>(() => "SACHINTHA".split(""));
   const [isGlitching, setIsGlitching] = useState(false);
 
-  // Trigger high-speed RGB hacker scramble glitch
+  // Trigger 800ms left-to-right text scramble
   const triggerGlitch = () => {
     if (isGlitching) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     setIsGlitching(true);
-
     const GLYPHS = "01X#_<>!?*/+~$%&";
-    let count = 0;
-    const interval = setInterval(() => {
-      count++;
-      setDiniduChars("DINIDU".split("").map((c) => (Math.random() < 0.4 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : c)));
-      setSachinthaChars("SACHINTHA".split("").map((c) => (Math.random() < 0.4 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : c)));
+    const startTime = performance.now();
+    const duration = 800; // 800ms
+    const totalChars = 15; // 6 for DINIDU + 9 for SACHINTHA
 
-      if (count >= 5) {
-        clearInterval(interval);
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      const resolvedTotal = Math.floor(progress * totalChars);
+
+      const resolvedD = Math.min(6, resolvedTotal);
+      const resolvedS = Math.max(0, resolvedTotal - 6);
+
+      setDiniduChars(
+        "DINIDU".split("").map((c, i) => (i < resolvedD ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))
+      );
+      setSachinthaChars(
+        "SACHINTHA".split("").map((c, i) => (i < resolvedS ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))
+      );
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
         setDiniduChars("DINIDU".split(""));
         setSachinthaChars("SACHINTHA".split(""));
         setIsGlitching(false);
       }
-    }, 65);
+    };
+
+    requestAnimationFrame(tick);
   };
 
   useEffect(() => {
@@ -190,7 +208,7 @@ export default function Hero() {
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
         <div className="hero-dymas-frame relative overflow-hidden">
-          {/* Phase E: 3 Drifting Blurred Glow Orbs (Transform Only, GPU Accelerated) */}
+          {/* Subtle Drifting Blurred Glow Orbs */}
           <div className="hero-glow-orbs" aria-hidden="true">
             <div className="hero-glow-orb hero-glow-orb-1" />
             <div className="hero-glow-orb hero-glow-orb-2" />
@@ -290,15 +308,18 @@ export default function Hero() {
 
             {/* Bottom Left: Role Title, Tech Pill, and Action Button */}
             <div className="hero-dymas-bottom-left">
-              <motion.h1
+              <motion.div
                 className="hero-dymas-role-title hero-role-glitch"
-                data-text="Software Engineer"
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.75, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
               >
-                Software Engineer
-              </motion.h1>
+                <LetterWave
+                  text="Software Engineer"
+                  as="h1"
+                  className="font-unbounded font-black tracking-tight"
+                />
+              </motion.div>
 
               <motion.p
                 className="hero-dymas-role-desc"
@@ -333,11 +354,14 @@ export default function Hero() {
               >
                 <a
                   href="#contact"
-                  className="hero-dymas-collab-btn group"
+                  className="hero-dymas-collab-btn btn-liquid-fill group"
                   aria-label="Let's collaborate - Contact Dinidu"
                 >
-                  <span className="hero-collab-text">Let's collaborate</span>
-                  <ArrowUpRight size={16} className="hero-collab-arrow" />
+                  <span className="liquid-fill-shape" aria-hidden="true" />
+                  <span className="liquid-btn-content">
+                    <span className="hero-collab-text">Let's collaborate</span>
+                    <ArrowUpRight size={16} className="hero-collab-arrow liquid-btn-arrow" />
+                  </span>
                 </a>
               </motion.div>
             </div>

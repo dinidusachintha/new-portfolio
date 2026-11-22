@@ -6745,41 +6745,56 @@ main {
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
-  /* Rendered IN FRONT of the big name typography */
-  width: min(720px, 86%);
-  height: 600px;
+  width: min(860px, 92%);
+  height: min(640px, 72vh);
   display: flex;
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
 }
 
+/* Reduced soft violet radial glow behind the video portrait */
+.hero-dymas-portrait-wrap::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle at 50% 50%, rgba(152, 103, 255, 0.14) 0%, rgba(152, 103, 255, 0.04) 50%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .hero-portrait-video-frame {
   position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   overflow: visible;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
 }
 
 .hero-dymas-portrait-video {
   width: 100%;
   height: 100%;
-  max-height: 620px;
-  object-fit: cover;
-  object-position: 50% 12%;
-  transform: scale(1.32);
-  transform-origin: center bottom;
-  mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 48%, #000 58%, transparent 100%);
-  filter: contrast(1.07) brightness(1.03);
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  filter: contrast(1.04) brightness(1.02);
   transition: transform 0.4s ease;
 }
 
 .hero-dymas-portrait-wrap:hover .hero-dymas-portrait-video {
-  transform: scale(1.35);
+  transform: none !important;
 }
 
 /* Tech Pill Row from Image 3: <> TypeScript ✦ React ✦ Node.js */
@@ -6802,7 +6817,7 @@ main {
 /* Bottom Left Block */
 .hero-dymas-bottom-left {
   position: relative;
-  z-index: 4;
+  z-index: 10;
   max-width: 360px;
   margin-top: auto;
   padding-bottom: 34px;
@@ -7028,7 +7043,7 @@ main {
   position: absolute;
   right: 0;
   bottom: 34px;
-  z-index: 4;
+  z-index: 10;
 }
 
 .hero-dymas-social-stack {
@@ -7097,8 +7112,10 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    transform: scale(1.24);
-    object-position: 50% 12%;
+    transform: none !important;
+    object-fit: contain;
+    object-position: center bottom;
+    max-height: 100%;
   }
 
   .hero-dymas-big-name {
@@ -7182,10 +7199,11 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    max-height: 400px;
+    max-height: 100%;
     height: 100%;
-    transform: scale(1.2);
-    object-position: 50% 12%;
+    transform: none !important;
+    object-fit: contain;
+    object-position: center bottom;
   }
 
   .hero-dymas-bottom-left {
@@ -7273,8 +7291,10 @@ main {
   }
 
   .hero-dymas-portrait-video {
-    max-height: 330px;
-    transform: scale(1.18);
+    max-height: 100%;
+    transform: none !important;
+    object-fit: contain;
+    object-position: center bottom;
   }
 
   .hero-dymas-social-stack {
@@ -10171,7 +10191,7 @@ body {
   }
 }
 
-/* 2. Hero Drifting Glow Orbs */
+/* 2. Hero Drifting Glow Orbs - Subtle Ambient Background (Behind Video & Text) */
 .hero-glow-orbs {
   position: absolute;
   inset: 0;
@@ -10193,8 +10213,8 @@ body {
   height: clamp(260px, 30vw, 440px);
   top: 10%;
   left: 5%;
-  background: radial-gradient(circle, rgba(152, 103, 255, 0.42) 0%, rgba(152, 103, 255, 0.12) 50%, transparent 75%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(152, 103, 255, 0.18) 0%, rgba(152, 103, 255, 0.04) 50%, transparent 75%);
+  filter: blur(45px);
   animation: hero-orb-drift-1 9s ease-in-out infinite alternate;
 }
 
@@ -10203,8 +10223,8 @@ body {
   height: clamp(240px, 28vw, 400px);
   top: 30%;
   right: 6%;
-  background: radial-gradient(circle, rgba(91, 59, 214, 0.38) 0%, rgba(91, 59, 214, 0.1) 50%, transparent 75%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(91, 59, 214, 0.16) 0%, rgba(91, 59, 214, 0.03) 50%, transparent 75%);
+  filter: blur(45px);
   animation: hero-orb-drift-2 11s ease-in-out infinite alternate;
   animation-delay: -3s;
 }
@@ -10214,8 +10234,8 @@ body {
   height: clamp(200px, 22vw, 340px);
   bottom: 12%;
   left: 38%;
-  background: radial-gradient(circle, rgba(192, 132, 252, 0.35) 0%, rgba(192, 132, 252, 0.08) 50%, transparent 75%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.14) 0%, rgba(192, 132, 252, 0.02) 50%, transparent 75%);
+  filter: blur(45px);
   animation: hero-orb-drift-3 13s ease-in-out infinite alternate;
   animation-delay: -6s;
 }
@@ -10306,6 +10326,406 @@ body {
   .star-twinkle,
   .hero-glow-orb,
   .footer-perspective-grid-plane {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   PREMIUM MICRO-ANIMATIONS SUITE
+   ========================================================================== */
+
+/* 1. Liquid Fill Buttons */
+.btn-liquid-fill {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.4s var(--ease-premium), box-shadow 0.4s var(--ease-premium);
+}
+
+.liquid-fill-shape {
+  position: absolute;
+  inset: -12% -10% -10% -10%;
+  background: linear-gradient(135deg, #9867ff 0%, #7c3aed 100%);
+  border-radius: 50% 50% 0 0;
+  transform: translate3d(0, 105%, 0) scaleY(0.7);
+  transform-origin: center bottom;
+  transition: transform 0.5s var(--ease-premium), border-radius 0.5s var(--ease-premium);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.btn-liquid-fill:hover .liquid-fill-shape,
+.btn-liquid-fill:focus-visible .liquid-fill-shape {
+  transform: translate3d(0, 0%, 0) scaleY(1);
+  border-radius: 0;
+}
+
+.btn-liquid-fill .liquid-btn-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-liquid-fill .liquid-btn-arrow {
+  transition: transform 0.35s var(--ease-premium);
+  will-change: transform;
+}
+
+.btn-liquid-fill:hover .liquid-btn-arrow,
+.btn-liquid-fill:focus-visible .liquid-btn-arrow {
+  transform: rotate(45deg) translate3d(1px, -1px, 0);
+}
+
+/* 2. Cursor Image Trail (Projects Header) */
+.cursor-trail-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 30;
+}
+
+.cursor-trail-card {
+  position: absolute;
+  width: 140px;
+  height: 90px;
+  transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
+  animation: cursor-trail-anim 1s var(--ease-premium) forwards;
+  will-change: transform, opacity;
+}
+
+.cursor-trail-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(152, 103, 255, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), 0 0 15px rgba(152, 103, 255, 0.25);
+  background: #09090d;
+}
+
+.cursor-trail-badge {
+  position: absolute;
+  bottom: 0;
+  inset-x: 0;
+  padding: 3px 6px;
+  background: linear-gradient(to top, rgba(5, 5, 7, 0.95), transparent);
+  font-family: monospace;
+  font-size: 9px;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes cursor-trail-anim {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.65);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-50%, calc(-50% - 24px), 0) scale(0.92);
+  }
+}
+
+/* 3. Odometer Rolling Digit Columns */
+.odometer-root {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.odometer-viewport {
+  display: inline-flex;
+  align-items: baseline;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.odometer-column {
+  display: inline-block;
+  height: 1.15em;
+  overflow: hidden;
+  vertical-align: baseline;
+  line-height: 1.15;
+}
+
+.odometer-strip {
+  will-change: transform;
+}
+
+.odometer-digit {
+  height: 1.15em;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.odometer-symbol {
+  display: inline-block;
+  line-height: 1.15;
+}
+
+/* 4. 5-Bar Violet Curtain Transition */
+.curtain-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  pointer-events: none;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.curtain-bar {
+  flex: 1;
+  height: 100%;
+  background: #0d0918;
+  border-right: 1px solid rgba(152, 103, 255, 0.22);
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.curtain-bar:last-child {
+  border-right: none;
+}
+
+/* 5. Rare Ambient Background Lightning */
+.background-lightning-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.background-lightning-container.phase-flash1 {
+  opacity: 0.38;
+}
+
+.background-lightning-container.phase-dip {
+  opacity: 0.12;
+}
+
+.background-lightning-container.phase-flash2 {
+  opacity: 0.52;
+}
+
+.background-lightning-container.phase-fade {
+  opacity: 0;
+  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lightning-sheet-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--lightning-x, 75%) var(--lightning-y, 15%),
+    rgba(152, 103, 255, 0.28) 0%,
+    rgba(120, 70, 240, 0.14) 38%,
+    rgba(99, 102, 241, 0.05) 62%,
+    transparent 80%);
+}
+
+.lightning-ambient-aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 60% at 50% 0%, rgba(152, 103, 255, 0.1) 0%, transparent 70%);
+}
+
+.lightning-filament-svg {
+  position: absolute;
+  width: 260px;
+  height: 480px;
+  transform: translate3d(-50%, 0, 0);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   BENTO ABOUT SECTION (#about)
+   ========================================================================== */
+.bento-about-section {
+  position: relative;
+  padding-block: 72px 52px;
+}
+
+@media (max-width: 768px) {
+  .bento-about-section {
+    padding-block: 46px 32px;
+  }
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.bento-tile {
+  background: #111118;
+  border: 0.5px solid #232331;
+  border-radius: 16px;
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    transform 0.35s var(--ease-premium, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color 0.35s ease,
+    opacity 0.65s var(--ease-premium, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.bento-tile.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bento-tile:hover {
+  transform: translateY(-3px);
+  border-color: rgba(152, 103, 255, 0.4);
+}
+
+.bento-tile-bio {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: #1a1426;
+  border-color: #3a2d5c;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .bento-tile-bio {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+}
+
+.bento-glow-corner {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(152, 103, 255, 0.28) 0%, transparent 70%);
+  filter: blur(25px);
+  pointer-events: none;
+}
+
+.bento-tile-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bento-stat-num {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.15;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.bento-stat-suffix {
+  font-size: 0.85em;
+  color: #9867ff;
+}
+
+.bento-tile-stack {
+  grid-column: span 2;
+}
+
+@media (max-width: 767px) {
+  .bento-tile-stack {
+    grid-column: span 1;
+  }
+}
+
+.bento-stack-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: #161622;
+  border: 0.5px solid #2a2a38;
+  color: #c084fc;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.bento-stack-chip:hover {
+  border-color: #9867ff;
+  background: #201a30;
+}
+
+.bento-pulse-ping {
+  animation: ping-opacity 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping-opacity {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Disable touch hover and respect reduced motion */
+@media (hover: none) {
+  .btn-liquid-fill:hover .liquid-fill-shape {
+    transform: translate3d(0, 105%, 0) scaleY(0.7);
+    border-radius: 50% 50% 0 0;
+  }
+  .btn-liquid-fill:hover .liquid-btn-arrow {
+    transform: none;
+  }
+  .cursor-trail-layer {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-liquid-fill .liquid-fill-shape,
+  .btn-liquid-fill .liquid-btn-arrow,
+  .cursor-trail-card,
+  .curtain-bar,
+  .background-lightning-container,
+  .wave-letter {
+    transition: none !important;
     animation: none !important;
   }
 }
