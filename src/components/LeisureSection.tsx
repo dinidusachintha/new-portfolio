@@ -57,9 +57,9 @@ export default function LeisureSection() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Section Eyebrow matching light theme */}
-          <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-sm">
-            <Sparkles size={13} className="text-violet-600" />
+          {/* Section Eyebrow matching dark theme */}
+          <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-sm">
+            <Sparkles size={13} className="text-violet-400" />
             <span>/ 06 — THE HUMAN SIDE</span>
           </div>
 

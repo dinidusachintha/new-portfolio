@@ -12,8 +12,9 @@ import {
   Server,
   Zap,
 } from "lucide-react";
-import { skillPillars, techMarquee } from "../data/portfolio";
+import { skillPillars } from "../data/portfolio";
 import FlyingHeading from "./FlyingHeading";
+import Tech3DMarquee from "./Tech3DMarquee";
 
 export default function TechStack() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -55,12 +56,12 @@ export default function TechStack() {
 
   return (
     <>
-      {/* SECTION 1: ENGINEERING ARSENAL & TOOLKIT (WHITE BACKGROUND) */}
-      <section className="tech-stack-section tech-stack-light" id="stack">
+      {/* SECTION 1: ENGINEERING ARSENAL & TOOLKIT (BACKGROUND BLACK) */}
+      <section className="tech-stack-section tech-stack-dark" id="stack">
         <div className="container">
           <div className="section-top reveal">
             <span className="eyebrow">
-              <Code2 size={13} className="inline mr-1 text-violet-600" />
+              <Code2 size={13} className="inline mr-1 text-violet-400" />
               05 / ENGINEERING ARSENAL & TOOLKIT
             </span>
             <span className="small-index">INTERACTIVE ARCHITECTURAL SLIDESHOW</span>
@@ -242,29 +243,20 @@ export default function TechStack() {
         </div>
       </section>
 
-      {/* SECTION 2: CORE RUNTIMES & CLOUD INFRASTRUCTURE (UNCHANGED DARK BLACK BACKGROUND) */}
-      <section className="core-runtimes-section tech-stack-dark" id="runtimes">
+      {/* SECTION 2: CORE RUNTIMES & CLOUD INFRASTRUCTURE (BACKGROUND WHITE) */}
+      <section className="core-runtimes-section core-runtimes-light" id="runtimes">
         <div className="container">
           <div className="section-top reveal mb-5">
             <span className="eyebrow flex items-center gap-1.5">
-              <Zap size={13} className="text-violet-400" />
+              <Zap size={13} className="text-violet-600" />
               CORE RUNTIMES & CLOUD INFRASTRUCTURE
             </span>
             <span className="small-index">END-TO-END OBSERVABILITY</span>
           </div>
 
-          {/* Infinite Tech Marquee */}
-          <div className="tech-marquee-wrapper reveal" aria-hidden="true">
-            <div className="tech-marquee-strip">
-              <div className="marquee-content-track">
-                {[...techMarquee, ...techMarquee].map((tech, idx) => (
-                  <span key={idx} className="marquee-tech-pill">
-                    <span className="marquee-bullet">✦</span>
-                    <span>{tech}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
+          {/* 3D Core Runtimes & Infrastructure Icons Marquee */}
+          <div className="reveal my-6" aria-hidden="true">
+            <Tech3DMarquee />
           </div>
 
           {/* CS Fundamentals & Architecture Badges */}

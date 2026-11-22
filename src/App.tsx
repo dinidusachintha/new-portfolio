@@ -23,8 +23,9 @@ import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
 import TechnologyMarquee from "./components/TechnologyMarquee";
 import IntroLoader from "./components/animations/IntroLoader";
+import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
+import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useIntroSession } from "./hooks/useIntroSession";
-import Butterflies from "./components/butterflies/ButterflyOverlay"
 
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
@@ -46,6 +47,8 @@ function CornerMusicButton() {
   useEffect(() => {
     const el = audio.current;
     if (el) el.volume = 0.28;
+
+    let removeInteractionListeners: (() => void) | null = null;
 
     // Automatically pause whenever user leaves the site (tab switch, window minimization, navigation away)
     const handleLeaveSite = () => {
@@ -83,7 +86,10 @@ function CornerMusicButton() {
           } catch {
             // Silently handled
           }
-          cleanup();
+          if (removeInteractionListeners) {
+            removeInteractionListeners();
+            removeInteractionListeners = null;
+          }
         };
 
         const cleanup = () => {
@@ -93,6 +99,7 @@ function CornerMusicButton() {
           window.removeEventListener("scroll", onFirstInteraction);
           window.removeEventListener("keydown", onFirstInteraction);
         };
+        removeInteractionListeners = cleanup;
 
         window.addEventListener("pointerdown", onFirstInteraction, { once: true, passive: true });
         window.addEventListener("click", onFirstInteraction, { once: true, passive: true });
@@ -105,6 +112,9 @@ function CornerMusicButton() {
     attemptAutoPlay();
 
     return () => {
+      if (removeInteractionListeners) {
+        removeInteractionListeners();
+      }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", handleLeaveSite);
       window.removeEventListener("beforeunload", handleLeaveSite);
@@ -170,54 +180,6 @@ function CornerMusicButton() {
           <span>{playing ? "Pause Music" : "Play Music"}</span>
         </span>
       </button>
-    </div>
-  );
-}
-
-function ProjectSkeleton() {
-  return (
-    <div
-      className="space-y-10 my-10"
-      aria-label="Loading system architecture previews"
-      role="status"
-    >
-      {[0, 1].map((i) => (
-        <div
-          key={i}
-          className="p-6 sm:p-10 lg:p-12 rounded-[2rem] sm:rounded-[2.5rem] bg-[#090b14] border border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center shadow-2xl"
-        >
-          <div className="lg:col-span-6 space-y-4 sm:space-y-5">
-            <div className="flex items-center gap-2">
-              <div className="skeleton h-5 w-24 rounded-full" />
-              <div className="skeleton h-5 w-16 rounded-full" />
-            </div>
-            <div className="skeleton h-8 sm:h-10 w-3/4 rounded-xl" />
-            <div className="skeleton h-14 sm:h-16 w-full rounded-lg" />
-            {/* Metrics Skeleton */}
-            <div className="grid grid-cols-3 gap-2 pt-1">
-              <div className="skeleton h-12 w-full rounded-lg" />
-              <div className="skeleton h-12 w-full rounded-lg" />
-              <div className="skeleton h-12 w-full rounded-lg" />
-            </div>
-            {/* Tech Badges Skeleton */}
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-              <div className="skeleton h-6 w-16 rounded-full" />
-              <div className="skeleton h-6 w-20 rounded-full" />
-              <div className="skeleton h-6 w-14 rounded-full" />
-              <div className="skeleton h-6 w-24 rounded-full" />
-            </div>
-            {/* Buttons Row Skeleton */}
-            <div className="flex gap-3 pt-2">
-              <div className="skeleton h-10 w-36 rounded-full" />
-              <div className="skeleton h-10 w-36 rounded-full" />
-            </div>
-          </div>
-          <div className="lg:col-span-6 w-full aspect-[4/3] rounded-2xl sm:rounded-3xl bg-black/40 border border-white/5 p-4 flex items-center justify-center">
-            <div className="skeleton w-full h-full rounded-xl sm:rounded-2xl" />
-          </div>
-        </div>
-      ))}
-      <span className="sr-only">Loading system architecture previews...</span>
     </div>
   );
 }
@@ -715,7 +677,7 @@ export default function App() {
       <main id="main">
         {currentPage === "blog" ? (
           /* Dedicated Blog Page Route */
-          <Suspense fallback={<div className="container py-32"><ProjectSkeleton /></div>}>
+          <Suspense fallback={<BlogPageSkeleton />}>
             <BlogPage onBackToHome={() => navigateTo("home")} />
           </Suspense>
         ) : (
@@ -757,11 +719,11 @@ export default function App() {
                 </div>
 
                 {workReady ? (
-                  <Suspense fallback={<ProjectSkeleton />}>
+                  <Suspense fallback={<ProjectGridSkeleton count={3} />}>
                     <ProjectGrid onSelect={handleOpenProject} />
                   </Suspense>
                 ) : (
-                  <ProjectSkeleton />
+                  <ProjectGridSkeleton count={3} />
                 )}
 
                 <div className="work-end reveal">

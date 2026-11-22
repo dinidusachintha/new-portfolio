@@ -146,13 +146,13 @@ export default function Navbar({
           <button
             ref={mobileMenuTriggerRef}
             type="button"
-            className="mobile-menu-toggle md:hidden cursor-pointer transition-all duration-200 active:scale-95 flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.05] border border-white/15 hover:bg-white/[0.1] hover:border-white/30 text-white shadow-sm"
+            className="mobile-menu-toggle md:hidden cursor-pointer transition-all duration-200 active:scale-95 flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.05] border border-white/15 hover:bg-white/[0.1] hover:border-white/30 text-white shadow-sm"
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-sidebar"
             onClick={onToggleMenu}
           >
-            {menuOpen ? <X size={19} className="text-white" /> : <Menu size={19} className="text-white" />}
+            {menuOpen ? <X size={20} className="text-white" /> : <Menu size={20} className="text-white" />}
           </button>
         </div>
       </div>
