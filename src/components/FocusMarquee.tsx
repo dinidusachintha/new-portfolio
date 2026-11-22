@@ -28,7 +28,6 @@ export default function FocusMarquee() {
     if (prefersReducedMotion) return;
 
     // 1. Measure and cache geometries ONCE (plus on ResizeObserver)
-    const GAP = 20;
     const count = items.length;
     const halfCount = focusMarqueeTech.length;
     let itemWidths: number[] = new Array(count).fill(120);
@@ -39,6 +38,9 @@ export default function FocusMarquee() {
 
     const measureGeometries = () => {
       containerWidth = container.offsetWidth || window.innerWidth;
+      const isMobile = containerWidth < 768;
+      // Generous spacing (56px desktop, 38px mobile) so scaled items (up to 1.32x) never overlap or touch borders
+      const gap = isMobile ? 38 : 56;
       let cumOffset = 0;
 
       // Measure first half
@@ -47,7 +49,7 @@ export default function FocusMarquee() {
         const w = el ? el.offsetWidth : 120;
         itemWidths[i] = w;
         initialOffsets[i] = cumOffset;
-        cumOffset += w + GAP;
+        cumOffset += w + gap;
       }
 
       cycleWidth = cumOffset;
@@ -166,6 +168,7 @@ export default function FocusMarquee() {
           if (isFocused !== wasFocused[i]) {
             wasFocused[i] = isFocused;
             el.classList.toggle("is-focused", isFocused);
+            el.style.zIndex = isFocused ? "10" : "1";
           }
 
           // Write ONLY transform & opacity
