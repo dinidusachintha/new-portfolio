@@ -5,11 +5,8 @@ import {
   Pause,
   ChevronLeft,
   ChevronRight,
-  ArrowUpRight,
-  Code2,
   LayoutGrid,
   Layers,
-  Sparkles,
   Orbit,
 } from "lucide-react";
 import {
@@ -19,6 +16,7 @@ import {
 } from "../data/projectsData";
 import { projects, type Project } from "../data/portfolio";
 import ProjectCard from "./ProjectCard";
+import ProjectShowcaseCard from "./ProjectShowcaseCard";
 
 type FilterCategory = "All" | ProjectDomain;
 type ViewMode = "carousel" | "stack" | "grid";
@@ -37,13 +35,14 @@ export default function ProjectGrid({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stackContainerRef = useRef<HTMLDivElement>(null);
+  const cardWrapRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [viewMode, setViewMode] = useState<ViewMode>("carousel");
   const [selectedDomain, setSelectedDomain] = useState<FilterCategory>("All");
   const [isPlaying, setIsPlaying] = useState(true);
-  const [angle, setAngle] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const [isVisible, setIsVisible] = useState(true);
 
   // Pause carousel rotation loop when off-screen to preserve CPU
@@ -88,55 +87,93 @@ export default function ProjectGrid({
     rz: 390,
     cardW: 400,
   });
+  const stageDimRef = useRef(stageDimensions);
+  stageDimRef.current = stageDimensions;
 
   const totalCards = filteredProjects.length;
   const stepAngle = (2 * Math.PI) / Math.max(1, totalCards);
+
+  const applyCardTransforms = useCallback(
+    (currentAngle: number) => {
+      const { rx, rz } = stageDimRef.current;
+      for (let i = 0; i < totalCards; i++) {
+        const el = cardWrapRefs.current[i];
+        if (!el) continue;
+        const cardAngle = currentAngle + i * stepAngle;
+        let delta =
+          ((cardAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        if (delta > Math.PI) delta -= 2 * Math.PI;
+
+        const sinDelta = Math.sin(delta);
+        const cosDelta = Math.cos(delta);
+
+        const x = sinDelta * rx;
+        const z = (cosDelta - 1) * rz;
+
+        const normDepth = (cosDelta + 1) / 2;
+        const scale = 0.72 + 0.28 * normDepth;
+        const opacity = 0.34 + 0.66 * normDepth;
+        const rotY = -sinDelta * 26;
+        const zIndex = Math.round(10 + normDepth * 50);
+
+        el.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+        el.style.zIndex = `${zIndex}`;
+        el.style.opacity = `${opacity.toFixed(3)}`;
+      }
+    },
+    [stepAngle, totalCards]
+  );
 
   // Reset carousel angle when filter changes
   useEffect(() => {
     angleRef.current = 0;
     targetAngleRef.current = 0;
-    setAngle(0);
+    activeIndexRef.current = 0;
     setActiveIndex(0);
-  }, [selectedDomain]);
+    applyCardTransforms(0);
+  }, [selectedDomain, applyCardTransforms]);
 
   // Responsive stage dimensions (Mobile, Tablet, Desktop)
   useEffect(() => {
     const updateDimensions = () => {
       const w = containerRef.current?.offsetWidth || window.innerWidth;
+      let nextDim;
       if (w < 480) {
-        setStageDimensions({
+        nextDim = {
           rx: Math.min(105, w * 0.26),
           rz: 185,
           cardW: Math.min(324, w - 24),
-        });
+        };
       } else if (w < 640) {
-        setStageDimensions({
+        nextDim = {
           rx: Math.min(155, w * 0.34),
           rz: 225,
           cardW: Math.min(346, w - 28),
-        });
+        };
       } else if (w < 1024) {
-        setStageDimensions({
+        nextDim = {
           rx: Math.min(330, w * 0.43),
           rz: 320,
           cardW: Math.min(372, w * 0.82),
-        });
+        };
       } else {
-        setStageDimensions({
+        nextDim = {
           rx: Math.min(465, w * 0.44),
           rz: 405,
           cardW: 402,
-        });
+        };
       }
+      stageDimRef.current = nextDim;
+      setStageDimensions(nextDim);
+      applyCardTransforms(angleRef.current);
     };
 
     updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("resize", updateDimensions, { passive: true });
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
+  }, [applyCardTransforms]);
 
-  // Smooth continuous rotation loop
+  // Smooth continuous rotation loop (writes transforms via refs, updates React state only when front card changes)
   useEffect(() => {
     if (viewMode !== "carousel" || totalCards <= 1 || !isVisible) return;
 
@@ -147,38 +184,57 @@ export default function ProjectGrid({
       const delta = timestamp - lastTimeRef.current;
       lastTimeRef.current = timestamp;
 
-      if (!isDraggingRef.current) {
+      let moved = false;
+      if (!isDraggingRef.current && !document.hidden) {
         if (isPlaying && !isHovered) {
           const autoSpeed = 0.00016;
           angleRef.current =
             (angleRef.current + autoSpeed * delta) % (Math.PI * 2);
           targetAngleRef.current = angleRef.current;
-          setAngle(angleRef.current);
+          moved = true;
         } else {
           const diff = targetAngleRef.current - angleRef.current;
           if (Math.abs(diff) > 0.0005) {
             angleRef.current += diff * 0.095;
-            setAngle(angleRef.current);
+            moved = true;
           }
         }
       }
 
-      // Compute which card is frontmost
-      const normalizedAngle =
-        ((angleRef.current % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-      const closestIdx =
-        Math.round(totalCards - normalizedAngle / stepAngle) % totalCards;
-      setActiveIndex((closestIdx + totalCards) % totalCards);
+      if (moved) {
+        applyCardTransforms(angleRef.current);
+
+        // Compute which card is frontmost and update state ONLY when it changes
+        const normalizedAngle =
+          ((angleRef.current % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        const closestIdx =
+          (Math.round(totalCards - normalizedAngle / stepAngle) % totalCards +
+            totalCards) %
+          totalCards;
+        if (closestIdx !== activeIndexRef.current) {
+          activeIndexRef.current = closestIdx;
+          setActiveIndex(closestIdx);
+        }
+      }
 
       animFrameRef.current = requestAnimationFrame(animate);
     };
 
+    applyCardTransforms(angleRef.current);
     animFrameRef.current = requestAnimationFrame(animate);
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       lastTimeRef.current = null;
     };
-  }, [isPlaying, isHovered, viewMode, stepAngle, totalCards, isVisible]);
+  }, [
+    isPlaying,
+    isHovered,
+    viewMode,
+    stepAngle,
+    totalCards,
+    isVisible,
+    applyCardTransforms,
+  ]);
 
   // Pointer drag events for horizontal spinning
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -203,7 +259,18 @@ export default function ProjectGrid({
     const sensitivity = 0.0038;
     angleRef.current = dragStartAngleRef.current + dx * sensitivity;
     targetAngleRef.current = angleRef.current;
-    setAngle(angleRef.current);
+    applyCardTransforms(angleRef.current);
+
+    const normalizedAngle =
+      ((angleRef.current % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    const closestIdx =
+      (Math.round(totalCards - normalizedAngle / stepAngle) % totalCards +
+        totalCards) %
+      totalCards;
+    if (closestIdx !== activeIndexRef.current) {
+      activeIndexRef.current = closestIdx;
+      setActiveIndex(closestIdx);
+    }
   };
 
   const handlePointerUp = (e?: React.PointerEvent) => {
@@ -382,7 +449,7 @@ export default function ProjectGrid({
       {/* ===================================================================== */}
       {viewMode === "carousel" && (
         <div
-          className="glass-project-stage relative w-full h-[670px] sm:h-[740px] lg:h-[780px] rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
+          className="glass-project-stage relative w-full h-[710px] sm:h-[790px] lg:h-[835px] rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -466,7 +533,7 @@ export default function ProjectGrid({
             style={{ perspective: "1350px" }}
           >
             {filteredProjects.map((project, index) => {
-              const cardAngle = angle + index * stepAngle;
+              const cardAngle = angleRef.current + index * stepAngle;
               let delta =
                 ((cardAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
               if (delta > Math.PI) delta -= 2 * Math.PI;
@@ -482,11 +549,14 @@ export default function ProjectGrid({
               const opacity = 0.34 + 0.66 * normDepth;
               const rotY = -sinDelta * 26;
               const zIndex = Math.round(10 + normDepth * 50);
-              const isFrontCard = normDepth > 0.92 || totalCards === 1;
+              const isFrontCard = activeIndex === index || totalCards === 1;
 
               return (
                 <div
                   key={project.id}
+                  ref={(el) => {
+                    cardWrapRefs.current[index] = el;
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (hasMovedRef.current) return;
@@ -501,15 +571,16 @@ export default function ProjectGrid({
                     width: `${stageDimensions.cardW}px`,
                     left: "50%",
                     top: "50%",
-                    transform: `translate(-50%, -50%) translate3d(${x}px, 0px, ${z}px) rotateY(${rotY}deg) scale(${scale})`,
+                    transform: `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
                     zIndex,
                     opacity,
                     transformOrigin: "center center",
                   }}
                 >
-                  <GlassCardItem
+                  <ProjectShowcaseCard
                     project={project}
                     isFront={isFrontCard}
+                    inCarousel
                     onOpenDemo={() => handleSelectProject(project, "demo")}
                     onOpenArch={() => handleSelectProject(project, "arch")}
                   />
@@ -575,14 +646,14 @@ export default function ProjectGrid({
       {/* VIEW MODE 3: RESPONSIVE 3-COLUMN FROSTED GLASS BENTO GRID             */}
       {/* ===================================================================== */}
       {viewMode === "grid" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 items-stretch">
           {filteredProjects.map((project) => (
             <div
               key={project.id}
               onClick={() => handleSelectProject(project, "demo")}
-              className="w-full cursor-pointer transition-transform duration-300 hover:-translate-y-1.5"
+              className="w-full h-full cursor-pointer flex"
             >
-              <GlassCardItem
+              <ProjectShowcaseCard
                 project={project}
                 isFront
                 onOpenDemo={() => handleSelectProject(project, "demo")}
@@ -593,238 +664,5 @@ export default function ProjectGrid({
         </div>
       )}
     </div>
-  );
-}
-
-// =============================================================================
-// REUSABLE LUXURY FROSTED GLASS EFFECT CARD COMPONENT (OBSIDIAN + VIOLET/CYAN)
-// =============================================================================
-function GlassCardItem({
-  project,
-  isFront,
-  onOpenDemo,
-  onOpenArch,
-}: {
-  project: ProjectItem;
-  isFront: boolean;
-  onOpenDemo: () => void;
-  onOpenArch: () => void;
-}) {
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const categoryTag = `#${project.category
-    .replace(/[^a-zA-Z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .toUpperCase()}`;
-
-  return (
-    <article
-      style={{
-        background: project.cardBg,
-        borderColor: isFront ? project.borderColor : "rgba(255, 255, 255, 0.14)",
-      }}
-      className={`glass-card-frosted w-full rounded-[1.35rem] sm:rounded-[2.15rem] p-3 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden relative text-center select-none ${
-        isFront ? "ring-1 ring-violet-400/30" : ""
-      }`}
-    >
-      {/* Subtle Inner Ambient Violet/Cyan Flare */}
-      <div
-        className="absolute -top-24 left-1/2 -translate-x-1/2 w-56 h-56 rounded-full pointer-events-none blur-3xl opacity-35"
-        style={{ background: project.accentColor }}
-      />
-
-      {/* Top Index & Live Status Corner Pills */}
-      <div className="relative z-10 flex items-center justify-between gap-2 mb-1 sm:mb-2">
-        <span
-          className="px-2 sm:px-2.5 py-0.5 rounded-full text-[8.5px] sm:text-[10px] font-unbounded font-bold uppercase border truncate max-w-[60%]"
-          style={{
-            background: project.tagBg,
-            color: project.tagColor,
-            borderColor: project.borderColor,
-          }}
-        >
-          {project.badgeCategory || `${project.number} · ${project.domain}`}
-        </span>
-
-        {project.status === "COMING SOON" ? (
-          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[8.5px] sm:text-[9.5px] font-mono font-bold text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)] shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>COMING SOON</span>
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-[8.5px] sm:text-[9.5px] font-mono font-bold text-violet-200 shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{project.year}</span>
-          </span>
-        )}
-      </div>
-
-      {/* 1. TOP HEADER WITH UNBOUNDED FONT */}
-      <div className="relative z-10 space-y-0.5 sm:space-y-1 mb-1.5 sm:mb-3">
-        <div className="flex items-center justify-center gap-1.5 text-violet-300 font-mono text-[9px] sm:text-xs font-semibold tracking-wider uppercase">
-          <Sparkles size={10} className="text-violet-400 shrink-0 sm:w-[11px] sm:h-[11px]" />
-          <span className="truncate">{project.role} · {project.year}</span>
-        </div>
-
-        {/* Project Title in Unbounded Font */}
-        <h3 className="text-[15px] sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug font-unbounded truncate">
-          {project.title}
-        </h3>
-
-        {/* Subtitle / Latency & Category Badge */}
-        <div className="text-[8.5px] sm:text-[10.5px] font-mono font-bold tracking-widest uppercase text-cyan-300 pt-0.5 truncate">
-          {project.subtitle ? project.subtitle : `${project.metrics[1]?.value || "<50MS TTFB"} · ${categoryTag}`}
-        </div>
-      </div>
-
-      {/* 2. FROSTED SCREENSHOT PREVIEW FRAME */}
-      <div className="relative z-10 w-full aspect-[16/8.2] sm:aspect-[16/9] rounded-lg sm:rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-inner mb-1.5 sm:mb-3.5 group/img">
-        {!imgLoaded && <div className="skeleton absolute inset-0" />}
-        <img
-          src={project.screenshot}
-          alt={project.imageAlt || `${project.title} system interface preview`}
-          onLoad={() => setImgLoaded(true)}
-          decoding="async"
-          className={`w-full h-full object-cover object-top transition-all duration-500 group-hover/img:scale-105 ${
-            imgLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070810]/85 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute bottom-1.5 sm:bottom-2 left-2 sm:left-2.5 right-2 sm:right-2.5 flex items-center justify-between text-[8px] sm:text-[10px] font-mono text-slate-200">
-          <span className="px-1.5 sm:px-2 py-0.5 rounded bg-black/75 border border-white/15 text-cyan-300 truncate max-w-[65%]">
-            {project.status === "COMING SOON"
-              ? "schoolride-lk.dev [COMING SOON]"
-              : project.demoUrl.replace(/^https?:\/\//, "")}
-          </span>
-          {project.status === "COMING SOON" ? (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-600/80 border border-emerald-400/50 text-white font-bold text-[8px] sm:text-[9.5px] tracking-wider shadow-[0_0_10px_rgba(34,197,94,0.4)]">
-              COMING SOON
-            </span>
-          ) : (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded bg-violet-600/80 border border-violet-400/40 text-white font-bold">
-              LIVE ↗
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* 3. STRUCTURED METADATA WITH HAIRLINE DIVIDERS */}
-      <div className="relative z-10 space-y-0.5 sm:space-y-1.5 mb-2 sm:mb-3.5">
-        {/* Row 1: SYSTEM ARCHITECTURE */}
-        <div className="py-0.5 sm:py-1 border-t border-white/10">
-          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
-            SYSTEM ARCHITECTURE
-          </div>
-          <p
-            className="text-[9.5px] sm:text-xs line-clamp-2 leading-snug sm:leading-relaxed px-1 font-normal"
-            style={{ color: "#e2e8f0" }}
-          >
-            {project.shortDescription || project.description}
-          </p>
-        </div>
-
-        {/* Row 2: CORE FEATURES (if provided) */}
-        {project.coreFeatures && (
-          <div className="py-0.5 sm:py-1 border-t border-white/10">
-            <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
-              CORE FEATURES
-            </div>
-            <div className="text-[9px] sm:text-[11px] font-mono text-emerald-300 font-semibold tracking-wide truncate px-1">
-              {project.coreFeatures}
-            </div>
-          </div>
-        )}
-
-        {/* Row 3: PRIMARY ARSENAL */}
-        <div className="py-0.5 sm:py-1 border-t border-white/10">
-          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
-            PRIMARY ARSENAL
-          </div>
-          <div className="text-[9px] sm:text-[11px] font-mono text-violet-300 font-semibold tracking-wide truncate px-1">
-            {project.technologies.slice(0, 6).join(" · ")}
-          </div>
-        </div>
-
-        {/* Row 4: PRODUCTION IMPACT / SYSTEM CAPABILITIES */}
-        <div className="py-0.5 sm:py-1 border-t border-b border-white/10">
-          <div className="text-[7.5px] sm:text-[9.5px] font-unbounded tracking-widest uppercase text-slate-400 font-bold mb-0.5">
-            {project.capabilitiesLabel || "PRODUCTION IMPACT"}
-          </div>
-          <div className="text-[9px] sm:text-[11px] font-mono text-cyan-300 font-bold tracking-wider truncate">
-            {project.capabilitiesText ||
-              project.metrics
-                .map((m) => `${m.value} ${m.label.split(" ")[0]}`)
-                .join(" ✦ ")}
-          </div>
-        </div>
-      </div>
-
-      {/* 4. TWO 3D GLASS PILL ACTION BUTTONS (MATCHING IMAGE 2) */}
-      <div className="relative z-10 space-y-1.5 sm:space-y-2">
-        {/* Top Button: White 3D Elevated Glass Pill with Dark Text & Arrow ↗ (Image 2 style) */}
-        {project.status === "COMING SOON" ? (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenDemo();
-            }}
-            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
-          >
-            <span>EXPLORE PROJECT</span>
-            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
-          </button>
-        ) : project.liveUrl && !project.liveUrl.endsWith("/dinidu") ? (
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
-          >
-            <span>EXPLORE LIVE SYSTEM</span>
-            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
-          </a>
-        ) : (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenDemo();
-            }}
-            className="glass-pill-white-3d w-full min-h-[38px] sm:min-h-[44px] py-2 sm:py-2.5 px-3 sm:px-5 rounded-full text-black font-unbounded font-bold text-[9.5px] min-[375px]:text-[10px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md whitespace-nowrap"
-          >
-            <span>EXPLORE LIVE SYSTEM</span>
-            <ArrowUpRight size={13} className="shrink-0 stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
-          </button>
-        )}
-
-        {/* Bottom Button: Obsidian 3D Frosted Glass Pill with White Text (Image 2 style) */}
-        {project.sourceUrl && !project.sourceUrl.endsWith("/dinidu") ? (
-          <a
-            href={project.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="glass-pill-dark-3d w-full min-h-[38px] sm:min-h-[44px] py-2 px-3 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[9px] min-[375px]:text-[9.5px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
-          >
-            <Code2 size={12} className="shrink-0 text-violet-300 sm:w-[13px] sm:h-[13px]" />
-            <span>VIEW ARCHITECTURE & CODE</span>
-          </a>
-        ) : (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenArch();
-            }}
-            className="glass-pill-dark-3d w-full min-h-[38px] sm:min-h-[44px] py-2 px-3 sm:px-5 rounded-full text-white font-unbounded font-semibold text-[9px] min-[375px]:text-[9.5px] sm:text-[11px] tracking-[0.02em] sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
-          >
-            <Code2 size={12} className="shrink-0 text-violet-300 sm:w-[13px] sm:h-[13px]" />
-            <span>VIEW ARCHITECTURE & CODE</span>
-          </button>
-        )}
-      </div>
-    </article>
   );
 }

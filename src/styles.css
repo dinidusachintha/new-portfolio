@@ -7906,7 +7906,8 @@ body {
    ========================================================================== */
 
 .have-a-system-reveal {
-  will-change: transform, opacity;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -91,7 +91,9 @@ export default function ProjectShowcaseCard({
           ? project.borderColor || "rgba(0, 217, 255, 0.35)"
           : "rgba(255, 255, 255, 0.14)",
       }}
-      className={`glass-card-frosted group/card w-full h-full rounded-[28px] sm:rounded-[32px] p-3.5 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden relative text-center select-none transition-all duration-300 ${
+      className={`glass-card-frosted group/card w-full h-full rounded-[28px] sm:rounded-[32px] ${
+        inCarousel ? "p-3 sm:p-4 lg:p-5" : "p-3.5 sm:p-5 lg:p-6"
+      } flex flex-col justify-between overflow-hidden relative text-center select-none transition-all duration-300 ${
         !inCarousel
           ? "hover:-translate-y-[5px] hover:shadow-[0_24px_60px_-12px_rgba(0,0,0,0.88),0_0_30px_rgba(0,217,255,0.2)]"
           : ""

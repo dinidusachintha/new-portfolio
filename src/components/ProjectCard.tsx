@@ -140,9 +140,11 @@ export default function ProjectCard({
 
               <div
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9.5px] sm:text-[10px] font-mono font-bold ${
-                  project.status === "COMING SOON"
-                    ? "bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)]"
-                    : "bg-violet-500/15 border border-violet-400/30 text-violet-200"
+                  project.status === "RESEARCH PROJECT"
+                    ? "bg-[#00D9FF]/12 border border-[#00D9FF]/45 text-[#67e8f9] shadow-[0_0_12px_rgba(0,217,255,0.25)]"
+                    : project.status === "COMING SOON"
+                      ? "bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-[0_0_12px_rgba(34,197,94,0.3)]"
+                      : "bg-violet-500/15 border border-violet-400/30 text-violet-200"
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -243,7 +245,10 @@ export default function ProjectCard({
               >
                 <Play size={13} className="fill-current shrink-0" />
                 <span>
-                  {project.status === "COMING SOON" ? "EXPLORE PROJECT" : "Interactive Live Demo"}
+                  {project.primaryCtaLabel ||
+                    (project.status === "COMING SOON" || project.status === "RESEARCH PROJECT"
+                      ? "EXPLORE PROJECT"
+                      : "Interactive Live Demo")}
                 </span>
               </button>
 
@@ -256,9 +261,12 @@ export default function ProjectCard({
                 >
                   <Code2 size={14} className="text-violet-300 shrink-0" />
                   <span>
-                    {project.status === "COMING SOON"
-                      ? "VIEW ARCHITECTURE & CODE"
-                      : "Architecture & Specs"}
+                    {project.secondaryCtaLabel ||
+                      (project.status === "RESEARCH PROJECT"
+                        ? "VIEW RESEARCH & CODE"
+                        : project.status === "COMING SOON"
+                          ? "VIEW ARCHITECTURE & CODE"
+                          : "Architecture & Specs")}
                   </span>
                 </a>
               ) : (

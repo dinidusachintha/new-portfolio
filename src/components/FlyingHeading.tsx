@@ -11,28 +11,28 @@ interface FlyingHeadingProps {
 }
 
 const headingContainerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.024,
-      delayChildren: 0.08,
+      staggerChildren: 0.018,
+      delayChildren: 0.02,
     },
   },
 };
 
 const letterFlyVariants: Variants = {
-  hidden: (i: number) => ({
-    opacity: 0,
-    y: i % 2 === 0 ? -20 : 20,
-    scale: 0.85,
+  hidden: () => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
   }),
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.5,
+      duration: 0.4,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },
