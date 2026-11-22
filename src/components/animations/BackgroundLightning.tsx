@@ -36,10 +36,9 @@ export default function BackgroundLightning() {
       setStrike(null);
     };
 
-    // Schedule next rare lightning strike (between 20s and 34s)
+    // Schedule next rare lightning strike (every 10s to 16s)
     const scheduleNextStrike = () => {
-      // Rare interval: 20000ms to 34000ms
-      const delay = 20000 + Math.random() * 14000;
+      const delay = 10000 + Math.random() * 6000;
 
       timeoutId = setTimeout(() => {
         // Only trigger if document is visible and not light theme
@@ -106,14 +105,14 @@ export default function BackgroundLightning() {
       );
     };
 
-    // Initial first trigger after 7s to welcome the user, then rare (every 22-34s)
+    // Initial first trigger after 4s to welcome the user, then every 10s-16s
     timeoutId = setTimeout(() => {
       if (!document.hidden) {
         triggerRareLightning();
       } else {
         scheduleNextStrike();
       }
-    }, 7000);
+    }, 4000);
 
     const handleVisibility = () => {
       if (document.hidden) {

@@ -51,13 +51,13 @@ export default function LetterWave({
   return (
     <Component
       ref={containerRef as React.RefObject<any>}
-      className={`letter-wave-wrap inline-block cursor-pointer select-none ${className}`}
+      className={`letter-wave-wrap inline-block cursor-pointer select-none whitespace-nowrap ${className}`}
       aria-label={text}
       onMouseEnter={handleTrigger}
       onFocus={handleTrigger}
       tabIndex={0}
     >
-      <span aria-hidden="true" className="letter-wave-inner inline-flex flex-wrap">
+      <span aria-hidden="true" className="letter-wave-inner inline-flex flex-nowrap whitespace-nowrap">
         {text.split("").map((char, i) => (
           <span
             key={i}

@@ -27,7 +27,6 @@ import GlobalStarfield from "./components/animations/GlobalStarfield";
 import BackgroundLightning from "./components/animations/BackgroundLightning";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
-import BentoAbout from "./components/BentoAbout";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useIntroSession } from "./hooks/useIntroSession";
@@ -736,9 +735,6 @@ export default function App() {
           <>
             {/* Hero Section */}
             <Hero />
-
-            {/* Bento About Section with Odometer Rolling Digits (1y, 5+, 20+) */}
-            <BentoAbout />
 
             {/* Focus Lens Continuous Technology Marquee */}
             <FocusMarquee />
