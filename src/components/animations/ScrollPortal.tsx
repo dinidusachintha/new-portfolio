@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { ChevronDown, Layers, Sparkles, ArrowRight, ExternalLink } from "lucide-react";
+import { ChevronDown, Layers, Sparkles, ArrowRight } from "lucide-react";
 
 export interface ScrollPortalScene {
   id?: string | number;
@@ -116,8 +116,8 @@ export default function ScrollPortal({
   const sceneCount = scenes.length;
   // Calculate total runway height: each scene gets scrollLength * 100vh
   const totalRunwayVh = useMemo(() => {
-    return Math.max(200, (sceneCount - 1) * scrollLength * 100 + 100);
-  }, [sceneCount, scrollLength]);
+    return Math.max(200, (sceneCount - 1 + hold * sceneCount) * scrollLength * 100 + 100);
+  }, [sceneCount, scrollLength, hold]);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

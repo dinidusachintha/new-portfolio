@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import LeisureCarousel from "./LeisureCarousel";
+import SkewedCarousel from "./animations/SkewedCarousel";
 import "../styles/leisure-section.css";
 
 export default function LeisureSection() {
@@ -74,14 +74,14 @@ export default function LeisureSection() {
           </p>
         </motion.div>
 
-        {/* 3D Floating Cards Curved Carousel */}
+        {/* Skewed Carousel of Cards that Tilt as They Slide */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
-          <LeisureCarousel />
+          <SkewedCarousel />
         </motion.div>
       </div>
     </section>

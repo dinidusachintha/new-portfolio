@@ -24,6 +24,7 @@ import GlobalStarfield from "./components/animations/GlobalStarfield";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
 import RisingLines from "./components/animations/RisingLines";
+import ScrollPortal from "./components/ScrollPortal";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useSmoothScroll, type LenisScrollEvent } from "./hooks/useSmoothScroll";
@@ -736,6 +737,11 @@ export default function App() {
 
             {/* 05 / Engineering Arsenal & Tech Stack (+ Core Runtimes & Cloud Infrastructure) */}
             <TechStack />
+
+            {/* Scroll Portal — Fly through nested architectural frames */}
+            <section className="scroll-portal-section relative w-full" id="portal">
+              <ScrollPortal />
+            </section>
 
             {/* 06 / Beyond the Code — The Human Side (White Background) */}
             <LeisureSection />

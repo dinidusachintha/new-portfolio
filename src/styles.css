@@ -10801,17 +10801,67 @@ body {
   }
 }
 
+/* ==========================================================================
+   SCROLL PORTAL & SKEWED CAROUSEL SUITE
+   ========================================================================== */
+
+/* Scroll Portal 3D Nested Frames */
+.scroll-portal-section {
+  position: relative;
+  width: 100%;
+  overflow: clip;
+}
+
+.scroll-portal-root {
+  contain: paint;
+}
+
+.scroll-portal-perspective-stage {
+  transform-style: preserve-3d;
+}
+
+.scroll-portal-frame {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Skewed Carousel */
+.skewed-carousel-wrapper {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.skewed-carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.skewed-carousel-stage {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.skewed-carousel-card-slot {
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+.skewed-card {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .btn-liquid-fill .liquid-fill-shape,
-  .btn-liquid-fill .liquid-btn-arrow,
-  .cursor-trail-card,
-  .curtain-bar,
-  .background-lightning-container,
-  .wave-letter {
+  .scroll-portal-frame,
+  .skewed-carousel-stage,
+  .skewed-carousel-card-slot,
+  .skewed-card {
     transition: none !important;
     animation: none !important;
   }
 }
+
 
 
 
