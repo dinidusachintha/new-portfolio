@@ -213,7 +213,6 @@ export default function SynapticShift({
       const uColor = gl.getUniformLocation(program, "u_color");
       const uColor2 = gl.getUniformLocation(program, "u_color2");
 
-      let startTime = performance.now();
       let accumulatedTime = 0;
       let lastFrameTime = performance.now();
 
