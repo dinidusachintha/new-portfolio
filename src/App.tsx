@@ -24,7 +24,6 @@ import GlobalStarfield from "./components/animations/GlobalStarfield";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
 import RisingLines from "./components/animations/RisingLines";
-import SmoothCursor from "./components/SmoothCursor";
 import TextReveal3D from "./components/TextReveal3D";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
@@ -636,7 +635,6 @@ export default function App() {
 
       <div className="ambient-spotlight" aria-hidden="true" />
       <GlobalStarfield />
-      <SmoothCursor />
       <a className="skip-link" href="#main">
         Skip to main content
       </a>

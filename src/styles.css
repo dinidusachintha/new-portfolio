@@ -10951,21 +10951,7 @@ body {
   -webkit-backface-visibility: hidden;
 }
 
-/* ==========================================================================
-   SMOOTH SPRINGY CURSOR TRAIL
-   ========================================================================== */
-.smooth-cursor-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 99999;
-}
 
-@media (pointer: coarse) {
-  .smooth-cursor-canvas {
-    display: none !important;
-  }
-}
 
 
 
