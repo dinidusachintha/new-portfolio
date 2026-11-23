@@ -6988,6 +6988,57 @@ main {
   color: #ffffff;
 }
 
+.hero-dymas-cv-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 24px;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(152, 103, 255, 0.45);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(152, 103, 255, 0.18);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.hero-dymas-cv-btn:hover {
+  transform: translateY(-2.5px) scale(1.025);
+  background: rgba(152, 103, 255, 0.16);
+  border-color: rgba(192, 132, 252, 0.8);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.65),
+    0 14px 36px rgba(0, 0, 0, 0.6),
+    0 0 32px rgba(152, 103, 255, 0.45);
+}
+
+.hero-dymas-cv-btn:active {
+  transform: translateY(0px) scale(0.985);
+}
+
+.hero-dymas-cv-btn .hero-collab-text,
+.hero-dymas-cv-btn span {
+  position: relative;
+  z-index: 3;
+  color: #ffffff;
+}
+
+.hero-dymas-cv-btn:hover .hero-collab-arrow {
+  transform: translateY(2px);
+  color: #ffffff;
+}
+
 .hero-tech-pill-row {
   display: inline-flex;
   align-items: center;
@@ -7252,7 +7303,8 @@ main {
   }
 
   .hero-glass-talk-btn,
-  .hero-dymas-collab-btn {
+  .hero-dymas-collab-btn,
+  .hero-dymas-cv-btn {
     padding: 10px 22px;
     font-size: 12px;
     min-height: 42px;

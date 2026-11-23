@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Code2,
+  Download,
   FileText,
   Github,
   Instagram,
@@ -363,6 +364,21 @@ export default function Hero() {
                     <ArrowUpRight size={16} className="hero-collab-arrow liquid-btn-arrow" />
                   </span>
                 </a>
+
+                {profile.cv && (
+                  <a
+                    href={asset(profile.cv)}
+                    download="Dinidu_Sachintha_Resume.pdf"
+                    className="hero-dymas-cv-btn btn-liquid-fill group"
+                    aria-label="Download Dinidu Sachintha CV"
+                  >
+                    <span className="liquid-fill-shape" aria-hidden="true" />
+                    <span className="liquid-btn-content">
+                      <span className="hero-collab-text">Download CV</span>
+                      <Download size={15} className="hero-collab-arrow" />
+                    </span>
+                  </a>
+                )}
               </motion.div>
             </div>
 
