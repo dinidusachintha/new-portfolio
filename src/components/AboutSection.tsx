@@ -47,6 +47,43 @@ export default function AboutSection() {
     }
 
     const ctx = gsap.context(() => {
+      // 1. Bento Stat Tiles smooth cascading upward reveal
+      gsap.fromTo(
+        ".bento-tile-stat",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".about-stats-grid",
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // 2. Glass Effect Black Card smooth upward entrance
+      gsap.fromTo(
+        ".about-glass-black-card",
+        { opacity: 0, y: 40, scale: 0.985 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.85,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".about-glass-black-card",
+            start: "top 82%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // 3. Narrative word-by-word highlight on scroll
       if (wordEls.length > 0) {
         gsap.to(wordEls, {
           color: "rgba(255, 255, 255, 0.98)",
