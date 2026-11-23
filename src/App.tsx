@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useRef, useState, useCallback } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUp,
   ArrowUpRight,
@@ -21,14 +20,12 @@ import FlyingHeading from "./components/FlyingHeading";
 import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
 import FocusMarquee from "./components/FocusMarquee";
-import IntroLoader from "./components/animations/IntroLoader";
 import GlobalStarfield from "./components/animations/GlobalStarfield";
 import BackgroundLightning from "./components/animations/BackgroundLightning";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
-import { useIntroSession } from "./hooks/useIntroSession";
 import { useSmoothScroll, type LenisScrollEvent } from "./hooks/useSmoothScroll";
 
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
@@ -317,9 +314,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("");
   const [workReady, setWorkReady] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const { shouldPlayIntro, markIntroSeen } = useIntroSession();
-  const [introActive, setIntroActive] = useState(shouldPlayIntro);
-  const [loaded, setLoaded] = useState(!shouldPlayIntro);
+  const [loaded] = useState(true);
 
   const scrollProgressBarRef = useRef<HTMLDivElement>(null);
   const scrollProgressRingRef = useRef<SVGCircleElement>(null);
@@ -497,27 +492,6 @@ export default function App() {
     };
   }, []);
 
-  const handleIntroComplete = () => {
-    markIntroSeen();
-    setIntroActive(false);
-    setLoaded(true);
-    lenis.current?.start();
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 60);
-  };
-
-  // Lock scrolling during intro reveal animation
-  useEffect(() => {
-    if (introActive) {
-      lenis.current?.stop();
-      document.documentElement.classList.add("intro-active");
-    } else {
-      lenis.current?.start();
-      document.documentElement.classList.remove("intro-active");
-    }
-  }, [introActive]);
-
   useEffect(() => {
     let frame = 0;
     const onMouseMove = (e: MouseEvent) => {
@@ -653,11 +627,6 @@ export default function App() {
 
   return (
     <div className={`site-shell ${loaded ? "is-loaded" : ""}`}>
-      {/* Cinematic Futuristic Landing Intro Loader */}
-      {introActive && (
-        <IntroLoader onComplete={handleIntroComplete} />
-      )}
-
       {/* 5-Bar Violet Curtain Transition for Case Studies */}
       <CurtainTransition
         isActive={curtainActive}
