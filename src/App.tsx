@@ -21,7 +21,6 @@ import MobileSidebar from "./components/MobileSidebar";
 import Navbar from "./components/Navbar";
 import FocusMarquee from "./components/FocusMarquee";
 import GlobalStarfield from "./components/animations/GlobalStarfield";
-import BackgroundLightning from "./components/animations/BackgroundLightning";
 import PixelMagnet from "./components/animations/PixelMagnet";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
@@ -637,7 +636,6 @@ export default function App() {
 
       <div className="ambient-spotlight" aria-hidden="true" />
       <GlobalStarfield />
-      <BackgroundLightning />
       <PixelMagnet fullScreen />
       <a className="skip-link" href="#main">
         Skip to main content
