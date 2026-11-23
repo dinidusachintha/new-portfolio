@@ -4712,42 +4712,6 @@ main {
   background: #34d399;
 }
 
-.video-hint-pill {
-  position: absolute;
-  bottom: 74px;
-  right: 28px;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-size: 11px;
-  color: #94a3b8;
-  pointer-events: none;
-  animation: fadeInOut 4s ease forwards;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-
-  15%,
-  85% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 /* ==========================================================================
    INTERACTIVE DEVELOPER TERMINAL
    ========================================================================== */

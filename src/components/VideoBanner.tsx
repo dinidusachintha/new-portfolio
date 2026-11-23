@@ -1,210 +1,121 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Maximize2,
-  Minimize2,
-  Pause,
-  Play,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
-import { asset, profile } from "../data/portfolio";
+import { ArrowUpRight, Pause, Play } from "lucide-react";
 import FlyingHeading from "./FlyingHeading";
 
 export default function VideoBanner() {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isTabVisible, setIsTabVisible] = useState(true);
 
   useEffect(() => {
-    const video = videoRef.current;
     const container = containerRef.current;
-    if (!video || !container) return;
+    if (!container) return;
 
-    video.muted = isMuted;
-
-    // Lazy-play video strictly when near viewport to eliminate startup bandwidth usage and duplicate requests
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => setIsPlaying(false));
-          } else if (!video.paused) {
-            video.pause();
-            setIsPlaying(false);
-          }
+          setIsInView(entry.isIntersecting);
         });
       },
-      { rootMargin: "250px" }
+      { rootMargin: "200px" }
     );
     io.observe(container);
 
-    const onFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
+    const onVisibilityChange = () => {
+      setIsTabVisible(!document.hidden);
     };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
-    document.addEventListener("fullscreenchange", onFullscreenChange);
     return () => {
       io.disconnect();
-      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    setHasInteracted(true);
-    if (video.paused) {
-      video.play();
-      setIsPlaying(true);
-    } else {
-      video.pause();
-      setIsPlaying(false);
-    }
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    setHasInteracted(true);
-    const nextMuted = !video.muted;
-    video.muted = nextMuted;
-    setIsMuted(nextMuted);
-    if (!nextMuted && video.paused) {
-      video.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
-    try {
-      if (!document.fullscreenElement) {
-        await containerRef.current.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    } catch {
-      // Fullscreen not supported or allowed
-    }
-  };
+  const shouldPause = isPaused || !isInView || !isTabVisible;
 
   return (
-    <section className="video-banner-section video-banner-light-bg w-full" aria-label="Cinematic video showcase">
+    <section className="video-banner-section video-banner-light-bg w-full" aria-label="Systems architecture showcase">
       <div className="container">
         <div
           ref={containerRef}
-          className={`video-banner-card ${isFullscreen ? "is-fullscreen" : ""}`}
+          className="video-banner-card relative overflow-hidden"
+          data-paused={shouldPause}
         >
-        {/* Background Video (controlled strictly via IntersectionObserver, no eager autoPlay) */}
-        <video
-          ref={videoRef}
-          className="video-banner-media"
-          src={asset(profile.video)}
-          poster={asset("assets/images/video1-poster.jpg")}
-          loop
-          muted={isMuted}
-          playsInline
-          preload="metadata"
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-        />
+          {/* Layer 0: Astral Shell Globe Container */}
+          <div
+            className="absolute inset-0 h-full w-full pointer-events-auto z-0"
+            style={{ touchAction: "pan-y" }}
+            aria-hidden="true"
+          >
+            <div className="astral-shell-fallback absolute inset-0" />
+          </div>
 
-        {/* Ambient Subtle Vignette for Text Legibility */}
-        <div className="video-banner-overlay" aria-hidden="true" />
+          {/* Layer 1: Ambient Readability Overlay */}
+          <div className="video-banner-overlay" aria-hidden="true" />
 
-        {/* Center Content */}
-        <div className="video-banner-content">
-          <FlyingHeading
-            line1="BUILDING SYSTEMS."
-            line2="CRAFTING WHAT MATTERS."
-            line2ClassName="video-title-gradient font-unbounded block"
-            className="video-title font-unbounded"
-          />
+          {/* Layer 2: Center Content */}
+          <div className="video-banner-content pointer-events-none relative z-10">
+            <FlyingHeading
+              line1="BUILDING SYSTEMS."
+              line2="CRAFTING WHAT MATTERS."
+              line2ClassName="video-title-gradient font-unbounded block"
+              className="video-title font-unbounded pointer-events-auto"
+            />
 
-          <p className="video-lead">
-            High-throughput event pipelines, resilient relational models, and responsive web platforms engineered to endure real-world production load.
-          </p>
+            <p className="video-lead pointer-events-auto">
+              High-throughput event pipelines, resilient relational models, and responsive web platforms engineered to endure real-world production load.
+            </p>
 
-          <div className="video-actions">
-            <a href="#contact" className="video-btn-primary">
-              <span>Let’s Build Together</span>
-              <ArrowUpRight size={17} />
-            </a>
+            <div className="video-actions pointer-events-auto">
+              <a href="#contact" className="video-btn-primary">
+                <span>Let’s Build Together</span>
+                <ArrowUpRight size={17} />
+              </a>
 
-            <a href="#work" className="video-btn-secondary">
-              <span>Explore Architecture</span>
-            </a>
+              <a href="#work" className="video-btn-secondary">
+                <span>Explore Architecture</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Layer 2: Bottom Controls & Telemetry */}
+          <div className="video-banner-bottom relative z-10">
+            <div className="video-controls pointer-events-auto">
+              <button
+                type="button"
+                className={`video-ctrl-btn ${isPaused ? "is-active" : ""}`}
+                onClick={togglePause}
+                aria-pressed={isPaused}
+                aria-label={isPaused ? "Resume star globe animation" : "Pause star globe animation"}
+                title={isPaused ? "Resume star globe animation" : "Pause star globe animation"}
+              >
+                {isPaused ? <Play size={17} /> : <Pause size={17} />}
+                <span className="hidden sm:inline">
+                  {isPaused ? "Play" : "Pause"}
+                </span>
+              </button>
+            </div>
+
+            <div className="video-bottom-stats pointer-events-auto">
+              <span className="stat-pill">
+                <span className="dot-green" /> REGION: AP-SOUTH-1
+              </span>
+              <span className="stat-pill hidden md:inline-flex">
+                LATENCY: 24ms
+              </span>
+              <span className="stat-pill hidden lg:inline-flex">
+                UPTIME: 99.98%
+              </span>
+            </div>
           </div>
         </div>
-
-        {/* Bottom Controls & Telemetry */}
-        <div className="video-banner-bottom">
-          <div className="video-controls">
-            <button
-              type="button"
-              className="video-ctrl-btn"
-              onClick={togglePlay}
-              aria-label={isPlaying ? "Pause video" : "Play video"}
-              title={isPlaying ? "Pause video" : "Play video"}
-            >
-              {isPlaying ? <Pause size={17} /> : <Play size={17} />}
-              <span className="hidden sm:inline">
-                {isPlaying ? "Pause" : "Play"}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className={`video-ctrl-btn ${!isMuted ? "is-active" : ""}`}
-              onClick={toggleMute}
-              aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
-              title={isMuted ? "Unmute video" : "Mute video"}
-            >
-              {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
-              <span className="hidden sm:inline">
-                {isMuted ? "Sound Off" : "Sound On"}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="video-ctrl-btn"
-              onClick={toggleFullscreen}
-              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-              title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-            >
-              {isFullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
-            </button>
-          </div>
-
-          <div className="video-bottom-stats">
-            <span className="stat-pill">
-              <span className="dot-green" /> REGION: AP-SOUTH-1
-            </span>
-            <span className="stat-pill hidden md:inline-flex">
-              LATENCY: 24ms
-            </span>
-            <span className="stat-pill hidden lg:inline-flex">
-              UPTIME: 99.98%
-            </span>
-          </div>
-        </div>
-
-        {!hasInteracted && isMuted && (
-          <div className="video-hint-pill hidden sm:flex">
-            <Volume2 size={13} />
-            <span>Click controls to toggle sound</span>
-          </div>
-        )}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
 }
