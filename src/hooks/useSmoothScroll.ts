@@ -83,6 +83,7 @@ export function useSmoothScroll({
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      syncTouch: false, // Keep native momentum scroll on touch devices (phones/tablets)
       wheelMultiplier: 1.0,
       touchMultiplier: 1.5,
       infinite: false,
@@ -96,7 +97,7 @@ export function useSmoothScroll({
       velocityRef.current = e.velocity;
       ScrollTrigger.update();
       onScrollRef.current?.(e);
-      window.dispatchEvent(new CustomEvent("lenis-scroll", { detail: e }));
+      // Synchronous scroll dispatch without firing synthetic window CustomEvents
     });
 
     const updateTicker = (time: number) => {

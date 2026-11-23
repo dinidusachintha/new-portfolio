@@ -86,10 +86,12 @@ export default function FocusMarquee() {
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
-    // 3. Lenis scroll velocity & direction listener (reads existing event, no new scroll listener)
-    const handleLenisScroll = (e: Event) => {
+    // 3. Direct Lenis scroll listener (no window CustomEvent dispatch, zero event-handler violations)
+    const lenis = (window as unknown as { __lenis?: { on: (event: string, cb: (e: LenisScrollEvent) => void) => void; off: (event: string, cb: (e: LenisScrollEvent) => void) => void } }).__lenis;
+
+    const handleLenisScroll = (e: LenisScrollEvent) => {
       if (!isVisibleRef.current) return;
-      const { velocity, direction } = (e as CustomEvent<LenisScrollEvent>).detail;
+      const { velocity, direction } = e;
 
       if (direction !== 0) {
         directionRef.current = direction; // 1 = down (scroll left), -1 = up (scroll right)
@@ -99,7 +101,9 @@ export default function FocusMarquee() {
       targetSpeedRef.current = Math.max(targetSpeedRef.current, 50 * (1 + boost));
     };
 
-    window.addEventListener("lenis-scroll", handleLenisScroll, { passive: true });
+    if (lenis) {
+      lenis.on("scroll", handleLenisScroll);
+    }
 
     // 4. ONE requestAnimationFrame animation loop
     let rAFId: number | null = null;
@@ -186,7 +190,7 @@ export default function FocusMarquee() {
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("lenis-scroll", handleLenisScroll);
+      if (lenis) lenis.off("scroll", handleLenisScroll);
       if (rAFId) cancelAnimationFrame(rAFId);
     };
   }, [items.length]);
