@@ -192,7 +192,7 @@ export default function MobileSidebar({
                   ref={closeBtnRef}
                   type="button"
                   onClick={onClose}
-                  className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.14] active:scale-95 border border-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.06] hover:bg-white/[0.14] active:scale-95 border border-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
                   aria-label="Close navigation"
                 >
                   <X size={18} />

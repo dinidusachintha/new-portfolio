@@ -206,7 +206,7 @@ export default function ProjectDialog({
               <button
                 autoFocus
                 type="button"
-                className="w-9 h-9 border border-white/20 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center rounded-full transition-colors cursor-pointer shrink-0"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] border border-white/20 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center rounded-full transition-colors cursor-pointer shrink-0"
                 onClick={onClose}
                 aria-label="Close dialog"
               >

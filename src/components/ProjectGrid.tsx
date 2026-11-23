@@ -44,6 +44,8 @@ export default function ProjectGrid({
   const [activeIndex, setActiveIndex] = useState(0);
   const activeIndexRef = useRef(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
+  const mobileTrackRef = useRef<HTMLDivElement>(null);
 
   // Pause carousel rotation loop when off-screen to preserve CPU
   useEffect(() => {
@@ -137,6 +139,7 @@ export default function ProjectGrid({
   useEffect(() => {
     const updateDimensions = () => {
       const w = containerRef.current?.offsetWidth || window.innerWidth;
+      setIsMobile(w < 768);
       let nextDim;
       if (w < 480) {
         nextDim = {
@@ -165,7 +168,9 @@ export default function ProjectGrid({
       }
       stageDimRef.current = nextDim;
       setStageDimensions(nextDim);
-      applyCardTransforms(angleRef.current);
+      if (w >= 768) {
+        applyCardTransforms(angleRef.current);
+      }
     };
 
     updateDimensions();
@@ -173,9 +178,9 @@ export default function ProjectGrid({
     return () => window.removeEventListener("resize", updateDimensions);
   }, [applyCardTransforms]);
 
-  // Smooth continuous rotation loop (writes transforms via refs, updates React state only when front card changes)
+  // Smooth continuous rotation loop (active on desktop, paused on mobile touch to ensure 60fps)
   useEffect(() => {
-    if (viewMode !== "carousel" || totalCards <= 1 || !isVisible) return;
+    if (isMobile || viewMode !== "carousel" || totalCards <= 1 || !isVisible) return;
 
     const animate = (timestamp: number) => {
       if (lastTimeRef.current === null) {
@@ -227,6 +232,7 @@ export default function ProjectGrid({
       lastTimeRef.current = null;
     };
   }, [
+    isMobile,
     isPlaying,
     isHovered,
     viewMode,
@@ -235,6 +241,35 @@ export default function ProjectGrid({
     isVisible,
     applyCardTransforms,
   ]);
+
+  // Track active slide on mobile via IntersectionObserver (zero-reflow, updates state ONLY when card snaps)
+  useEffect(() => {
+    if (!isMobile || viewMode !== "carousel") return;
+    const track = mobileTrackRef.current;
+    if (!track) return;
+
+    const slides = track.querySelectorAll<HTMLElement>(".mobile-snap-slide");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.52) {
+            const idxStr = entry.target.getAttribute("data-slide-index");
+            if (idxStr !== null) {
+              const idx = parseInt(idxStr, 10);
+              if (!isNaN(idx) && idx !== activeIndexRef.current) {
+                activeIndexRef.current = idx;
+                setActiveIndex(idx);
+              }
+            }
+          }
+        });
+      },
+      { root: track, threshold: 0.52 }
+    );
+
+    slides.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, [isMobile, viewMode, filteredProjects]);
 
   // Pointer drag events for horizontal spinning
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -284,8 +319,24 @@ export default function ProjectGrid({
     isDraggingRef.current = false;
   };
 
+  const scrollToMobileSlide = useCallback((index: number) => {
+    const track = mobileTrackRef.current;
+    if (!track) return;
+    const slides = track.querySelectorAll<HTMLElement>(".mobile-snap-slide");
+    const target = slides[index];
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      activeIndexRef.current = index;
+      setActiveIndex(index);
+    }
+  }, []);
+
   const rotateTo = useCallback(
     (index: number) => {
+      if (isMobile) {
+        scrollToMobileSlide(index);
+        return;
+      }
       const currentRotations = Math.floor(angleRef.current / (2 * Math.PI));
       const targetBase = -index * stepAngle;
       let newTarget = currentRotations * 2 * Math.PI + targetBase;
@@ -295,18 +346,28 @@ export default function ProjectGrid({
       targetAngleRef.current = newTarget;
       setIsPlaying(false);
     },
-    [stepAngle]
+    [isMobile, scrollToMobileSlide, stepAngle]
   );
 
   const stepNext = useCallback(() => {
-    targetAngleRef.current = angleRef.current - stepAngle;
-    setIsPlaying(false);
-  }, [stepAngle]);
+    if (isMobile) {
+      const nextIdx = Math.min(totalCards - 1, activeIndex + 1);
+      scrollToMobileSlide(nextIdx);
+    } else {
+      targetAngleRef.current = angleRef.current - stepAngle;
+      setIsPlaying(false);
+    }
+  }, [isMobile, totalCards, activeIndex, scrollToMobileSlide, stepAngle]);
 
   const stepPrev = useCallback(() => {
-    targetAngleRef.current = angleRef.current + stepAngle;
-    setIsPlaying(false);
-  }, [stepAngle]);
+    if (isMobile) {
+      const prevIdx = Math.max(0, activeIndex - 1);
+      scrollToMobileSlide(prevIdx);
+    } else {
+      targetAngleRef.current = angleRef.current + stepAngle;
+      setIsPlaying(false);
+    }
+  }, [isMobile, activeIndex, scrollToMobileSlide, stepAngle]);
 
   // Convert ProjectItem to full Project and open modal on requested tab
   const handleSelectProject = useCallback(
@@ -377,7 +438,7 @@ export default function ProjectGrid({
                 role="tab"
                 aria-selected={active}
                 onClick={() => setSelectedDomain(f.value)}
-                className={`snap-start inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-full font-unbounded text-[9.5px] sm:text-[11px] tracking-wide transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                className={`snap-start inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 min-h-[38px] sm:min-h-[44px] rounded-full font-unbounded text-[9.5px] sm:text-[11px] tracking-wide transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   active
                     ? "bg-gradient-to-r from-[#9867ff] to-[#6366f1] text-white font-bold shadow-[0_0_20px_rgba(152,103,255,0.45)] border border-violet-400/50"
                     : "text-slate-300 hover:text-white hover:bg-white/[0.06] border border-transparent font-medium"
@@ -403,7 +464,7 @@ export default function ProjectGrid({
           <button
             type="button"
             onClick={() => setViewMode("carousel")}
-            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3.5 py-2 min-h-[38px] sm:min-h-[44px] rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "carousel"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
@@ -417,7 +478,7 @@ export default function ProjectGrid({
           <button
             type="button"
             onClick={() => setViewMode("stack")}
-            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3.5 py-2 min-h-[38px] sm:min-h-[44px] rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "stack"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
@@ -431,7 +492,7 @@ export default function ProjectGrid({
           <button
             type="button"
             onClick={() => setViewMode("grid")}
-            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-1.5 rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3.5 py-2 min-h-[38px] sm:min-h-[44px] rounded-lg sm:rounded-full transition-all cursor-pointer whitespace-nowrap ${
               viewMode === "grid"
                 ? "bg-white text-slate-950 font-bold shadow-md"
                 : "text-slate-300 hover:text-white font-medium"
@@ -449,15 +510,21 @@ export default function ProjectGrid({
       {/* ===================================================================== */}
       {viewMode === "carousel" && (
         <div
-          className="glass-project-stage relative w-full h-[710px] sm:h-[790px] lg:h-[835px] rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
+          className={`glass-project-stage relative w-full ${
+            isMobile ? "min-h-[580px] h-auto" : "h-[710px] sm:h-[790px] lg:h-[835px]"
+          } rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/15 overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl flex flex-col justify-between touch-pan-y`}
+          onPointerDown={isMobile ? undefined : handlePointerDown}
+          onPointerMove={isMobile ? undefined : handlePointerMove}
+          onPointerUp={isMobile ? undefined : handlePointerUp}
           onPointerLeave={() => {
-            handlePointerUp();
-            setIsHovered(false);
+            if (!isMobile) {
+              handlePointerUp();
+              setIsHovered(false);
+            }
           }}
-          onPointerEnter={() => setIsHovered(true)}
+          onPointerEnter={() => {
+            if (!isMobile) setIsHovered(true);
+          }}
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "ArrowLeft") {
@@ -468,7 +535,7 @@ export default function ProjectGrid({
               stepNext();
             }
           }}
-          aria-label="3D interactive project carousel. Use Left and Right arrow keys or drag to rotate."
+          aria-label="Interactive project carousel. Use Left and Right arrow keys or swipe to rotate."
         >
           {/* Matching Portfolio Electric Violet & Cyber Cyan Bokeh Lighting Backdrop */}
           <div
@@ -527,67 +594,104 @@ export default function ProjectGrid({
             </div>
           </div>
 
-          {/* 3D Perspective Stage */}
-          <div
-            className="relative w-full flex-1 flex items-center justify-center pointer-events-none my-1 sm:my-2"
-            style={{ perspective: "1350px" }}
-          >
-            {filteredProjects.map((project, index) => {
-              const cardAngle = angleRef.current + index * stepAngle;
-              let delta =
-                ((cardAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-              if (delta > Math.PI) delta -= 2 * Math.PI;
+          {/* Mobile Native Scroll-Snap Track OR Desktop 3D Perspective Stage */}
+          {isMobile ? (
+            <div
+              ref={mobileTrackRef}
+              className="relative w-full flex-1 flex items-stretch gap-4 overflow-x-auto px-4 py-3 my-2 no-scrollbar pointer-events-auto"
+              style={{
+                scrollSnapType: "x mandatory",
+                WebkitOverflowScrolling: "touch",
+                overscrollBehaviorX: "contain",
+                touchAction: "pan-y",
+              }}
+            >
+              {filteredProjects.map((project, index) => {
+                const isFrontCard = activeIndex === index;
+                return (
+                  <div
+                    key={project.id}
+                    data-slide-index={index}
+                    className="mobile-snap-slide shrink-0 flex items-center justify-center snap-center"
+                    style={{
+                      width: "calc(100vw - 44px)",
+                      maxWidth: "355px",
+                      touchAction: "pan-y",
+                    }}
+                  >
+                    <ProjectShowcaseCard
+                      project={project}
+                      isFront={isFrontCard}
+                      inCarousel
+                      onOpenDemo={() => handleSelectProject(project, "demo")}
+                      onOpenArch={() => handleSelectProject(project, "arch")}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div
+              className="relative w-full flex-1 flex items-center justify-center pointer-events-none my-1 sm:my-2"
+              style={{ perspective: "1350px" }}
+            >
+              {filteredProjects.map((project, index) => {
+                const cardAngle = angleRef.current + index * stepAngle;
+                let delta =
+                  ((cardAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+                if (delta > Math.PI) delta -= 2 * Math.PI;
 
-              const sinDelta = Math.sin(delta);
-              const cosDelta = Math.cos(delta);
+                const sinDelta = Math.sin(delta);
+                const cosDelta = Math.cos(delta);
 
-              const x = sinDelta * stageDimensions.rx;
-              const z = (cosDelta - 1) * stageDimensions.rz;
+                const x = sinDelta * stageDimensions.rx;
+                const z = (cosDelta - 1) * stageDimensions.rz;
 
-              const normDepth = (cosDelta + 1) / 2;
-              const scale = 0.72 + 0.28 * normDepth;
-              const opacity = 0.34 + 0.66 * normDepth;
-              const rotY = -sinDelta * 26;
-              const zIndex = Math.round(10 + normDepth * 50);
-              const isFrontCard = activeIndex === index || totalCards === 1;
+                const normDepth = (cosDelta + 1) / 2;
+                const scale = 0.72 + 0.28 * normDepth;
+                const opacity = 0.34 + 0.66 * normDepth;
+                const rotY = -sinDelta * 26;
+                const zIndex = Math.round(10 + normDepth * 50);
+                const isFrontCard = activeIndex === index || totalCards === 1;
 
-              return (
-                <div
-                  key={project.id}
-                  ref={(el) => {
-                    cardWrapRefs.current[index] = el;
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (hasMovedRef.current) return;
-                    if (!isFrontCard) {
-                      rotateTo(index);
-                    } else {
-                      handleSelectProject(project, "demo");
-                    }
-                  }}
-                  className="absolute pointer-events-auto cursor-pointer transition-shadow duration-300 flex items-center justify-center"
-                  style={{
-                    width: `${stageDimensions.cardW}px`,
-                    left: "50%",
-                    top: "50%",
-                    transform: `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
-                    zIndex,
-                    opacity,
-                    transformOrigin: "center center",
-                  }}
-                >
-                  <ProjectShowcaseCard
-                    project={project}
-                    isFront={isFrontCard}
-                    inCarousel
-                    onOpenDemo={() => handleSelectProject(project, "demo")}
-                    onOpenArch={() => handleSelectProject(project, "arch")}
-                  />
-                </div>
-              );
-            })}
-          </div>
+                return (
+                  <div
+                    key={project.id}
+                    ref={(el) => {
+                      cardWrapRefs.current[index] = el;
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (hasMovedRef.current) return;
+                      if (!isFrontCard) {
+                        rotateTo(index);
+                      } else {
+                        handleSelectProject(project, "demo");
+                      }
+                    }}
+                    className="absolute pointer-events-auto cursor-pointer transition-shadow duration-300 flex items-center justify-center"
+                    style={{
+                      width: `${stageDimensions.cardW}px`,
+                      left: "50%",
+                      top: "50%",
+                      transform: `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+                      zIndex,
+                      opacity,
+                      transformOrigin: "center center",
+                    }}
+                  >
+                    <ProjectShowcaseCard
+                      project={project}
+                      isFront={isFrontCard}
+                      inCarousel
+                      onOpenDemo={() => handleSelectProject(project, "demo")}
+                      onOpenArch={() => handleSelectProject(project, "arch")}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Bottom Centered Progress Indicator Pills */}
           <div className="relative z-30 flex items-center justify-center px-4 pt-1 pb-3 sm:pb-5 pointer-events-auto">

@@ -14,6 +14,7 @@ export default function SmartImage({
   return (
     <div
       className={`smart-image ${loaded || failed ? "is-loaded" : ""} ${className}`}
+      style={{ contain: "layout paint" }}
     >
       {!loaded && !failed && (
         <div className="image-skeleton" aria-hidden="true" />
@@ -29,7 +30,7 @@ export default function SmartImage({
           alt={alt}
           loading={eager ? "eager" : "lazy"}
           decoding="async"
-          fetchPriority={eager ? "high" : "auto"}
+          fetchPriority={eager ? "high" : "low"}
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
         />
