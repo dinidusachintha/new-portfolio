@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
 import FlyingHeading from "./FlyingHeading";
+import SynapticShift from "./animations/SynapticShift";
 
 export default function VideoBanner() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,14 +48,8 @@ export default function VideoBanner() {
           className="video-banner-card relative overflow-hidden"
           data-paused={shouldPause}
         >
-          {/* Layer 0: Astral Shell Globe Container */}
-          <div
-            className="absolute inset-0 h-full w-full pointer-events-auto z-0"
-            style={{ touchAction: "pan-y" }}
-            aria-hidden="true"
-          >
-            <div className="astral-shell-fallback absolute inset-0" />
-          </div>
+          {/* Layer 0: Synaptic Shift - Glowing neural tendrils that pulse and shift */}
+          <SynapticShift isPaused={shouldPause} />
 
           {/* Layer 1: Ambient Readability Overlay */}
           <div className="video-banner-overlay" aria-hidden="true" />

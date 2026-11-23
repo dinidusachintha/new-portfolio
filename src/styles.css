@@ -10862,6 +10862,111 @@ body {
   }
 }
 
+/* ==========================================================================
+   HERO VIDEO MOBILE PAUSE SUPPRESSION & RESPONSIVE POLICIES
+   ========================================================================== */
+.hero-dymas-portrait-video,
+.hero-portrait-video-frame,
+.hero-ref-portrait-video {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+.hero-dymas-portrait-video::-webkit-media-controls,
+.hero-dymas-portrait-video::-webkit-media-controls-panel,
+.hero-dymas-portrait-video::-webkit-media-controls-play-button,
+.hero-dymas-portrait-video::-webkit-media-controls-start-playback-button,
+.hero-dymas-portrait-video::-webkit-media-controls-overlay-play-button,
+.hero-dymas-portrait-video::-webkit-media-controls-enclosure {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 768px) {
+  .hero-dymas-portrait-video::-webkit-media-controls,
+  .hero-dymas-portrait-video::-webkit-media-controls-panel,
+  .hero-dymas-portrait-video::-webkit-media-controls-play-button,
+  .hero-dymas-portrait-video::-webkit-media-controls-start-playback-button,
+  .hero-dymas-portrait-video::-webkit-media-controls-overlay-play-button {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  .hero-portrait-video-frame button,
+  .hero-video-pause-btn,
+  .hero-video-ctrl,
+  .hero-portrait-video-frame .video-ctrl-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ==========================================================================
+   SYNAPTIC SHIFT NEURAL FILAMENT BACKGROUND
+   ========================================================================== */
+.synaptic-shift-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.synaptic-shift-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   3D TEXT REVEAL CYLINDER TRANSITION
+   ========================================================================== */
+.text-reveal-3d-section {
+  position: relative;
+  width: 100%;
+  overflow: clip;
+  contain: paint;
+}
+
+.cylinder-viewport {
+  transform-style: preserve-3d;
+}
+
+.cylinder-drum {
+  transform-style: preserve-3d;
+}
+
+.cylinder-text-line {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ==========================================================================
+   SMOOTH SPRINGY CURSOR TRAIL
+   ========================================================================== */
+.smooth-cursor-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+@media (pointer: coarse) {
+  .smooth-cursor-canvas {
+    display: none !important;
+  }
+}
+
 
 
 

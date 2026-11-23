@@ -388,9 +388,12 @@ export default function Hero() {
                         playsInline
                         preload="auto"
                         disablePictureInPicture
+                        disableRemotePlayback
                         controls={false}
+                        controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
                         poster={asset("assets/images/video2-preview.jpg")}
-                        className="hero-dymas-portrait-video"
+                        className="hero-dymas-portrait-video pointer-events-none select-none"
+                        style={{ pointerEvents: "none" }}
                         aria-label="Dinidu Sachintha video portrait"
                       />
                     </div>
