@@ -41,6 +41,10 @@ async function audit() {
 
   await call('Console.enable');
   await call('Page.enable');
+  await call('Emulation.setEmulatedMedia', {
+    media: 'screen',
+    features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }]
+  });
   await call('Page.navigate', { url: 'http://localhost:4173/' });
   await new Promise(r => setTimeout(r, 3000));
 
