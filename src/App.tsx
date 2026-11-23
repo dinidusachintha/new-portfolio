@@ -211,7 +211,7 @@ function HaveASystemSection() {
       <div className="have-a-system-reveal relative z-10">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
           <Sparkles size={13} className="text-violet-400" />
-          <span>07 // INITIATE COLLABORATION · LET’S WORK TOGETHER</span>
+          <span>INITIATE COLLABORATION · LET’S WORK TOGETHER</span>
         </span>
       </div>
 
@@ -725,7 +725,7 @@ export default function App() {
                 <div className="section-top reveal">
                   <span className="eyebrow inline-flex items-center gap-1.5">
                     <Sparkles size={13} className="text-violet-600" />
-                    03 / PRODUCTION SYSTEMS & CASE STUDIES
+                    PRODUCTION SYSTEMS & CASE STUDIES
                   </span>
                   <span className="small-index">END-TO-END ARCHITECTURAL WORK</span>
                 </div>

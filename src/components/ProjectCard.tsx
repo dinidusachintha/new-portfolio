@@ -131,7 +131,7 @@ export default function ProjectCard({
                     borderColor: project.borderColor,
                   }}
                 >
-                  {project.badgeCategory || `${project.number} // ${categoryTag}`}
+                  {(project.badgeCategory || categoryTag).replace(/^\d+\s*(?:·|\/|\/\/)\s*/, "")}
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/15 bg-white/[0.04] text-[9.5px] sm:text-[10px] font-mono font-semibold text-slate-300 uppercase">
                   {project.domain}

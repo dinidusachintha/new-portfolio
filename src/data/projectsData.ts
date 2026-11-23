@@ -109,7 +109,7 @@ export const projectsData: ProjectItem[] = [
   {
     id: "schoolride-lk",
     number: "02",
-    badgeCategory: "04 · FULL STACK",
+    badgeCategory: "FULL STACK",
     category: "Full Stack",
     domain: "Full Stack",
     year: "2026",
@@ -269,7 +269,7 @@ export const projectsData: ProjectItem[] = [
   {
     id: "ayurvedic-plant-recognition",
     number: "05",
-    badgeCategory: "05 · AI / ML RESEARCH",
+    badgeCategory: "AI / ML RESEARCH",
     category: "AI / ML Research",
     domain: "AI & Media",
     year: "2026",

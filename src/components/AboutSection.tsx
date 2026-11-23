@@ -125,7 +125,7 @@ export default function AboutSection() {
           <div className="section-top relative z-10">
             <span className="eyebrow flex items-center gap-1.5 font-mono text-violet-300">
               <Sparkles size={13} className="text-violet-400" />
-              01 / ABOUT THE ENGINEER
+              ABOUT THE ENGINEER
             </span>
             <span className="small-index font-mono text-slate-400">ETHOS & BACKGROUND</span>
           </div>

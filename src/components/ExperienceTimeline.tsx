@@ -78,7 +78,7 @@ export default function ExperienceTimeline() {
       <div className="section-top reveal">
         <span className="eyebrow flex items-center gap-1.5 text-violet-400">
           <Briefcase size={13} />
-          02 / TRAJECTORY & EXPERIENCE
+          TRAJECTORY & EXPERIENCE
         </span>
         <span className="small-index">TRACK RECORD & ACADEMICS</span>
       </div>
@@ -114,7 +114,7 @@ export default function ExperienceTimeline() {
             <div className="text-left">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-xs font-bold text-violet-400 uppercase tracking-wider">
-                  02 / TRAJECTORY & EXPERIENCE
+                  TRAJECTORY & EXPERIENCE
                 </span>
                 <span className="status-live-dot" />
               </div>

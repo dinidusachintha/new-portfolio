@@ -78,7 +78,7 @@ export default function TechStack() {
           <div className="section-top reveal">
             <span className="eyebrow">
               <Code2 size={13} className="inline mr-1 text-violet-400" />
-              05 / ENGINEERING ARSENAL & TOOLKIT
+              ENGINEERING ARSENAL & TOOLKIT
             </span>
             <span className="small-index">INTERACTIVE ARCHITECTURAL SLIDESHOW</span>
           </div>

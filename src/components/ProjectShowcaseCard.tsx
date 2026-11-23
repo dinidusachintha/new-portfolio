@@ -129,7 +129,7 @@ export default function ProjectShowcaseCard({
                 "rgba(16, 185, 129, 0.45)",
             }}
           >
-            {project.badgeCategory || `${project.number} · ${project.domain}`}
+            {(project.badgeCategory || project.domain).replace(/^\d+\s*(?:·|\/|\/\/)\s*/, "")}
           </span>
 
           {isResearch ? (

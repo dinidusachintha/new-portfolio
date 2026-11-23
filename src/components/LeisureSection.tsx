@@ -60,7 +60,7 @@ export default function LeisureSection() {
           {/* Section Eyebrow matching dark theme */}
           <div className="leisure-eyebrow-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-mono font-semibold tracking-widest uppercase mb-5 shadow-sm">
             <Sparkles size={13} className="text-violet-400" />
-            <span>/ 06 — THE HUMAN SIDE</span>
+            <span>THE HUMAN SIDE</span>
           </div>
 
           {/* Main Heading: "Beyond the Code." with dual Violet-Cyan Gradient */}

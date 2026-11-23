@@ -5,7 +5,6 @@ import {
   Minimize2,
   Pause,
   Play,
-  Sparkles,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -117,18 +116,11 @@ export default function VideoBanner() {
           onPause={() => setIsPlaying(false)}
         />
 
-        {/* Ambient Dark Tech Gradients & Scanlines */}
+        {/* Ambient Subtle Vignette for Text Legibility */}
         <div className="video-banner-overlay" aria-hidden="true" />
-        <div className="video-banner-grid" aria-hidden="true" />
-
 
         {/* Center Content */}
         <div className="video-banner-content">
-          <div className="video-eyebrow">
-            <Sparkles size={14} className="text-violet-400" />
-            <span>06 / SOFTWARE ARCHITECTURE IN ACTION</span>
-          </div>
-
           <FlyingHeading
             line1="BUILDING SYSTEMS."
             line2="CRAFTING WHAT MATTERS."
