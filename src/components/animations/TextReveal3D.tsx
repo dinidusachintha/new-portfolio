@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Sparkles, Layers } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -134,14 +133,6 @@ export default function TextReveal3D({
         aria-hidden="true"
       />
 
-      {/* Eyebrow Milestone Tag */}
-      <div className="relative z-10 text-center mb-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-400 font-mono text-xs uppercase tracking-widest">
-          <Sparkles size={12} className="text-violet-400" />
-          <span>EVOLUTION & ARCHITECTURAL FOCUS</span>
-        </div>
-      </div>
-
       {/* 3D Cylinder Stage */}
       <div
         className="cylinder-viewport relative w-full max-w-[1200px] h-[340px] sm:h-[420px] mx-auto flex items-center justify-center overflow-visible"
@@ -177,14 +168,6 @@ export default function TextReveal3D({
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Bottom Sub-Indicator */}
-      <div className="relative z-10 flex items-center justify-center gap-3 mt-4 text-center">
-        <span className="font-mono text-[11px] text-gray-400 uppercase tracking-wider flex items-center gap-2">
-          <Layers size={13} className="text-violet-400" />
-          <span>TRANSITIONING TO PRODUCTION CASE STUDIES</span>
-        </span>
       </div>
     </div>
   );
