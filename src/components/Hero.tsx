@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { asset, profile } from "../data/portfolio";
 import LetterWave from "./animations/LetterWave";
+import HeroThreeBackground from "./HeroThreeBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -209,6 +210,9 @@ export default function Hero() {
       >
         {/* Inner Luminous Pure Black Hero Card Canvas */}
         <div className="hero-dymas-frame relative overflow-hidden">
+          {/* Three.js Hero Interactive Background Layer */}
+          <HeroThreeBackground />
+
           {/* Subtle Drifting Blurred Glow Orbs */}
           <div className="hero-glow-orbs" aria-hidden="true">
             <div className="hero-glow-orb hero-glow-orb-1" />
