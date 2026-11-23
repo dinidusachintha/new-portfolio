@@ -97,7 +97,47 @@ export default function Hero() {
     const v = videoRef.current;
     if (!el || !v) return;
 
+    v.defaultMuted = true;
     v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+
+    // Guaranteed autoplay on site load with multi-event fallback
+    const playVideo = () => {
+      const promise = v.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          const unlock = () => {
+            v.play().catch(() => {});
+            window.removeEventListener("pointerdown", unlock);
+            window.removeEventListener("touchstart", unlock);
+            window.removeEventListener("scroll", unlock);
+            window.removeEventListener("keydown", unlock);
+          };
+          window.addEventListener("pointerdown", unlock, { passive: true, once: true });
+          window.addEventListener("touchstart", unlock, { passive: true, once: true });
+          window.addEventListener("scroll", unlock, { passive: true, once: true });
+          window.addEventListener("keydown", unlock, { passive: true, once: true });
+        });
+      }
+    };
+    playVideo();
+
+    // Enforce seamless infinite looping
+    const handleEnded = () => {
+      v.currentTime = 0;
+      v.play().catch(() => {});
+    };
+    v.addEventListener("ended", handleEnded);
+
+    // Auto resume playback when returning to the tab
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        v.play().catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     let glitchTimer: ReturnType<typeof setInterval> | null = null;
 
     const startGlitchTimer = () => {
@@ -119,7 +159,7 @@ export default function Hero() {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          v.play().catch(() => {});
+          playVideo();
           startGlitchTimer();
         } else {
           v.pause();
@@ -194,6 +234,8 @@ export default function Hero() {
     return () => {
       io.disconnect();
       stopGlitchTimer();
+      v.removeEventListener("ended", handleEnded);
+      document.removeEventListener("visibilitychange", handleVisibility);
       ctx?.revert();
     };
   }, []);
@@ -249,7 +291,9 @@ export default function Hero() {
                   loop
                   muted
                   playsInline
-                  preload="metadata"
+                  preload="auto"
+                  disablePictureInPicture
+                  controls={false}
                   poster={asset("assets/images/video2-preview.jpg")}
                   className="hero-dymas-portrait-video"
                   aria-label="Dinidu Sachintha video portrait"

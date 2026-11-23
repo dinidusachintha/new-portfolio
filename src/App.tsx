@@ -23,6 +23,7 @@ import FocusMarquee from "./components/FocusMarquee";
 import GlobalStarfield from "./components/animations/GlobalStarfield";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
+import RisingLines from "./components/animations/RisingLines";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
 import { useSmoothScroll, type LenisScrollEvent } from "./hooks/useSmoothScroll";
@@ -198,11 +199,9 @@ function HaveASystemSection() {
 
   return (
     <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      {/* Background Dot Grid Spotlight & Perspective Floor */}
+      {/* Background Dot Grid Spotlight & Smooth Rising Lines from Glowing Horizon */}
       <div className="dot-grid-spotlight" aria-hidden="true" />
-      <div className="footer-perspective-grid-wrap" aria-hidden="true">
-        <div className="footer-perspective-grid-plane" />
-      </div>
+      <RisingLines />
 
       <div className="have-a-system-reveal relative z-10">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
