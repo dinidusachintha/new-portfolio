@@ -738,11 +738,6 @@ export default function App() {
             {/* 05 / Engineering Arsenal & Tech Stack (+ Core Runtimes & Cloud Infrastructure) */}
             <TechStack />
 
-            {/* Scroll Portal — Fly through nested architectural frames */}
-            <section className="scroll-portal-section relative w-full" id="portal">
-              <ScrollPortal />
-            </section>
-
             {/* 06 / Beyond the Code — The Human Side (White Background) */}
             <LeisureSection />
 
