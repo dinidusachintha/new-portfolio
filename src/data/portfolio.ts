@@ -27,7 +27,6 @@ export const profile = {
   linkedin: "https://linkedin.com/in/dinidusachintha",
   cv: "assets/documents/Dinidu_Sachintha_Resume.pdf",
   music: "assets/music/ambientd-loop.mp3",
-  video: "assets/videos/video1.mp4",
   portrait: "assets/images/dinidu-portrait.png",
   available: true,
   status: "Available for high-impact roles & contract engineering",
