@@ -15,13 +15,14 @@ import FlyingHeading from "./FlyingHeading";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ExperienceTimeline() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    if (!isDropdownOpen) return;
     const container = containerRef.current;
     const line = lineRef.current;
     if (!container || !line) return;
@@ -70,7 +71,7 @@ export default function ExperienceTimeline() {
     setIsDropdownOpen((prev) => !prev);
     setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 350);
+    }, 450);
   };
 
   return (
@@ -235,22 +236,22 @@ export default function ExperienceTimeline() {
             </div>
 
           {/* CV Download Bar */}
-          <div className="cv-download-strip mt-12 p-6 rounded-2xl bg-gradient-to-r from-violet-950/30 via-transparent to-cyan-950/30 border border-white/10 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h4 className="text-base font-bold text-white">
+          <div className="cv-download-strip mt-10 sm:mt-12 p-4 sm:p-6 md:p-7 rounded-xl sm:rounded-2xl bg-gradient-to-r from-violet-950/30 via-transparent to-cyan-950/30 border border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-5">
+            <div className="max-w-xl">
+              <h4 className="text-sm sm:text-base md:text-lg font-bold text-white leading-snug">
                 Looking for a full resume with complete academic transcripts?
               </h4>
-              <p className="text-xs text-muted mt-0.5">
+              <p className="text-xs text-muted mt-1 leading-relaxed">
                 Download the official PDF document or reach out directly for references.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto shrink-0">
               {profile.cv && (
                 <a
                   href={asset(profile.cv)}
                   download
-                  className="button button-outline text-xs py-2.5 px-4 flex items-center gap-2"
+                  className="button button-outline text-xs sm:text-xs py-2.5 px-4 min-h-[44px] flex items-center justify-center gap-2 rounded-full whitespace-nowrap transition-all shadow-sm"
                 >
                   <Download size={15} />
                   <span>Download CV</span>
@@ -258,7 +259,7 @@ export default function ExperienceTimeline() {
               )}
               <a
                 href="#contact"
-                className="button button-primary text-xs py-2.5 px-4 flex items-center gap-2"
+                className="button button-primary text-xs sm:text-xs py-2.5 px-5 min-h-[44px] flex items-center justify-center gap-2 rounded-full whitespace-nowrap transition-all shadow-sm"
               >
                 <span>Initiate Conversation</span>
                 <ArrowUpRight size={15} />
