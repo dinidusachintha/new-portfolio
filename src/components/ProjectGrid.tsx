@@ -222,7 +222,24 @@ export default function ProjectGrid({
 
     applyCardTransforms(angleRef.current);
     animFrameRef.current = requestAnimationFrame(animate);
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (animFrameRef.current) {
+          cancelAnimationFrame(animFrameRef.current);
+          animFrameRef.current = null;
+        }
+      } else {
+        if (!animFrameRef.current) {
+          lastTimeRef.current = null;
+          animFrameRef.current = requestAnimationFrame(animate);
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       lastTimeRef.current = null;
     };

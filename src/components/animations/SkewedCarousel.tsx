@@ -28,7 +28,18 @@ export default function SkewedCarousel({
   const containerRef = useRef<HTMLDivElement>(null);
   const dragStartX = useRef<number>(0);
   const dragCurrentX = useRef<number>(0);
+  const rafDragRef = useRef<number | null>(null);
   const count = activities.length;
+
+  const updateDrag = (currentX: number) => {
+    dragCurrentX.current = currentX;
+    if (rafDragRef.current === null) {
+      rafDragRef.current = requestAnimationFrame(() => {
+        setDragOffset(dragCurrentX.current - dragStartX.current);
+        rafDragRef.current = null;
+      });
+    }
+  };
 
   const nextSlide = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % count);
@@ -41,6 +52,15 @@ export default function SkewedCarousel({
   const goToSlide = (idx: number) => {
     setActiveIndex(idx);
   };
+
+  // Cleanup pending drag rAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafDragRef.current !== null) {
+        cancelAnimationFrame(rafDragRef.current);
+      }
+    };
+  }, []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -80,11 +100,14 @@ export default function SkewedCarousel({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
-    dragCurrentX.current = e.touches[0].clientX;
-    setDragOffset(dragCurrentX.current - dragStartX.current);
+    updateDrag(e.touches[0].clientX);
   };
 
   const handleTouchEnd = () => {
+    if (rafDragRef.current !== null) {
+      cancelAnimationFrame(rafDragRef.current);
+      rafDragRef.current = null;
+    }
     if (!isDragging) return;
     setIsDragging(false);
     const delta = dragCurrentX.current - dragStartX.current;
@@ -106,12 +129,15 @@ export default function SkewedCarousel({
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
-      dragCurrentX.current = e.clientX;
-      setDragOffset(dragCurrentX.current - dragStartX.current);
+      updateDrag(e.clientX);
     }
   };
 
   const handleMouseUp = () => {
+    if (rafDragRef.current !== null) {
+      cancelAnimationFrame(rafDragRef.current);
+      rafDragRef.current = null;
+    }
     if (!isDragging) return;
     setIsDragging(false);
     const delta = dragCurrentX.current - dragStartX.current;
@@ -167,7 +193,8 @@ export default function SkewedCarousel({
   return (
     <div
       ref={containerRef}
-      className={`skewed-carousel-wrapper relative w-full overflow-hidden select-none py-10 sm:py-16 ${className}`}
+      className={`skewed-carousel-wrapper relative w-full overflow-hidden select-none py-10 sm:py-16 touch-pan-y ${className}`}
+      style={{ touchAction: "pan-y" }}
       tabIndex={0}
       role="region"
       aria-label="Skewed Carousel - Beyond The Code"

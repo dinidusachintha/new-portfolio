@@ -231,7 +231,7 @@ export default function IntroLoader({ onComplete, lenis }: IntroLoaderProps) {
     const ro = new ResizeObserver(() => updateCanvasDimensions());
     if (canvas.parentElement) ro.observe(canvas.parentElement);
 
-    const { w, h, radius } = dimsRef.current;
+    const { w, h } = dimsRef.current;
 
     // Generate Fibonacci Sphere points
     for (let i = 0; i < TOTAL_STARS; i++) {

@@ -200,9 +200,8 @@ function HaveASystemSection() {
 
   return (
     <div ref={containerRef} className="have-a-system-box pt-4 pb-0 sm:pt-6 sm:pb-0 relative overflow-hidden">
-      {/* Background Dot Grid Spotlight & Smooth Rising Lines from Glowing Horizon */}
+      {/* Background Dot Grid Spotlight */}
       <div className="dot-grid-spotlight" aria-hidden="true" />
-      <RisingLines />
 
       <div className="have-a-system-reveal relative z-10">
         <span className="font-mono text-xs uppercase tracking-widest text-violet-400 mb-4 inline-flex items-center gap-2">
@@ -314,6 +313,7 @@ export default function App() {
   const [workReady, setWorkReady] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [loaded] = useState(true);
+  const [introComplete, setIntroComplete] = useState(false);
 
   const scrollProgressBarRef = useRef<HTMLDivElement>(null);
   const scrollProgressRingRef = useRef<SVGCircleElement>(null);
@@ -626,6 +626,14 @@ export default function App() {
 
   return (
     <div className={`site-shell ${loaded ? "is-loaded" : ""}`}>
+      {/* Stars Converge Into Globe Intro Loader */}
+      {!introComplete && (
+        <IntroLoader
+          onComplete={() => setIntroComplete(true)}
+          lenis={{ stop, start }}
+        />
+      )}
+
       {/* 5-Bar Violet Curtain Transition for Case Studies */}
       <CurtainTransition
         isActive={curtainActive}

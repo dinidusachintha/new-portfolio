@@ -215,10 +215,12 @@ export default function SynapticShift({
 
       let accumulatedTime = 0;
       let lastFrameTime = performance.now();
+      let animId: number = 0;
 
       const resize = () => {
         const rect = container.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const isCoarse = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+        const dpr = isCoarse ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.5);
         width = Math.floor(rect.width * dpr);
         height = Math.floor(rect.height * dpr);
         canvas.width = Math.max(1, width);
@@ -231,8 +233,8 @@ export default function SynapticShift({
       resize();
 
       const loop = (now: number) => {
-        if (!isVisible) {
-          animId = requestAnimationFrame(loop);
+        if (!isVisible || document.hidden) {
+          animId = 0;
           return;
         }
 
@@ -260,18 +262,47 @@ export default function SynapticShift({
         animId = requestAnimationFrame(loop);
       };
 
-      animId = requestAnimationFrame(loop);
+      const startLoop = () => {
+        if (animId === 0 && isVisible && !document.hidden) {
+          lastFrameTime = performance.now();
+          animId = requestAnimationFrame(loop);
+        }
+      };
+
+      const stopLoop = () => {
+        if (animId !== 0) {
+          cancelAnimationFrame(animId);
+          animId = 0;
+        }
+      };
 
       const io = new IntersectionObserver(
         ([entry]) => {
           isVisible = entry.isIntersecting;
+          if (isVisible) {
+            startLoop();
+          } else {
+            stopLoop();
+          }
         },
         { rootMargin: "100px" }
       );
       io.observe(container);
 
+      const handleVisibilityChange = () => {
+        if (!document.hidden && isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      startLoop();
+
       return () => {
-        cancelAnimationFrame(animId);
+        stopLoop();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
         resizeObserver.disconnect();
         io.disconnect();
         gl.deleteProgram(program);

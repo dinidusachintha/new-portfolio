@@ -72,20 +72,6 @@ export default function FocusMarquee() {
     });
     ro.observe(container);
 
-    // 2. Pause when off-screen or tab hidden
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-      },
-      { rootMargin: "120px" },
-    );
-    io.observe(container);
-
-    const handleVisibility = () => {
-      isTabVisibleRef.current = !document.hidden;
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
     // 3. Direct Lenis scroll listener (no window CustomEvent dispatch, zero event-handler violations)
     const lenis = (window as unknown as { __lenis?: { on: (event: string, cb: (e: LenisScrollEvent) => void) => void; off: (event: string, cb: (e: LenisScrollEvent) => void) => void } }).__lenis;
 
@@ -181,17 +167,59 @@ export default function FocusMarquee() {
         }
       }
 
-      rAFId = requestAnimationFrame(tick);
+      if (isVisibleRef.current && isTabVisibleRef.current) {
+        rAFId = requestAnimationFrame(tick);
+      } else {
+        rAFId = null;
+      }
     };
 
-    rAFId = requestAnimationFrame(tick);
+    const startLoop = () => {
+      if (!rAFId && isVisibleRef.current && isTabVisibleRef.current) {
+        lastTime = performance.now();
+        rAFId = requestAnimationFrame(tick);
+      }
+    };
+
+    const stopLoop = () => {
+      if (rAFId) {
+        cancelAnimationFrame(rAFId);
+        rAFId = null;
+      }
+    };
+
+    // 2. Pause when off-screen or tab hidden
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { rootMargin: "120px" },
+    );
+    io.observe(container);
+
+    const handleVisibility = () => {
+      isTabVisibleRef.current = !document.hidden;
+      if (!document.hidden && isVisibleRef.current) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    startLoop();
 
     return () => {
+      stopLoop();
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
       if (lenis) lenis.off("scroll", handleLenisScroll);
-      if (rAFId) cancelAnimationFrame(rAFId);
     };
   }, [items.length]);
 

@@ -78,6 +78,7 @@ export default function TextReveal3D({
             scrub: 0.8,
             onUpdate: (self) => {
               // Calculate lighting & opacity based on angle facing the viewer
+              const isMobile = window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches;
               const currentRot = startRotation + self.progress * (endRotation - startRotation);
               const lineEls = cylinder.querySelectorAll<HTMLElement>(".cylinder-text-line");
               const total = lineEls.length;
@@ -96,12 +97,20 @@ export default function TextReveal3D({
                   // Facing camera
                   const intensity = Math.pow(cos, 1.8);
                   el.style.opacity = `${Math.max(0.15, intensity)}`;
-                  el.style.filter = `blur(${Math.max(0, (1 - cos) * 4)}px)`;
+                  if (!isMobile) {
+                    el.style.filter = `blur(${Math.max(0, (1 - cos) * 4)}px)`;
+                  } else {
+                    el.style.filter = "none";
+                  }
                   el.style.pointerEvents = cos > 0.8 ? "auto" : "none";
                 } else {
                   // Back face
                   el.style.opacity = "0.05";
-                  el.style.filter = "blur(6px)";
+                  if (!isMobile) {
+                    el.style.filter = "blur(6px)";
+                  } else {
+                    el.style.filter = "none";
+                  }
                   el.style.pointerEvents = "none";
                 }
               });
