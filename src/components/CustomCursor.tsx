@@ -362,7 +362,6 @@ export default function CustomCursor() {
   return (
     <div
       ref={wrapperRef}
-      // @ts-expect-error popover attribute is standard in modern HTML
       popover="manual"
       className="custom-cursor-wrapper"
       aria-hidden="true"

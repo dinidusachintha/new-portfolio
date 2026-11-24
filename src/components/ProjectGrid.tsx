@@ -699,6 +699,7 @@ export default function ProjectGrid({
           {filteredProjects.map((project) => (
             <div
               key={project.id}
+              data-cur="view"
               onClick={() => handleSelectProject(project, "demo")}
               className="w-full h-full cursor-pointer flex"
             >

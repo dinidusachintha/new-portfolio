@@ -32,6 +32,7 @@ import { useSmoothScroll, type LenisScrollEvent } from "./hooks/useSmoothScroll"
 const ProjectDialog = lazy(() => import("./components/ProjectDialog"));
 const BlogPage = lazy(() => import("./components/BlogPage"));
 const ProjectGrid = lazy(() => import("./components/ProjectGrid"));
+const CustomCursor = lazy(() => import("./components/CustomCursor"));
 
 const navLinks = [
   { name: "About", id: "about" },
@@ -626,6 +627,11 @@ export default function App() {
 
   return (
     <div className={`site-shell ${loaded ? "is-loaded" : ""}`}>
+      {/* Premium Smart Cursor - Morphological 5 States */}
+      <Suspense fallback={null}>
+        <CustomCursor />
+      </Suspense>
+
       {/* Stars Converge Into Globe Intro Loader */}
       {!introComplete && (
         <IntroLoader

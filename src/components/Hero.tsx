@@ -277,7 +277,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Central Visual Stage */}
-          <div className="hero-dymas-stage">
+          <div className="hero-dymas-stage pointer-events-auto" data-cur="drag">
             {/* Centered Live Video 2 of Dinidu - Continuously Auto-Playing, Perfectly Grounded */}
             <motion.div
               className="hero-dymas-portrait-wrap"
