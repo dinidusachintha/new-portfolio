@@ -11,11 +11,13 @@ interface SnapBounds {
 }
 
 export default function CustomCursor() {
-  // Only render on devices with hover capability and fine pointer (mouse/trackpad),
+  // Only render on devices with hover capability and fine pointer,
   // respecting prefers-reduced-motion and forced-colors.
   const [isSupported, setIsSupported] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
-    const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const hasFinePointer =
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
+      window.matchMedia("(any-hover: hover) and (any-pointer: fine)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const forcedColors = window.matchMedia("(forced-colors: active)").matches;
     return hasFinePointer && !prefersReducedMotion && !forcedColors;
@@ -30,15 +32,14 @@ export default function CustomCursor() {
   const targetPos = useRef({ x: -100, y: -100 });
   const ringPos = useRef({ x: -100, y: -100 });
   const isMoving = useRef(false);
-  const isSettled = useRef(true);
   const rAFId = useRef<number | null>(null);
 
   // Cursor state refs
   const stateRef = useRef<CursorState>("default");
   const snapBounds = useRef<SnapBounds | null>(null);
-  const isPressedRef = useRef(false);
   const isWindowFocusedRef = useRef(true);
   const hasMovedOnceRef = useRef(false);
+  const lastHoveredTargetRef = useRef<HTMLElement | null>(null);
 
   // Promote popover into browser top-layer (above native <dialog>)
   const ensureTopLayer = useCallback(() => {
@@ -51,37 +52,18 @@ export default function CustomCursor() {
     }
   }, []);
 
-  // Update dynamic classes and text based on current state
-  const updateCursorClasses = useCallback((state: CursorState, label = "") => {
-    stateRef.current = state;
-    const ring = ringRef.current;
-    const dot = dotRef.current;
-    const lbl = labelRef.current;
-    if (!ring || !dot || !lbl) return;
-
-    ring.dataset.state = state;
-    dot.dataset.state = state;
-    lbl.textContent = label;
-
-    if (state === "snap" && snapBounds.current) {
-      ring.style.width = `${snapBounds.current.width}px`;
-      ring.style.height = `${snapBounds.current.height}px`;
-      ring.style.borderRadius = snapBounds.current.borderRadius;
-    } else {
-      ring.style.width = "";
-      ring.style.height = "";
-      ring.style.borderRadius = "";
-    }
-  }, []);
-
   // Media queries listener
   useEffect(() => {
     const mqHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mqAnyHover = window.matchMedia("(any-hover: hover) and (any-pointer: fine)");
     const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mqColors = window.matchMedia("(forced-colors: active)");
 
     const checkSupport = () => {
-      const supported = mqHover.matches && !mqMotion.matches && !mqColors.matches;
+      const supported =
+        (mqHover.matches || mqAnyHover.matches) &&
+        !mqMotion.matches &&
+        !mqColors.matches;
       setIsSupported(supported);
       if (!supported) {
         document.documentElement.classList.remove("has-cursor");
@@ -89,11 +71,13 @@ export default function CustomCursor() {
     };
 
     mqHover.addEventListener("change", checkSupport);
+    mqAnyHover.addEventListener("change", checkSupport);
     mqMotion.addEventListener("change", checkSupport);
     mqColors.addEventListener("change", checkSupport);
 
     return () => {
       mqHover.removeEventListener("change", checkSupport);
+      mqAnyHover.removeEventListener("change", checkSupport);
       mqMotion.removeEventListener("change", checkSupport);
       mqColors.removeEventListener("change", checkSupport);
       document.documentElement.classList.remove("has-cursor");
@@ -107,7 +91,8 @@ export default function CustomCursor() {
     const wrapper = wrapperRef.current;
     const dot = dotRef.current;
     const ring = ringRef.current;
-    if (!wrapper || !dot || !ring) return;
+    const lbl = labelRef.current;
+    if (!wrapper || !dot || !ring || !lbl) return;
 
     ensureTopLayer();
 
@@ -154,23 +139,20 @@ export default function CustomCursor() {
       ringPos.current.x = rx;
       ringPos.current.y = ry;
 
-      // Dot follows pointer instantly
+      // Dot follows pointer instantly (zero lag)
       dot.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
 
-      // Ring trails with press scale feedback
-      const scaleVal = isPressedRef.current ? 0.85 : 1;
-      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${scaleVal})`;
+      // Ring trails to (rx, ry)
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
 
       const dist = Math.hypot(destinationX - rx, destinationY - ry);
 
-      // Stop loop when settled and mouse is not moving
+      // Stop loop when settled and mouse has stopped moving
       if (dist < 0.1 && !isMoving.current) {
-        isSettled.current = true;
         rAFId.current = null;
         return;
       }
 
-      isSettled.current = false;
       rAFId.current = requestAnimationFrame(render);
     };
 
@@ -181,82 +163,25 @@ export default function CustomCursor() {
     };
 
     // -----------------------------------------------------------------------
-    // Mouse Move & Native Cursor Safe Initialization
+    // State Determination & Transition Engine
     // -----------------------------------------------------------------------
-    const handleMouseMove = (e: MouseEvent) => {
-      targetPos.current.x = e.clientX;
-      targetPos.current.y = e.clientY;
-      isMoving.current = true;
+    const applyState = ({
+      state,
+      label = "",
+      element,
+    }: {
+      state: CursorState;
+      label?: string;
+      element?: HTMLElement;
+    }) => {
+      stateRef.current = state;
+      ring.dataset.state = state;
+      dot.dataset.state = state;
+      lbl.textContent = label;
 
-      // First move initialization: enable custom cursor & hide native cursor
-      if (!hasMovedOnceRef.current) {
-        hasMovedOnceRef.current = true;
-        document.documentElement.classList.add("has-cursor");
-        ringPos.current.x = e.clientX;
-        ringPos.current.y = e.clientY;
-        wrapper.style.opacity = "1";
-      }
-
-      startLoop();
-
-      // Reset moving flag on idle
-      clearTimeout((handleMouseMove as unknown as { idleTimer?: ReturnType<typeof setTimeout> }).idleTimer);
-      (handleMouseMove as unknown as { idleTimer?: ReturnType<typeof setTimeout> }).idleTimer = setTimeout(() => {
-        isMoving.current = false;
-      }, 40);
-    };
-
-    // -----------------------------------------------------------------------
-    // Delegated State Determination (Single mouseover on document)
-    // -----------------------------------------------------------------------
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      // Native cursor exceptions (inputs, editable, video, etc.)
-      const isInput = target.closest(
-        'input, textarea, select, [contenteditable="true"], iframe, video, audio, [data-cur="none"]'
-      );
-      if (isInput) {
-        updateCursorClasses("hidden");
-        return;
-      }
-
-      const match = target.closest(
-        '[data-cur], a[href], button, [role="button"], summary, label, p, li, blockquote'
-      ) as HTMLElement | null;
-
-      if (!match) {
-        snapBounds.current = null;
-        updateCursorClasses("default");
-        return;
-      }
-
-      const customState = match.dataset.cur as CursorState | undefined;
-
-      if (customState === "view") {
-        snapBounds.current = null;
-        updateCursorClasses("view", "View");
-        return;
-      }
-
-      if (customState === "drag") {
-        snapBounds.current = null;
-        updateCursorClasses("drag", "Drag");
-        return;
-      }
-
-      if (customState === "text" || /^(P|LI|BLOCKQUOTE)$/.test(match.tagName)) {
-        snapBounds.current = null;
-        updateCursorClasses("text");
-        return;
-      }
-
-      // Snap state for buttons & links: read layout ONCE here in mouseover
-      const rect = match.getBoundingClientRect();
-      // Cap snap size at 320x120px; larger elements keep the default ring
-      if (rect.width <= 320 && rect.height <= 120 && rect.width > 0 && rect.height > 0) {
-        const computed = window.getComputedStyle(match);
+      if (state === "snap" && element) {
+        const rect = element.getBoundingClientRect();
+        const computed = window.getComputedStyle(element);
         snapBounds.current = {
           x: rect.left + rect.width / 2,
           y: rect.top + rect.height / 2,
@@ -264,17 +189,101 @@ export default function CustomCursor() {
           height: Math.round(rect.height + 14),
           borderRadius: computed.borderRadius || "9999px",
         };
-        updateCursorClasses("snap");
+        ring.style.width = `${snapBounds.current.width}px`;
+        ring.style.height = `${snapBounds.current.height}px`;
+        ring.style.borderRadius = snapBounds.current.borderRadius;
       } else {
         snapBounds.current = null;
-        updateCursorClasses("default");
+        ring.style.width = "";
+        ring.style.height = "";
+        ring.style.borderRadius = "";
       }
+
+      startLoop();
+    };
+
+    const determineState = (
+      target: HTMLElement | null
+    ): { state: CursorState; label?: string; element?: HTMLElement } => {
+      if (!target) return { state: "default" };
+
+      // 1. Native cursor exceptions (inputs, contenteditable, iframe, video controls, data-cur="none")
+      const isInput = target.closest(
+        'input, textarea, select, [contenteditable="true"], iframe, video[controls], audio[controls], [data-cur="none"]'
+      );
+      if (isInput) return { state: "hidden" };
+
+      // 2. Clickable buttons & links: SNAP state (capped at 320x120px)
+      const clickable = target.closest(
+        'a[href], button, [role="button"], summary, label, [data-cur="snap"]'
+      ) as HTMLElement | null;
+      if (clickable) {
+        const rect = clickable.getBoundingClientRect();
+        if (rect.width <= 320 && rect.height <= 120 && rect.width > 0 && rect.height > 0) {
+          return { state: "snap", element: clickable };
+        }
+        return { state: "default" };
+      }
+
+      // 3. Custom data-cur attributes (e.g. project cards "view", hero stage "drag")
+      const customCur = target.closest("[data-cur]") as HTMLElement | null;
+      if (customCur) {
+        const cur = customCur.dataset.cur;
+        if (cur === "view") return { state: "view", label: "View" };
+        if (cur === "drag") return { state: "drag", label: "Drag" };
+        if (cur === "text") return { state: "text" };
+        if (cur === "none") return { state: "hidden" };
+      }
+
+      // 4. Text paragraphs and long text: TEXT state (shrink to 2px x 26px bar)
+      const textEl = target.closest("p, li, blockquote") as HTMLElement | null;
+      if (textEl) {
+        return { state: "text" };
+      }
+
+      return { state: "default" };
+    };
+
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // -----------------------------------------------------------------------
+    // Mouse Move & State Update
+    // -----------------------------------------------------------------------
+    const handleMouseMove = (e: MouseEvent) => {
+      targetPos.current.x = e.clientX;
+      targetPos.current.y = e.clientY;
+      isMoving.current = true;
+
+      // Enable custom cursor class and ensure wrapper is visible
+      if (!hasMovedOnceRef.current) {
+        hasMovedOnceRef.current = true;
+        document.documentElement.classList.add("has-cursor");
+        ringPos.current.x = e.clientX;
+        ringPos.current.y = e.clientY;
+      }
+      wrapper.style.opacity = "1";
+
+      // Detect state change only when element under pointer changes
+      const target = e.target as HTMLElement | null;
+      if (target !== lastHoveredTargetRef.current) {
+        lastHoveredTargetRef.current = target;
+        const next = determineState(target);
+        applyState(next);
+      }
+
+      startLoop();
+
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        isMoving.current = false;
+      }, 50);
     };
 
     const handleMouseOut = (e: MouseEvent) => {
       if (!e.relatedTarget) {
         // Pointer left the window
         wrapper.style.opacity = "0";
+        lastHoveredTargetRef.current = null;
       }
     };
 
@@ -285,28 +294,32 @@ export default function CustomCursor() {
     };
 
     // -----------------------------------------------------------------------
-    // Click & Press Feedback (Transform only, 150ms)
+    // Click & Press Feedback (Transform only, 150ms spring via CSS scale)
     // -----------------------------------------------------------------------
     const handlePointerDown = () => {
-      isPressedRef.current = true;
-      startLoop();
+      ring.classList.add("is-pressed");
     };
 
     const handlePointerUp = () => {
-      isPressedRef.current = false;
-      startLoop();
+      ring.classList.remove("is-pressed");
     };
 
     // -----------------------------------------------------------------------
     // Drop back to default state on Lenis scroll (no layout reads)
     // -----------------------------------------------------------------------
-    const lenis = (window as unknown as { __lenis?: { on: (event: string, cb: () => void) => void; off: (event: string, cb: () => void) => void } }).__lenis;
+    const lenis = (
+      window as unknown as {
+        __lenis?: {
+          on: (event: string, cb: () => void) => void;
+          off: (event: string, cb: () => void) => void;
+        };
+      }
+    ).__lenis;
 
     const handleScroll = () => {
       if (stateRef.current === "snap") {
-        snapBounds.current = null;
-        updateCursorClasses("default");
-        startLoop();
+        lastHoveredTargetRef.current = null;
+        applyState({ state: "default" });
       }
     };
 
@@ -328,7 +341,6 @@ export default function CustomCursor() {
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseover", handleMouseOver, { passive: true });
     document.addEventListener("mouseout", handleMouseOut, { passive: true });
     document.addEventListener("mouseenter", handleMouseEnter, { passive: true });
     window.addEventListener("pointerdown", handlePointerDown, { passive: true });
@@ -340,9 +352,9 @@ export default function CustomCursor() {
         cancelAnimationFrame(rAFId.current);
         rAFId.current = null;
       }
+      if (idleTimer) clearTimeout(idleTimer);
       dialogObserver.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseout", handleMouseOut);
       document.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("pointerdown", handlePointerDown);
@@ -355,7 +367,7 @@ export default function CustomCursor() {
       }
       document.documentElement.classList.remove("has-cursor");
     };
-  }, [isSupported, ensureTopLayer, updateCursorClasses]);
+  }, [isSupported, ensureTopLayer]);
 
   if (!isSupported) return null;
 

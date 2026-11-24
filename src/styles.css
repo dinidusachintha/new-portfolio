@@ -7394,16 +7394,17 @@ html.has-cursor [data-cur="none"] {
 
 .custom-cursor-wrapper[popover] {
   position: fixed;
+  inset: 0 auto auto 0 !important;
   top: 0;
   left: 0;
   right: auto;
   bottom: auto;
   width: 0;
   height: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
   overflow: visible;
   pointer-events: none;
   z-index: 999999;
@@ -7420,7 +7421,7 @@ html.has-cursor [data-cur="none"] {
   pointer-events: none;
   will-change: transform;
   translate: -50% -50%;
-  transition: opacity 0.18s ease-out, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.18s ease-out;
 }
 
 .custom-cursor-dot[data-state="view"],
@@ -7446,14 +7447,20 @@ html.has-cursor [data-cur="none"] {
   justify-content: center;
   translate: -50% -50%;
   transform-origin: center center;
-  will-change: transform, width, height, border-radius;
+  scale: 1;
+  will-change: transform, width, height, border-radius, scale;
   transition:
+    scale 0.15s cubic-bezier(0.16, 1, 0.3, 1),
     width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
     height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
     border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
     background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.24s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.2s ease-out;
+}
+
+.custom-cursor-ring.is-pressed {
+  scale: 0.85;
 }
 
 .custom-cursor-ring[data-state="snap"] {
