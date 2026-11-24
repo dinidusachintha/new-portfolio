@@ -23,7 +23,7 @@ import FocusMarquee from "./components/FocusMarquee";
 import GlobalStarfield from "./components/animations/GlobalStarfield";
 import CursorImageTrail from "./components/animations/CursorImageTrail";
 import CurtainTransition from "./components/animations/CurtainTransition";
-import RisingLines from "./components/animations/RisingLines";
+import IntroLoader from "./components/IntroLoader";
 import TextReveal3D from "./components/TextReveal3D";
 import ProjectGridSkeleton from "./components/skeletons/ProjectGridSkeleton";
 import BlogPageSkeleton from "./components/skeletons/BlogPageSkeleton";
