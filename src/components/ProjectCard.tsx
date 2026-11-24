@@ -88,6 +88,7 @@ export default function ProjectCard({
     <div
       ref={containerRef}
       id={`project-card-${project.id}`}
+      data-cur="view"
       className="card-container"
       style={{
         zIndex: index + 10,
@@ -96,6 +97,7 @@ export default function ProjectCard({
       }}
     >
       <motion.article
+        data-cur="view"
         style={{
           scale,
           opacity,

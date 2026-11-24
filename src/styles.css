@@ -7350,6 +7350,168 @@ main {
 }
 
 /* ==========================================================================
+   PREMIUM SMART CURSOR — 5 DYNAMIC MORPHOLOGICAL STATES
+   - Default: 6px violet dot + 32px ring (lerp 0.17)
+   - Snap: morphs into pill enclosing buttons and links
+   - View: 76px solid violet circle (#7c4dff, contrast > 4.5:1) + "View"
+   - Drag: 76px translucent white circle + "Drag"
+   - Text: 2px x 26px vertical violet bar
+   - Press: scale(0.85) feedback on pointer down
+   ========================================================================== */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+html.has-cursor input,
+html.has-cursor textarea,
+html.has-cursor select,
+html.has-cursor [contenteditable="true"],
+html.has-cursor iframe,
+html.has-cursor video,
+html.has-cursor audio,
+html.has-cursor [data-cur="none"] {
+  cursor: auto !important;
+}
+
+.custom-cursor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: visible;
+  pointer-events: none;
+  user-select: none;
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 0.22s ease-out;
+}
+
+.custom-cursor-wrapper[popover] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 999999;
+}
+
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #9867ff;
+  pointer-events: none;
+  will-change: transform;
+  translate: -50% -50%;
+  transition: opacity 0.18s ease-out, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-cursor-dot[data-state="view"],
+.custom-cursor-dot[data-state="drag"],
+.custom-cursor-dot[data-state="text"],
+.custom-cursor-dot[data-state="hidden"] {
+  opacity: 0;
+  transform: scale(0) !important;
+}
+
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #9867ff;
+  background-color: transparent;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  translate: -50% -50%;
+  transform-origin: center center;
+  will-change: transform, width, height, border-radius;
+  transition:
+    width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease-out;
+}
+
+.custom-cursor-ring[data-state="snap"] {
+  background-color: rgba(152, 103, 255, 0.09);
+  border-color: rgba(152, 103, 255, 0.45);
+}
+
+.custom-cursor-ring[data-state="view"] {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  background-color: #7c4dff !important;
+  border-color: #7c4dff !important;
+  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.35);
+}
+
+.custom-cursor-ring[data-state="drag"] {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+}
+
+.custom-cursor-ring[data-state="text"] {
+  width: 2px !important;
+  height: 26px !important;
+  border-radius: 2px !important;
+  background-color: #9867ff !important;
+  border: none !important;
+}
+
+.custom-cursor-ring[data-state="hidden"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.custom-cursor-label {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: scale(0.85);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-cursor-ring[data-state="view"] .custom-cursor-label,
+.custom-cursor-ring[data-state="drag"] .custom-cursor-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ==========================================================================
    SMOOTH LANDING ANIMATION
    ========================================================================== */
 .hero-dymas-mockup-wrapper {

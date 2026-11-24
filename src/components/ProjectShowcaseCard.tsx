@@ -83,6 +83,7 @@ export default function ProjectShowcaseCard({
   return (
     <motion.article
       {...motionProps}
+      data-cur="view"
       style={{
         background:
           project.cardBg ||

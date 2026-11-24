@@ -605,6 +605,7 @@ export default function ProjectGrid({
                   ref={(el) => {
                     cardWrapRefs.current[index] = el;
                   }}
+                  data-cur="view"
                   onClick={(e) => {
                     e.stopPropagation();
                     if (hasMovedRef.current) return;
